@@ -1,145 +1,72 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <title>Fruit Shop</title>
-  <style>
-    body {
-      font-family: Arial;
-      margin: 0;
-      background: #f5f5f5;
-    }
-
-    /* HEADER */
-    header {
-      background: #4CAF50;
-      color: white;
-      padding: 15px;
-      text-align: center;
-      font-size: 24px;
-    }
-
-    nav {
-      background: #66bb6a;
-      padding: 10px;
-      text-align: center;
-    }
-
-    nav a {
-      color: white;
-      margin: 0 15px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    /* SECTION */
-    .section {
-      padding: 20px;
-    }
-
-    .title {
-      color: green;
-      border-left: 5px solid green;
-      padding-left: 10px;
-      margin-bottom: 10px;
-    }
-
-    /* GRID */
-    .grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 15px;
-    }
-
-    .card {
-      width: 200px;
-      background: white;
-      border-radius: 10px;
-      padding: 10px;
-      text-align: center;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-
-    .card img {
-      width: 100%;
-      height: 150px;
-      object-fit: cover;
-      border-radius: 10px;
-    }
-
-    .card h3 {
-      font-size: 16px;
-      margin: 10px 0;
-    }
-
-    .card button {
-      background: green;
-      color: white;
-      border: none;
-      padding: 8px 12px;
-      cursor: pointer;
-      border-radius: 5px;
-    }
-
-    /* PAGINATION */
-    .pagination {
-      text-align: center;
-      margin-top: 20px;
-    }
-
-    .pagination button {
-      margin: 3px;
-      padding: 5px 10px;
-    }
-
-  </style>
-    <style>
-        /* DÁN CSS Ở ĐÂY */
-    
-        .header {
-  background: linear-gradient(135deg, #2e7d32, #66bb6a);
-  color: white;
+<meta charset="UTF-8">
+<title>Fruit Shop - Trái Cây Nhập Khẩu</title>
+<style>
+/* Reset cơ bản */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-/* TOP */
+/* body */
+body {
+  font-family: Arial, sans-serif;
+  background: #f5f5f5;
+  line-height: 1.5;
+  color: #333;
+}
+
+/* header */
+.header {
+  background: linear-gradient(135deg, #2e7d32, #66bb6a);
+  color: white;
+  padding: 20px 0;
+}
+
+/* top container */
 .top {
   max-width: 1200px;
   margin: auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px;
+  padding: 0 15px;
 }
 
-/* LEFT */
-.left {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
+/* logo */
 .logo {
-  height: 120px;
+  height: 200px;
+  margin-right: 15px;
+  vertical-align: middle;
 }
 
+/* header left */
 .left h1 {
-  font-size: 24px;
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 28px;
+  font-weight: bold;
 }
 
-/* RIGHT */
-.right {
+/* header right */
+.top-info {
   display: flex;
   gap: 10px;
   align-items: center;
 }
 
+/* info boxes */
 .info {
   background: rgba(255,255,255,0.2);
-  padding: 5px 10px;
+  padding: 5px 12px;
   border-radius: 20px;
   font-size: 13px;
 }
 
+/* cart */
 .cart {
   background: #ffeb3b;
   color: black;
@@ -148,45 +75,152 @@
   font-weight: bold;
 }
 
-/* MENU */
-.menu {
-  display: flex;
-  justify-content: center;
-  gap: 25px;
-  padding: 10px;
-  background: rgba(0,0,0,0.1);
+/* nav bar */
+nav {
+  background: #66bb6a;
+  text-align: center;
+  padding: 10px 0;
 }
 
-.menu a {
+nav a {
   color: white;
   text-decoration: none;
-  font-weight: 500;
+  font-weight: bold;
+  margin: 0 15px;
+  font-size: 16px;
+  transition: color 0.3s;
 }
 
-.menu a:hover {
+nav a:hover {
   color: #ffeb3b;
 }
-      </style>
+
+/* sections */
+.section {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 0 15px;
+}
+
+/* title */
+.title {
+  color: green;
+  border-left: 5px solid green;
+  padding-left: 10px;
+  margin-bottom: 15px;
+  font-size: 22px;
+}
+
+/* grid */
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+/* card */
+.card {
+  width: 200px;
+  background: white;
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.card h3 {
+  font-size: 18px;
+  margin-bottom: 5px;
+}
+
+.card p {
+  font-size: 14px;
+  margin-bottom: 10px;
+  color: #555;
+}
+
+.card button {
+  background: green;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background 0.3s;
+}
+
+.card button:hover {
+  background: #2e7d32;
+}
+
+/* footer */
+footer {
+  background: #66bb6a;
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+  margin-top: 30px;
+  font-size: 14px;
+}
+
+footer a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+footer a:hover {
+  color: #ffeb3b;
+}
+
+/* responsive */
+@media(max-width: 768px){
+  .top {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+  .top-info {
+    justify-content: center;
+  }
+  .grid {
+    justify-content: center;
+  }
+}
+</style>
 </head>
 <body>
 
-    <header class="header">
-        <div class="top">
-            <div class="left">
-              <img src="logo.png" class="logo">
-              <h1>Fruit Shop</h1>
-            </div>
-          
-            <div class="right">
-              <div class="info">📍 103 Lạc Long Quân, Q11</div>
-              <div class="info">📞 0909xxx</div>
-              <div class="cart">🛒 0</div>
-            </div>
-          </div>
-      
-        
-      </header>
+<!-- header -->
+<header class="header">
+  <div class="top">
+    <div class="left">
+      <img src="logo.png" class="logo" alt="Logo">
+      <h1>TRÁI CÂY NHẬP KHẨU</h1>
+    </div>
+    <div class="top-info">
+      <div class="info">📍 103 Lạc Long Quân</div>
+      <div class="info">📞 0909xxx</div>
+      <div class="cart">🛒 0</div>
+    </div>
+  </div>
+</header>
 
+<!-- nav -->
 <nav>
   <a href="#">Trang chủ</a>
   <a href="#">Giới thiệu</a>
@@ -195,76 +229,66 @@
   <a href="#">Tin tức</a>
 </nav>
 
+<!-- section trái cây -->
 <div class="section">
-  <h2 class="title">Trái cây ngoại</h2>
-  <div id="ngoai" class="grid"></div>
+  <h2 class="title">Trái cây</h2>
+  <div class="grid" id="fruits">
+    <!-- card sẽ hiển thị ở đây -->
+  </div>
 </div>
 
+<!-- section khuyến mãi -->
 <div class="section">
-  <h2 class="title">Trái cây nội</h2>
-  <div id="noi" class="grid"></div>
+  <h2 class="title">Khuyến mãi</h2>
+  <div class="grid">
+    <div class="card">
+      <img src="uploads/tao.jpg" alt="Táo">
+      <h3>Táo Miễn Phí Vận Chuyển</h3>
+      <p>Áp dụng cho đơn trên 200k</p>
+      <button onclick="alert('Liên hệ: 0909xxx')">Liên hệ</button>
+    </div>
+    <div class="card">
+      <img src="uploads/cam.jpg" alt="Cam">
+      <h3>Cam Giảm Giá 10%</h3>
+      <p>Chỉ trong tuần này</p>
+      <button onclick="alert('Liên hệ: 0909xxx')">Liên hệ</button>
+    </div>
+  </div>
 </div>
 
-<div class="pagination" id="pagination"></div>
+<!-- footer -->
+<footer>
+  © 2026 Fruit Shop - <a href="#">Liên hệ</a>
+</footer>
 
 <script>
-let allFruits = []
-let currentPage = 1
-const perPage = 6
+// danh sách ảnh trái cây
+// danh sách ảnh trái cây
+const fruitImages = [
+  { img: "uploads/tao.jpg", name: "Táo" },
+  { img: "uploads/cam.jpg", name: "Cam" },
+  { img: "uploads/cherry.jpg", name: "Cherry" },
+  { img: "uploads/dao.jpg", name: "Đào" },
+  { img: "uploads/dau.jpg", name: "Dâu" },
+  { img: "uploads/dualuoi.jpg", name: "Dưa Lưới" },
+  { img: "uploads/kiwi.jpg", name: "Kiwi" },
+  { img: "uploads/nho.jpg", name: "Nho" },
+  { img: "uploads/thom.jpg", name: "Thơm" },
+  { img: "uploads/xoai.jpg", name: "Xoài" }
+];
 
-async function loadFruits() {
-  const res = await fetch("http://localhost:3000/api/fruits")
-  allFruits = await res.json()
-  render()
-}
+const container = document.getElementById("fruits");
 
-function render() {
-  document.getElementById("ngoai").innerHTML = ""
-  document.getElementById("noi").innerHTML = ""
-
-  const start = (currentPage - 1) * perPage
-  const pageData = allFruits.slice(start, start + perPage)
-
-  pageData.forEach(fruit => {
-    const card = `
-      <div class="card">
-        <img src="http://localhost:3000${fruit.image}">
-        <h3>${fruit.name}</h3>
-        <button onclick="contact()">Liên hệ</button>
-      </div>
-    `
-
-    if (fruit.category === "ngoai") {
-      document.getElementById("ngoai").innerHTML += card
-    } else {
-      document.getElementById("noi").innerHTML += card
-    }
-  })
-
-  renderPagination()
-}
-
-function renderPagination() {
-  const totalPages = Math.ceil(allFruits.length / perPage)
-  let html = ""
-
-  for (let i = 1; i <= totalPages; i++) {
-    html += `<button onclick="goPage(${i})">${i}</button>`
-  }
-
-  document.getElementById("pagination").innerHTML = html
-}
-
-function goPage(page) {
-  currentPage = page
-  render()
-}
-
-function contact() {
-  alert("Liên hệ: 0909xxx")
-}
-
-loadFruits()
+fruitImages.forEach(fruit => {
+  const card = document.createElement("div");
+  card.className = "card";
+  card.innerHTML = `
+    <img src="${fruit.img}" alt="${fruit.name}">
+    <h3>${fruit.name}</h3>
+    <button onclick="alert('Liên hệ: 0909xxx')">Liên hệ</button>
+  `;
+  container.appendChild(card);
+});
 </script>
 
 </body>

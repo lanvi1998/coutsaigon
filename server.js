@@ -3,6 +3,7 @@ const mongoose = require("mongoose")
 const cors = require("cors")
 const multer = require("multer")
 const path = require("path")
+const fs = require("fs")
 
 const app = express()
 
@@ -22,25 +23,23 @@ const fruitSchema = new mongoose.Schema({
     price: { type: Number, required: true },
     image: { type: String, required: true },
     description: String
-  })
-
+})
 const Fruit = mongoose.model("Fruit", fruitSchema)
+
+// ===== Tạo folder uploads nếu chưa có =====
+if (!fs.existsSync("uploads")) {
+  fs.mkdirSync("uploads")
+}
 
 // ===== Upload config =====
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/")
-  },
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname))
-  }
+  destination: (req, file, cb) => cb(null, "uploads/"),
+  filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
 })
-
 const upload = multer({ storage })
 
 // ===== API =====
-
-// GET danh sách
+// GET danh sách trái cây
 app.get("/api/fruits", async (req, res) => {
   try {
     const fruits = await Fruit.find()
@@ -50,7 +49,7 @@ app.get("/api/fruits", async (req, res) => {
   }
 })
 
-// DELETE
+// DELETE trái cây
 app.delete("/api/fruits/:id", async (req, res) => {
   try {
     await Fruit.findByIdAndDelete(req.params.id)
@@ -59,43 +58,13 @@ app.delete("/api/fruits/:id", async (req, res) => {
     res.status(500).json({ error: err.message })
   }
 })
-// UPLOAD ảnh + thêm fruit
-app.post("/api/upload", upload.single("image"), async (req, res) => {
-    try {
-      console.log("FILE:", req.file)
-      console.log("BODY:", req.body)
-  
-      const { name, price, description } = req.body
-  
-      if (!req.file) {
-        return res.status(400).json({ error: "Chưa chọn ảnh" })
-      }
-  
-      const fruit = new Fruit({
-        name,
-        price,
-        description,
-        image: "/uploads/" + req.file.filename
-      })
-  
-      await fruit.save()
-  
-      res.json(fruit)
-    } catch (err) {
-      console.log("🔥 LỖI THẬT:", err)
-      res.status(500).json({ error: err.message })
-    }
-  })
 
-// UPLOAD ảnh + thêm fruit
-app.use("/uploads", express.static("uploads"))
+// UPLOAD ảnh + thêm trái cây
 app.post("/api/upload", upload.single("image"), async (req, res) => {
   try {
     const { name, price, description } = req.body
 
-    if (!req.file) {
-      return res.status(400).json({ error: "Chưa chọn ảnh" })
-    }
+    if (!req.file) return res.status(400).json({ error: "Chưa chọn ảnh" })
 
     const fruit = new Fruit({
       name,
@@ -105,14 +74,12 @@ app.post("/api/upload", upload.single("image"), async (req, res) => {
     })
 
     await fruit.save()
-
     res.json(fruit)
   } catch (err) {
+    console.log("🔥 Lỗi:", err)
     res.status(500).json({ error: err.message })
   }
 })
 
 // ===== RUN SERVER =====
-app.listen(3000, () => {
-  console.log("Server running on port 3000")
-})
+app.listen(3000, () => console.log("Server running on http://localhost:3000"))
