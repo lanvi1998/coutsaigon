@@ -446,6 +446,121 @@ body {
     padding:10px 14px;
     font-size:16px;
   }
+  /* Thumbnails sản phẩm */
+.thumbs {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;       /* cho phép cuộn ngang */
+  padding-bottom: 5px;    /* khoảng cách với phần dưới */
+  max-width: 100%;
+  scrollbar-width: thin;   /* Firefox */
+}
+.thumbs::-webkit-scrollbar {
+  height: 6px;             /* chiều cao scrollbar */
+}
+.thumbs::-webkit-scrollbar-thumb {
+  background: #ff7043;
+  border-radius: 3px;
+}
+.thumbs img {
+  width: 60px;
+  height: 60px;
+  border-radius: 6px;
+  cursor: pointer;
+  object-fit: cover;
+  border: 2px solid transparent;
+  flex: 0 0 auto;          /* không co dãn */
+}
+.thumbs img.selected { border-color: #ff7043; }
+
+/* ADMIN EDIT THUMBNAILS */
+.thumbs, #adminThumbs {
+  display:flex;
+  gap:10px;
+  overflow-x:auto;
+  padding:5px 0;
+  max-width:100%;
+  border-radius:6px;
+}
+.thumbs::-webkit-scrollbar, #adminThumbs::-webkit-scrollbar { height:6px; }
+.thumbs::-webkit-scrollbar-thumb, #adminThumbs::-webkit-scrollbar-thumb { background:#ff7043; border-radius:3px; }
+.thumbs img, #adminThumbs img {
+  width:60px;
+  height:60px;
+  object-fit:cover;
+  cursor:pointer;
+  border:2px solid transparent;
+  flex:0 0 auto;
+  border-radius:6px;
+}
+.thumbs img.selected, #adminThumbs img.selected { border-color:#ff7043; }
+/* PRODUCT IMAGES */
+.product-images {
+  flex: 1 1 300px;
+  max-width: 400px; /* ảnh chính không quá 400px */
+  margin-right: 20px;
+}
+
+.product-images img#mainImage {
+  width: 100%;        /* full container */
+  height: auto;       /* giữ tỉ lệ gốc */
+  max-height: 400px;  /* tránh quá cao */
+  object-fit: contain; /* không bị cắt, giữ hình đầy đủ */
+  border-radius: 12px;
+  margin-bottom: 10px;
+}
+
+/* THUMBNAILS */
+.thumbs {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  max-width: 100%;
+  padding-bottom: 5px;
+}
+
+.thumbs img {
+  width: 60px;
+  height: 60px;
+  border-radius: 6px;
+  cursor: pointer;
+  object-fit: cover; /* crop hình vừa khung thumbnail */
+  border: 2px solid transparent;
+  flex: 0 0 auto;
+}
+
+.thumbs img.selected {
+  border-color: #ff7043;
+}
+/* ==== SỐ LƯỢNG THÊM GIỎ HÀNG ==== */
+.cart-qty {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.cart-qty button {
+  width: 32px;
+  height: 32px;
+  font-size: 18px;
+  font-weight: bold;
+  border: none;
+  background: #66bb6a;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.cart-qty button:hover { background: #2e7d32; }
+
+#qtyInput {
+  width: 50px;
+  text-align: center;
+  font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
 
   /* ADMIN */
   .admin input,

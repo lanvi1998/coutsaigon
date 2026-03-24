@@ -20,13 +20,14 @@ mongoose.connect("mongodb://lanvi:lanvi98@ac-yeq62ge-shard-00-00.lxr0whp.mongodb
 
 // ===== Schemas =====
 const fruitSchema = new mongoose.Schema({
-  name:String,
-  price:Number,
+  name: String,
+  price: Number,
   unit: String,          
-  image:String,
-  description:String,
-  category:String
-})
+  image: String,
+  description: String,
+  category: String,
+  thumbs: { type: [String], default: [] } // Thêm dòng này
+});
 const Fruit = mongoose.model("Fruit", fruitSchema)
 
 const userSchema = new mongoose.Schema({
@@ -294,6 +295,82 @@ app.get("/api/search", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+// ===== GET 1 sản phẩm theo ID =====
+app.get("/api/fruits/product/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Fruit.findById(id);
+    if (!product) return res.status(404).json({ error: "Không tìm thấy sản phẩm" });
+    res.json(product);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+// ===== UPDATE description sản phẩm (admin only) =====
+app.put("/api/fruits/:id/description", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { username, description } = req.body;
+
+    // Kiểm tra quyền admin
+    const user = await User.findOne({ username });
+    if(!user || user.role !== "admin") 
+      return res.status(403).json({success:false, message:"Chỉ admin mới được phép"});
+
+    // Cập nhật mô tả
+    const updated = await Fruit.findByIdAndUpdate(
+      id,
+      { description },
+      { new: true }
+    );
+
+    if(!updated) return res.status(404).json({success:false, message:"Không tìm thấy sản phẩm"});
+
+    res.json({success:true, product: updated});
+  } catch(err) {
+    console.error(err);
+    res.status(500).json({success:false, message:err.message});
+  }
+});
+// Express route ví dụ:
+// Express route upload thumbnail (server.js)
+app.post("/api/fruits/:id/thumb", upload.single("thumb"), async (req,res)=>{
+  try{
+    const { username } = req.body;
+    const user = await User.findOne({ username });
+    if(!user || user.role !== "admin") 
+      return res.status(403).json({success:false,message:"Chỉ admin"});
+
+    const fruit = await Fruit.findById(req.params.id);
+    if(!fruit) return res.status(404).json({success:false,message:"Không tìm thấy sản phẩm"});
+
+    if(!req.file) return res.status(400).json({success:false,message:"Chưa chọn file"});
+
+    if(!fruit.thumbs) fruit.thumbs=[];
+    const thumbPath = "/uploads/" + req.file.filename;
+    fruit.thumbs.push(thumbPath);
+    await fruit.save();
+
+    // Trả về product đã update để front-end hiển thị ngay
+    res.json({success:true, product: fruit});
+  }catch(err){ 
+    console.error(err); 
+    res.status(500).json({success:false,message:err.message}); 
+  }
+}); 
+//xoá thumbnail
+app.delete("/api/fruits/:id/thumb/:index", async (req,res)=>{
+  const {id,index} = req.params;
+  try{
+    const product = await Fruit.findById(id);
+    if(!product) return res.json({success:false,message:"Không tìm thấy sản phẩm"});
+    product.thumbs.splice(index,1); // xoá ảnh
+    await product.save();
+    res.json({success:true,product});
+  }catch(err){ res.json({success:false,message:"Lỗi server"}); }
+});
+
 // ===== Run server =====
 const PORT = 3000
 app.listen(PORT,()=>console.log("Server running on http://localhost:"+PORT))

@@ -134,8 +134,7 @@ document.getElementById("loginBtnPopup").addEventListener("click", async () => {
         document.querySelector(".admin-banner").style.display = "block";
       }
 
-      // Load lại sản phẩm và banner
-      loadProducts();
+      
       loadBanners();
     } else {
       alert(data.message || "Login thất bại!");
@@ -180,28 +179,7 @@ window.addEventListener("load", () => {
 });
 
 // ====== PRODUCTS ======
-async function loadProducts(){
-  try{
-    const res = await fetch("/api/fruits");
-    const products = await res.json();
-    const grid = document.getElementById("highlight");
-    grid.innerHTML="";
-    products.filter(p=>p.category?.toLowerCase()==="highlight").forEach(p=>{
-      const card = document.createElement("div");
-      card.className="card";
-      card.innerHTML=`
-        <img src="${p.image}" alt="${p.name}">
-        <div class="card-content">
-          <h3>${p.name}</h3>
-         <p>${Number(p.price).toLocaleString()} VND / ${p.unit}</p>
-          ${userRole==="admin"
-            ? `<button onclick="deleteProduct('${p._id}')">❌ Xoá</button>`
-            : `<button onclick="addToCart('${p._id}','${p.name}',${p.price},'${p.image}')">🛒 Thêm vào giỏ</button>`}
-        </div>`;
-      grid.appendChild(card);
-    });
-  } catch(err){ console.error(err); }
-}
+
 
 function addToCart(id,name,price,image){
   let cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -462,6 +440,28 @@ document.addEventListener("click", (e)=>{
     searchResults.style.display="none";
   }
 });
+// ====== PRODUCTS ======
+async function loadProducts(){
+  try{
+    const res = await fetch("/api/fruits");
+    const products = await res.json();
+    const grid = document.getElementById("highlight");
+    grid.innerHTML="";
+    products.filter(p=>p.category?.toLowerCase()==="highlight").forEach(p=>{
+      const card = document.createElement("div");
+      card.className="card";
+      card.innerHTML=`
+        <img src="${p.image}" alt="${p.name}" style="cursor:pointer;" onclick="window.location.href='product.html?id=${p._id}'">
+        <div class="card-content">
+          <h3>${p.name}</h3>
+          <p>${Number(p.price).toLocaleString()} VND / ${p.unit}</p>
+          <button onclick="addToCart('${p._id}','${p.name}','${p.price}','${p.image}')">🛒 Thêm vào giỏ hàng</button>
+          ${userRole==="admin" ? `<button onclick="deleteProduct('${p._id}')">❌ Xoá</button>` : ""}
+        </div>`;
+      grid.appendChild(card);
+    });
+  } catch(err){ console.error(err); }
+}
 // UPLOAD BANNER
 document.getElementById("uploadBannerBtn").addEventListener("click", async ()=>{
   const file=document.getElementById("bannerFile").files[0];
