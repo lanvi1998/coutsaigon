@@ -3,57 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <title>Trái cây cắt gọt</title>
-<style>
-/* CSS y hệt local.html chỉ thay tiêu đề, category ở JS */
-body{font-family:'Segoe UI',Tahoma,sans-serif;background:#f0f2f5;margin:0;}
-.header{background:linear-gradient(135deg,#2e7d32,#66bb6a);color:white;padding:0 30px;height:100px;display:flex;align-items:center;box-shadow:0 4px 12px rgba(0,0,0,0.2);}
-.header a{display:flex;align-items:center;gap:10px;text-decoration:none;color:white;}
-.header img{max-height:60px;border-radius:8px;}
-.header h1{font-size:22px;margin:0;}
-nav{background:#81c784;text-align:center;padding:12px;border-radius:10px;margin:10px;box-shadow:0 2px 5px rgba(0,0,0,0.2);}
-nav a{color:white;margin:0 20px;text-decoration:none;font-weight:bold;font-size:16px;}
-nav a:hover{color:#c8e6c9;}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:25px;padding:20px;margin:0 20px;}
-.card{background:white;border-radius:15px;overflow:hidden;box-shadow:0 4px 15px rgba(0,0,0,0.15);display:flex;flex-direction:column;justify-content:space-between;}
-.card img{width:100%;height:180px;object-fit:cover;}
-.card-content{padding:10px;}
-.card h3{color:#2e7d32;margin:5px 0;}
-.card p{color:#555;margin:5px 0;}
-.card button{padding:10px;border:none;border-radius:8px;background:linear-gradient(135deg,#66bb6a,#2e7d32);color:white;cursor:pointer;width:100%;}
-.card button:hover{opacity:0.9;transform:scale(1.05);}
-#loginBtn{position:fixed;top:20px;right:20px;padding:12px 20px;background:#66bb6a;color:white;border:none;border-radius:12px;cursor:pointer;z-index:1000;}
-#authPopup{display:none;position:fixed;top:80px;right:20px;background:white;padding:25px;border-radius:15px;box-shadow:0 10px 30px rgba(0,0,0,0.3);width:280px;z-index:1001;}
-#authPopup h3{text-align:center;color:#2e7d32;margin-bottom:15px;}
-#authPopup input{width:100%;padding:8px;margin:8px 0;border-radius:8px;border:1px solid #ccc;}
-#authPopup button{width:48%;padding:8px;border:none;border-radius:8px;font-weight:bold;cursor:pointer;}
-#authPopup button:first-child{background:#2e7d32;color:white;margin-right:4%;}
-#authPopup button:last-child{background:#1976d2;color:white;}
-.admin{display:none;background:white;padding:20px;margin:20px auto;border-radius:15px;max-width:450px;box-shadow:0 5px 20px rgba(0,0,0,0.2);}
-.admin input,.admin select,.admin button{width:90%;padding:10px;margin:10px 0;border-radius:8px;border:1px solid #ccc;}
-.admin button{background:#2e7d32;color:white;border:none;cursor:pointer;}
-.admin button:hover{opacity:0.85;transform:scale(1.02);}
-footer{background:linear-gradient(135deg,#2e7d32,#66bb6a);color:white;text-align:center;padding:20px;margin-top:30px;}
-</style>
+<link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<button id="loginBtn">Login / Register</button>
-
-<div id="authPopup">
-  <h3>Login / Register</h3>
-  <input id="username" placeholder="Username">
-  <input id="password" type="password" placeholder="Password">
-  <button onclick="login()">Login</button>
-  <button onclick="register()">Register</button>
+<!-- Popup Login -->
+<div id="authPopup" class="popup" style="display:none;">
+  <h3>Admin Login</h3>
+  <input id="username" placeholder="Username"><br><br>
+  <input id="password" type="password" placeholder="Password"><br><br>
+  <button id="loginBtnPopup">Login</button>
+  <button onclick="closePopup()">Close</button>
 </div>
 
+<!-- HEADER -->
 <header class="header">
-  <a href="index.html">
-    <img src="/logo.png" alt="Logo">
-    <h1>Trái cây cắt gọt</h1>
-  </a>
+  <div class="header-left">
+    <a href="index.html">
+      <img src="/logo.png" class="logo">
+    </a>
+    <input type="text" id="searchInput" placeholder="Tìm sản phẩm..." />
+    <div id="searchResults"></div>
+  </div>
+  <div class="header-right">
+    <a href="cart.html" class="cart">🛒 Giỏ (<span id="cartCount">0</span>)</a>
+  </div>
 </header>
 
+<!-- NAVBAR -->
 <nav>
   <a href="import.html">Trái cây nhập khẩu</a>
   <a href="local.html">Trái cây nội địa</a>
@@ -63,98 +40,211 @@ footer{background:linear-gradient(135deg,#2e7d32,#66bb6a);color:white;text-align
   <a href="box.html">Hộp quà tặng</a>
 </nav>
 
-<h2 style="text-align:center;margin-top:20px;">Trái cây cắt gọt</h2>
-<div class="grid" id="product-grid"></div>
+<!-- SẢN PHẨM CUT -->
+<h2 style="text-align:center; margin-top:20px;">Trái cây cắt gọt</h2>
+<div id="highlight" class="grid"></div>
 
-<div class="admin">
-  <h2>Admin Upload sản phẩm</h2>
+<!-- ADMIN UPLOAD -->
+<div class="admin" style="display:none;">
+  <h2>Admin Upload sản phẩm trái cây cắt gọt</h2>
   <input id="name" placeholder="Tên sản phẩm">
   <input id="price" placeholder="Giá">
-  <select id="category">
-    <option value="cut" selected>Trái cây cắt gọt</option>
-  </select>
+  <input id="unit" placeholder="Đơn vị (kg, hộp, phần...)">
   <input type="file" id="image">
-  <button onclick="addProduct()">Upload</button>
+  <button id="uploadProductBtn">Upload</button>
 </div>
 
+<!-- CONTACT -->
+<section style="background:#f5f5f5; padding:20px; text-align:center; margin-top:40px;">
+  <p>📍 103 Lạc Long Quân</p>
+  <p>📞 0909xxx</p>
+  <p>Zalo: 0909xxx | Facebook: <a href="#" target="_blank">https://www.facebook.com</a></p>
+</section>
+
+<!-- FOOTER -->
 <footer>© 2026 Fruit Shop</footer>
 
+<!-- Nút login/logout -->
+<div id="loginWrapper" style="position:fixed; bottom:10px; left:10px; z-index:1000;">
+  <button id="loginBtn">Login</button>
+  <button id="logoutBtn" style="display:none;">Logout</button>
+</div>
+
 <script>
+// ===== GLOBAL =====
 let userRole = null;
+updateCartCount();
 
-async function loadProducts(){
-  const res = await fetch("/api/fruits");
-  const data = await res.json();
-  const grid = document.getElementById("product-grid");
-  grid.innerHTML = "";
-  data.filter(p=>p.category==="cut").forEach(p=>{
-    const card = document.createElement("div");
-    card.className = "card";
-    card.innerHTML = `
-      <img src="${p.image}" alt="${p.name}">
-      <div class="card-content">
-        <h3>${p.name}</h3>
-        <p>${Number(p.price).toLocaleString()} VND</p>
-        ${userRole==="admin"?`<button onclick="deleteProduct('${p._id}')">Xoá</button>`:`<button>Thêm vào giỏ</button>`}
-      </div>
-    `;
-    grid.appendChild(card);
-  });
-}
+// ===== SHOW/HIDE POPUP =====
+document.getElementById("loginBtn").addEventListener("click",()=>{ document.getElementById("authPopup").style.display="block"; });
+function closePopup(){ document.getElementById("authPopup").style.display="none"; }
 
-document.getElementById("loginBtn").addEventListener("click", ()=>{
-  const popup = document.getElementById("authPopup");
-  popup.style.display = popup.style.display==="none"?"block":"none";
+// ===== LOGIN =====
+document.getElementById("loginBtnPopup").addEventListener("click", async ()=>{
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+  if(!username || !password){ alert("Điền đầy đủ username và password!"); return; }
+
+  try{
+    const res = await fetch("/api/login",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({username,password})
+    });
+    const data = await res.json();
+    if(data.success){
+      userRole = data.role;
+      localStorage.setItem("username", username);
+      localStorage.setItem("userRole", userRole);
+      closePopup();
+
+      document.getElementById("loginBtn").style.display="none";
+      document.getElementById("logoutBtn").style.display="inline-block";
+
+      if(userRole==="admin"){ document.querySelector(".admin").style.display="block"; }
+
+      loadProducts();
+    } else { alert(data.message || "Login thất bại!"); }
+  } catch(err){ console.error(err); alert("Login lỗi, thử lại!"); }
 });
 
-async function login(){
-  const username = document.getElementById("username").value;
-  const password = document.getElementById("password").value;
-  const res = await fetch("/api/login",{method:"POST",headers: {"Content-Type":"application/json"},body: JSON.stringify({username,password})});
-  const data = await res.json();
-  if(data.success){
-    userRole = data.role;
-    localStorage.setItem("username", username);
-    alert("Login thành công!");
-    document.getElementById("authPopup").style.display="none";
+// ===== LOGOUT =====
+document.getElementById("logoutBtn").addEventListener("click", ()=>{
+  userRole = null;
+  localStorage.removeItem("username");
+  localStorage.removeItem("userRole");
+  document.getElementById("loginBtn").style.display="inline-block";
+  document.getElementById("logoutBtn").style.display="none";
+  document.querySelector(".admin").style.display="none";
+  loadProducts();
+});
+
+// ===== CHECK LOGIN =====
+window.addEventListener("load",()=>{
+  const storedRole = localStorage.getItem("userRole");
+  if(storedRole){
+    userRole = storedRole;
     document.getElementById("loginBtn").style.display="none";
-    document.querySelector(".admin").style.display = (userRole==="admin")?"block":"none";
-    loadProducts();
-  }else alert(data.message);
+    document.getElementById("logoutBtn").style.display="inline-block";
+    if(userRole==="admin"){ document.querySelector(".admin").style.display="block"; }
+  }
+  updateCartCount();
+  loadProducts();
+});
+
+// ===== PRODUCTS =====
+async function loadProducts(){
+  try{
+    const res = await fetch("/api/fruits");
+    const products = await res.json();
+    const grid = document.getElementById("highlight");
+    grid.innerHTML="";
+    products.filter(p=>p.category?.toLowerCase()==="cut").forEach(p=>{
+      const card = document.createElement("div");
+      card.className="card";
+      card.innerHTML=`
+        <img src="${p.image}" alt="${p.name}">
+        <div class="card-content">
+          <h3>${p.name}</h3>
+          <p>${Number(p.price).toLocaleString()} VND / ${p.unit}</p>
+          ${userRole==="admin"
+            ? `<button onclick="deleteProduct('${p._id}')">❌ Xoá</button>`
+            : `<button onclick="addToCart('${p._id}','${p.name}',${p.price},'${p.image}')">🛒 Thêm vào giỏ</button>`}
+        </div>`;
+      grid.appendChild(card);
+    });
+  } catch(err){ console.error(err); }
 }
 
-function register(){ alert("Đăng ký demo, chỉ login admin mới có quyền"); }
-
-async function addProduct(){
+document.getElementById("uploadProductBtn").addEventListener("click", async ()=>{
   const name = document.getElementById("name").value;
   const price = document.getElementById("price").value;
-  const category = document.getElementById("category").value;
-  const fileInput = document.getElementById("image");
-  if(!name||!price||!fileInput.files.length){ alert("Nhập đủ thông tin!"); return; }
+  const unit = document.getElementById("unit").value;
+  const image = document.getElementById("image").files[0];
+
+  if(!name || !price || !unit || !image){ alert("Điền đủ thông tin và chọn ảnh!"); return; }
 
   const formData = new FormData();
   formData.append("name", name);
   formData.append("price", price);
-  formData.append("category", category);
+  formData.append("unit", unit);
+  formData.append("category", "cut");
   formData.append("username", localStorage.getItem("username"));
-  formData.append("image", fileInput.files[0]);
+  formData.append("image", image);
 
-  const res = await fetch("/api/upload", {method:"POST", body:formData});
-  const data = await res.json();
-  if(data.error){ alert(data.error); return; }
-  loadProducts();
-  document.getElementById("name").value="";
-  document.getElementById("price").value="";
-  fileInput.value="";
+  try{
+    const res = await fetch("/api/upload",{method:"POST", body:formData});
+    const data = await res.json();
+    if(data.error){ alert("Upload lỗi: "+data.error); return; }
+    alert("Upload sản phẩm thành công!");
+    document.getElementById("name").value="";
+    document.getElementById("price").value="";
+    document.getElementById("unit").value="";
+    document.getElementById("image").value="";
+    loadProducts();
+  } catch(err){ console.error(err); alert("Upload thất bại!"); }
+});
+
+function deleteProduct(id){
+  fetch("/api/fruits/"+id,{
+    method:"DELETE",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({username: localStorage.getItem("username")})
+  }).then(()=>loadProducts());
 }
 
-async function deleteProduct(id){
-  const username = localStorage.getItem("username");
-  await fetch(`/api/fruits/${id}`, {method:"DELETE", headers: {"Content-Type":"application/json"}, body: JSON.stringify({username})});
-  loadProducts();
+// ===== CART =====
+function addToCart(id,name,price,image){
+  let cart = JSON.parse(localStorage.getItem("cart"))||[];
+  const exist = cart.find(p=>p.id===id);
+  if(exist) exist.qty+=1; else cart.push({id,name,price,image,qty:1});
+  localStorage.setItem("cart", JSON.stringify(cart));
+  updateCartCount();
+  alert("Đã thêm vào giỏ hàng 🛒");
+}
+function updateCartCount(){
+  let cart = JSON.parse(localStorage.getItem("cart"))||[];
+  let total = cart.reduce((t,p)=>t+p.qty,0);
+  document.getElementById("cartCount").innerText = total;
 }
 
-loadProducts();
+// ===== SEARCH =====
+const searchInput = document.getElementById("searchInput");
+const searchResults = document.getElementById("searchResults");
+let timer, selectedIndex=-1, currentResults=[];
+searchInput.addEventListener("input", ()=>{
+  clearTimeout(timer);
+  timer = setTimeout(()=> fetchSearchResults(searchInput.value.trim()),300);
+});
+async function fetchSearchResults(query){
+  if(!query){ searchResults.style.display="none"; return; }
+  try{
+    const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+    const products = await res.json();
+    currentResults = products;
+    renderResults(products);
+  } catch(err){ console.error(err); }
+}
+function renderResults(products){
+  searchResults.innerHTML="";
+  selectedIndex=-1;
+  if(products.length===0){ searchResults.style.display="none"; return; }
+  products.forEach((p,i)=>{
+    const div=document.createElement("div");
+    div.innerHTML=`<strong>${p.name}</strong><br><small>${Number(p.price).toLocaleString()} VND</small>`;
+    div.dataset.index=i;
+    div.addEventListener("click",()=> window.location.href=`/search.html?q=${encodeURIComponent(p.name)}`);
+    searchResults.appendChild(div);
+  });
+  const rect = searchInput.getBoundingClientRect();
+  searchResults.style.top = rect.bottom + window.scrollY + "px";
+  searchResults.style.left = rect.left + window.scrollX + "px";
+  searchResults.style.width = rect.width + "px";
+  searchResults.style.display="block";
+}
+document.addEventListener("click",(e)=>{
+  if(!searchResults.contains(e.target) && e.target!==searchInput){ searchResults.style.display="none"; }
+});
 </script>
 </body>
 </html>

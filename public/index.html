@@ -3,166 +3,33 @@
 <head>
 <meta charset="UTF-8">
 <title>Fruit Shop</title>
-<style>
-html { scroll-behavior: smooth; }
-body {
-  font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
-  background:#f0f2f5;
-  margin:0;
-}
-/* HEADER */
-.header {
-  background: linear-gradient(135deg,#2e7d32,#66bb6a);
-  color:white;
-  padding:0 30px;
-  height:100px;
-  display:flex;
-  align-items:center;
-  gap:15px;
-  box-shadow:0 4px 12px rgba(0,0,0,0.2);
-}
-.header a {
-  display:flex;
-  align-items:center;
-  gap:10px;
-  text-decoration:none;
-  color:white;
-}
-.header img.logo {
-  max-height:230px;
-  border-radius:8px;
-}
-.header h1 {
-  font-size:22px;
-  margin:0;
-}
+<link rel="stylesheet" href="style.css">
 
-/* NAVBAR */
-nav {
-  background:#81c784;
-  text-align:center;
-  padding:12px;
-  border-radius:10px;
-  margin:10px 20px;
-  box-shadow:0 2px 5px rgba(0,0,0,0.2);
-}
-nav a {
-  color:white;
-  margin:0 20px;
-  text-decoration:none;
-  font-weight:bold;
-  font-size:16px;
-  transition:0.3s;
-}
-nav a:hover { color:#c8e6c9; transform:scale(1.05); }
-
-/* PRODUCT GRID */
-.grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(220px,1fr));
-  gap:25px;
-  padding:20px;
-  margin:0 20px;
-}
-.card {
-  background:white;
-  border-radius:15px;
-  overflow:hidden;
-  box-shadow:0 4px 15px rgba(0,0,0,0.15);
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  transition:0.3s;
-}
-.card:hover {
-  transform:translateY(-8px) scale(1.03);
-  box-shadow:0 10px 30px rgba(0,0,0,0.25);
-}
-.card img {
-  width:100%;
-  height:180px;
-  object-fit:cover;
-  transition:0.3s;
-}
-.card-content { padding:10px 12px; flex-grow:1; }
-.card h3 { font-size:18px; color:#2e7d32; margin:8px 0 5px 0; }
-.card p { font-size:16px; color:#555; margin:5px 0; }
-.card button {
-  margin-top:10px; padding:10px; border:none; border-radius:8px;
-  cursor:pointer; font-weight:bold; background:linear-gradient(135deg,#66bb6a,#2e7d32);
-  color:white; width:100%; transition:0.3s;
-}
-.card button:hover { opacity:0.9; transform:scale(1.05); }
-
-/* ADMIN UPLOAD */
-.admin {
-  background:white;
-  padding:25px;
-  margin:40px auto;
-  text-align:center;
-  border-radius:15px;
-  box-shadow:0 5px 20px rgba(0,0,0,0.2);
-  max-width:450px;
-  display:none;
-}
-.admin input, .admin select, .admin button {
-  width:90%; padding:10px; margin:10px 0; border-radius:8px; border:1px solid #ccc;
-}
-.admin button { background:#2e7d32; color:white; border:none; cursor:pointer; }
-.admin button:hover { opacity:0.85; transform:scale(1.02); }
-
-/* LOGIN POPUP */
-#authPopup {
-  display:none;
-  position:fixed;
-  top:80px; right:20px; z-index:1001;
-  background:white; padding:25px; border-radius:15px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.3); width:280px;
-}
-#authPopup h3 { text-align:center; margin-bottom:15px; color:#2e7d32; }
-#authPopup input { width:100%; padding:8px; margin:8px 0; border-radius:8px; border:1px solid #ccc; }
-#authPopup button {
-  width:48%; padding:8px; border:none; border-radius:8px; font-weight:bold; cursor:pointer;
-}
-#authPopup button:first-child { background:#2e7d32; color:white; margin-right:4%; }
-#authPopup button:last-child { background:#1976d2; color:white; }
-
-/* LOGIN BUTTON */
-#loginBtn {
-  position:fixed; top:20px; right:20px; z-index:1000;
-  padding:12px 20px; background:#66bb6a; color:white; border:none; border-radius:12px; font-weight:bold;
-  cursor:pointer; transition:0.3s;
-}
-#loginBtn:hover { background:#4caf50; transform:scale(1.05); }
-
-/* FOOTER */
-footer {
-  background:linear-gradient(135deg,#2e7d32,#66bb6a);
-  color:white; text-align:center; padding:20px; border-top:3px solid #1b5e20;
-  font-size:14px; margin-top:30px; border-radius:15px 15px 0 0;
-}
-</style>
 </head>
 <body>
 
-<!-- Login Button -->
-<button id="loginBtn">Login / Register</button>
-
-<!-- Popup Login/Register -->
+<!-- Popup Login -->
 <div id="authPopup">
-  <h3>Login / Register</h3>
-  <input id="username" placeholder="Username"><br>
-  <input id="password" type="password" placeholder="Password"><br>
-  <button onclick="login()">Login</button>
-  <button onclick="register()">Register</button>
+  <h3>Admin Login</h3>
+  <input id="username" placeholder="Username"><br><br>
+  <input id="password" type="password" placeholder="Password"><br><br>
+  <button id="loginBtnPopup">Login</button>
+  <button onclick="closePopup()">Close</button>
 </div>
 
 <!-- HEADER -->
 <header class="header">
-  <a href="index.html">
-    <img src="/logo.png" class="logo" alt="Logo">
-    <h1>FRUIT SHOP</h1>
-  </a>
+  <div class="header-left">
+    <a href="index.html">
+      <img src="/logo.png" class="logo">
+    </a>
+    <input type="text" id="searchInput" placeholder="Tìm sản phẩm..." />
+   
+  </div>
+  <div class="header-right">
+    
+    <a href="cart.html" class="cart">🛒 Giỏ (<span id="cartCount">0</span>)</a>
+  </div>
 </header>
 
 <!-- NAVBAR -->
@@ -175,141 +42,447 @@ footer {
   <a href="box.html">Hộp quà tặng</a>
 </nav>
 
-<!-- Product Grids -->
-<h2 style="text-align:center; margin-top:20px;">Sản phẩm</h2>
-<div id="import" class="grid"></div>
-<div id="local" class="grid"></div>
-<div id="cut" class="grid"></div>
-<div id="food" class="grid"></div>
-<div id="gift" class="grid"></div>
-<div id="box" class="grid"></div>
+<!-- BANNER SLIDER -->
+<div class="banner-slider" id="bannerSlider">
+  <div class="slides"></div>
+</div>
+<div id="bannerDots"></div>
 
-<!-- Admin Upload -->
+<!-- SẢN PHẨM NỔI BẬT -->
+<h2 style="text-align:center; margin-top:20px;">Sản phẩm nổi bật</h2>
+<div id="highlight" class="grid"></div>
+
+<!-- ADMIN UPLOAD -->
 <div class="admin">
-  <h2>Admin Upload sản phẩm</h2>
+  <h2>Admin Upload sản phẩm nổi bật</h2>
   <input id="name" placeholder="Tên sản phẩm">
   <input id="price" placeholder="Giá">
-  <select id="category">
-    <option value="import">Trái cây nhập khẩu</option>
-    <option value="local">Trái cây nội địa</option>
-    <option value="cut">Trái cây cắt gọt</option>
-    <option value="food">Thực phẩm công nghệ</option>
-    <option value="gift">Giỏ quà tặng</option>
-    <option value="box">Hộp quà tặng</option>
-  </select>
+  <input id="unit" placeholder="Đơn vị"> 
   <input type="file" id="image">
-  <button onclick="addProduct()">Upload</button>
+  <button id="uploadProductBtn">Upload</button>
 </div>
-<!-- CONTACT INFO (CHUYỂN XUỐNG CUỐI TRANG) --> 
- <section style="background:#f5f5f5; padding:20px; text-align:center; margin-top:40px; font-size:14px; color:#333; border-top:1px solid #ccc;">
-     <p>📍 103 Lạc Long Quân</p> <p>📞 0909xxx</p> <p>Zalo: 0909xxx | Facebook: <a href="#" target="_blank">https://www.facebook.com</a></p> </section> <!-- FOOTER -->
+<div class="admin-banner" style="display:none; margin-top:20px; text-align:center;">
+  <h2>Admin Upload Banner</h2>
+  <input type="file" id="bannerFile"/>
+  <button id="uploadBannerBtn">Upload Banner</button>
+</div>
 
-<!-- Footer -->
+<!-- CONTACT -->
+<section style="background:#f5f5f5; padding:20px; text-align:center; margin-top:40px;">
+  <p>📍 103 Lạc Long Quân</p>
+  <p>📞 0909xxx</p>
+  <p>Zalo: 0909xxx | Facebook: <a href="#" target="_blank">https://www.facebook.com</a></p>
+</section>
+
+<!-- Thêm container để show kết quả autocomplete -->
+<div id="searchResults"></div>
+
+<!-- FOOTER -->
 <footer>© 2026 Fruit Shop</footer>
+<button id="loginBtn">Login</button>
+  <button id="logoutBtn" style="display:none;">Logout</button>
 
 <script>
+// ====== LOGIN ======
 let userRole = null;
+let currentIndex = 0;
+let interval;
+let isDragging = false;
+let startX = 0;
 
-// Login popup toggle
-document.getElementById("loginBtn").addEventListener("click", ()=>{
-  const popup = document.getElementById("authPopup");
-  popup.style.display = popup.style.display==="none" ? "block" : "none";
+// ===== SHOW / HIDE POPUP =====
+document.getElementById("loginBtn").addEventListener("click", () => {
+  document.getElementById("authPopup").style.display = "block";
 });
 
-// Load products
-function loadProducts(){
-  fetch("/api/fruits")
-  .then(res=>res.json())
-  .then(products=>{
-    const categories = ["import","local","cut","food","gift","box"];
-    categories.forEach(c => {
-      const div = document.getElementById(c);
-      if(div) div.innerHTML="";
+function closePopup() {
+  document.getElementById("authPopup").style.display = "none";
+}
+
+// ===== LOGIN =====
+document.getElementById("loginBtnPopup").addEventListener("click", async () => {
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  if(!username || !password){
+    alert("Điền đầy đủ username và password!");
+    return;
+  }
+
+  try {
+    const res = await fetch("/api/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username, password })
     });
-    products.forEach(p=>{
+    const data = await res.json();
+
+    if(data.success){
+      userRole = data.role;
+      localStorage.setItem("username", username);
+      localStorage.setItem("userRole", userRole);
+
+      closePopup();
+
+      // Ẩn login, hiện logout
+      document.getElementById("loginBtn").style.display = "none";
+      document.getElementById("logoutBtn").style.display = "inline-block";
+
+      // Hiển thị admin form nếu là admin
+      if(userRole === "admin"){
+        document.querySelector(".admin").style.display = "block";
+        document.querySelector(".admin-banner").style.display = "block";
+      }
+
+      // Load lại sản phẩm và banner
+      loadProducts();
+      loadBanners();
+    } else {
+      alert(data.message || "Login thất bại!");
+    }
+  } catch(err) {
+    console.error(err);
+    alert("Login lỗi, thử lại!");
+  }
+});
+
+// ===== LOGOUT =====
+document.getElementById("logoutBtn").addEventListener("click", () => {
+  userRole = null;
+  localStorage.removeItem("username");
+  localStorage.removeItem("userRole");
+
+  // Ẩn admin form
+  document.querySelector(".admin").style.display = "none";
+  document.querySelector(".admin-banner").style.display = "none";
+
+  // Hiển thị login, ẩn logout
+  document.getElementById("loginBtn").style.display = "inline-block";
+  document.getElementById("logoutBtn").style.display = "none";
+
+  // Load lại sản phẩm và banner
+  loadProducts();
+  loadBanners();
+});
+
+// ===== CHECK LOGIN KHI LOAD TRANG =====
+window.addEventListener("load", () => {
+  const storedRole = localStorage.getItem("userRole");
+  if(storedRole){
+    userRole = storedRole;
+    document.getElementById("loginBtn").style.display = "none";
+    document.getElementById("logoutBtn").style.display = "inline-block";
+    if(userRole === "admin"){
+      document.querySelector(".admin").style.display = "block";
+      document.querySelector(".admin-banner").style.display = "block";
+    }
+  }
+});
+
+// ====== PRODUCTS ======
+async function loadProducts(){
+  try{
+    const res = await fetch("/api/fruits");
+    const products = await res.json();
+    const grid = document.getElementById("highlight");
+    grid.innerHTML="";
+    products.filter(p=>p.category?.toLowerCase()==="highlight").forEach(p=>{
       const card = document.createElement("div");
       card.className="card";
       card.innerHTML=`
         <img src="${p.image}" alt="${p.name}">
         <div class="card-content">
           <h3>${p.name}</h3>
-          <p>${p.price.toLocaleString()} VND</p>
-          ${userRole==="admin"?`<button onclick="deleteProduct('${p._id}')">Xoá</button>`:`<button>Thêm vào giỏ</button>`}
-        </div>
-      `;
-      const gridDiv = document.getElementById(p.category.toLowerCase());
-      if(gridDiv) gridDiv.appendChild(card);
+         <p>${Number(p.price).toLocaleString()} VND / ${p.unit}</p>
+          ${userRole==="admin"
+            ? `<button onclick="deleteProduct('${p._id}')">❌ Xoá</button>`
+            : `<button onclick="addToCart('${p._id}','${p.name}',${p.price},'${p.image}')">🛒 Thêm vào giỏ</button>`}
+        </div>`;
+      grid.appendChild(card);
     });
-  });
+  } catch(err){ console.error(err); }
 }
 
-// Login
-function login(){
-  const username=document.getElementById("username").value;
-  const password=document.getElementById("password").value;
-  fetch("/api/login",{
-    method:"POST",
-    headers:{"Content-Type":"application/json"},
-    body:JSON.stringify({username,password})
-  })
-  .then(res=>res.json())
-  .then(data=>{
-    if(data.success){
-      userRole=data.role;
-      localStorage.setItem("username", username);
-      alert("Login thành công!");
-      document.getElementById("authPopup").style.display="none";
-      document.getElementById("loginBtn").style.display="none";
-      if(userRole==="admin") document.querySelector(".admin").style.display="block";
-      loadProducts();
-    } else alert(data.message);
-  });
+function addToCart(id,name,price,image){
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  const existing = cart.find(p=>p.id===id);
+  if(existing) existing.qty+=1; else cart.push({id,name,price,image,qty:1});
+  localStorage.setItem("cart", JSON.stringify(cart));
+  updateCartCount();
+  alert("Đã thêm vào giỏ hàng 🛒");
 }
 
-// Register
-function register(){
-  alert("Demo đăng ký: chỉ login admin mới có quyền upload.");
+function updateCartCount(){
+  let cart = JSON.parse(localStorage.getItem("cart")) || [];
+  let total = cart.reduce((t,p)=>t+p.qty,0);
+  document.getElementById("cartCount").innerText = total;
 }
 
-// Add product
-function addProduct(){
-  const name=document.getElementById("name").value;
-  const price=document.getElementById("price").value;
-  const category=document.getElementById("category").value;
-  const image=document.getElementById("image").files[0];
-  if(!name||!price||!image){ alert("Nhập đủ thông tin!"); return; }
-  const formData=new FormData();
-  formData.append("name",name);
-  formData.append("price",price);
-  formData.append("category",category);
-  formData.append("image",image);
-  formData.append("username",localStorage.getItem("username"));
-  fetch("/api/upload",{method:"POST",body:formData})
-  .then(res=>res.json())
-  .then(data=>{
-    if(data.error){ alert(data.error); return; }
-    alert("Upload thành công");
-    document.getElementById("name").value="";
-    document.getElementById("price").value="";
-    document.getElementById("image").value="";
-    loadProducts();
-  });
-}
-
-// Delete product
 function deleteProduct(id){
-  fetch("/api/fruits/"+id,{
-    method:"DELETE",
-    headers:{"Content-Type":"application/json"},
-    body: JSON.stringify({username: localStorage.getItem("username")})
-  })
-  .then(res=>res.json())
+  fetch("/api/fruits/"+id,{method:"DELETE", headers:{"Content-Type":"application/json"}, body: JSON.stringify({username: localStorage.getItem("username")})})
   .then(()=>loadProducts());
 }
 
-// Initial load
-loadProducts();
-</script>
+// ====== BANNER SLIDER ======
+async function loadBanners(){
+  try{
+    const res = await fetch("/api/banners");
+    const banners = await res.json();
+    const slidesContainer = document.querySelector(".banner-slider .slides");
+    const dotsWrapper = document.getElementById("bannerDots");
+    slidesContainer.innerHTML="";
+    dotsWrapper.innerHTML="";
+    banners.forEach((b,i)=>{
+      const img = document.createElement("img");
+      img.src=b.image;
+      slidesContainer.appendChild(img);
+      if(userRole==="admin"){
+        const btn = document.createElement("button");
+        btn.innerText="❌";
+        btn.style.position="absolute";
+        btn.style.top="10px";
+        btn.style.right="10px";
+        btn.onclick=()=> deleteBanner(b._id);
+        slidesContainer.appendChild(btn);
+      }
+      const dot = document.createElement("span");
+      if(i===0) dot.classList.add("active");
+      dot.addEventListener("click", ()=>{
+        goToSlide(i);
+        resetInterval();
+      });
+      dotsWrapper.appendChild(dot);
+    });
+    goToSlide(0);
+    resetInterval();
+    enableSwipe();
+  } catch(err){ console.error(err); }
+}
+document.getElementById("uploadProductBtn").addEventListener("click", async ()=>{
+  const name = document.getElementById("name").value;
+const price = document.getElementById("price").value;
+const unit = document.getElementById("unit").value;
+const image = document.getElementById("image").files[0]; // files[0] để lấy File object
 
+if(!name || !price || !unit || !image){ alert("Điền đủ thông tin, đơn vị và chọn ảnh!"); return; }
+
+const formData = new FormData();
+formData.append("name", name);
+formData.append("unit", unit);        
+formData.append("price", price);
+formData.append("category", "highlight");
+formData.append("username", localStorage.getItem("username"))
+formData.append("image", image);
+
+  try{
+    const res = await fetch("/api/upload", { method:"POST", body: formData });
+    const data = await res.json();
+    if(data.error){ alert("Upload lỗi: "+data.error); return; }
+    alert("Upload sản phẩm thành công!");
+    // clear form
+    document.getElementById("name").value = "";
+    document.getElementById("price").value = "";
+    document.getElementById("image").value = "";
+    loadProducts(); // load lại sản phẩm
+  } catch(err){ console.error(err); alert("Upload thất bại!"); }
+});
+
+function goToSlide(index){
+  const slider = document.getElementById("bannerSlider");
+  const slidesContainer = document.querySelector(".banner-slider .slides");
+  const dots = document.querySelectorAll("#bannerDots span");
+
+  currentIndex = index;
+
+  slidesContainer.style.transform =
+    `translateX(${-slider.offsetWidth * currentIndex}px)`;
+
+  dots.forEach(d=>d.classList.remove("active"));
+  if(dots[currentIndex]) dots[currentIndex].classList.add("active");
+}
+
+function nextSlide(){
+  goToSlide((currentIndex+1)%document.querySelectorAll(".banner-slider .slides img").length);
+}
+
+function resetInterval(){
+  clearInterval(interval);
+  interval = setInterval(nextSlide, 5000); // 5 giây
+}
+
+// SWIPE
+function enableSwipe(){
+
+const slidesContainer = document.querySelector(".banner-slider .slides");
+const slider = document.getElementById("bannerSlider");
+
+slidesContainer.addEventListener("pointerdown",(e)=>{
+  isDragging = true;
+  startX = e.clientX;
+  slidesContainer.style.transition="none";
+});
+
+slidesContainer.addEventListener("pointermove",(e)=>{
+  if(!isDragging) return;
+
+  const dx = e.clientX - startX;
+
+  slidesContainer.style.transform =
+    `translateX(${-slider.offsetWidth * currentIndex + dx}px)`;
+});
+
+slidesContainer.addEventListener("pointerup",(e)=>{
+  if(!isDragging) return;
+
+  const dx = e.clientX - startX;
+  const slides = document.querySelectorAll(".banner-slider img");
+
+  if(dx > 80){
+    currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+  }
+  else if(dx < -80){
+    currentIndex = (currentIndex + 1) % slides.length;
+  }
+
+  slidesContainer.style.transition="transform 0.5s ease";
+  goToSlide(currentIndex);
+
+  isDragging = false;
+  resetInterval();
+});
+
+slidesContainer.addEventListener("pointerleave",()=>{
+  if(isDragging){
+    slidesContainer.dispatchEvent(new PointerEvent("pointerup"));
+  }
+});
+}
+//search
+const searchInput = document.getElementById("searchInput");
+const searchResults = document.getElementById("searchResults");
+function positionSearchResults(){
+  const rect = searchInput.getBoundingClientRect();
+  searchResults.style.top = rect.bottom + window.scrollY + "px";
+  searchResults.style.left = rect.left + window.scrollX + "px";
+  searchResults.style.width = rect.width + "px";
+}
+
+window.addEventListener("resize", positionSearchResults);
+window.addEventListener("scroll", positionSearchResults);
+searchInput.addEventListener("focus", positionSearchResults);
+let selectedIndex = -1;
+let currentResults = [];
+let timer;
+
+// debounce và fetch
+searchInput.addEventListener("input", ()=>{
+  clearTimeout(timer);
+  timer = setTimeout(()=> fetchSearchResults(searchInput.value.trim()), 300);
+});
+
+// gọi API
+async function fetchSearchResults(query) {
+  if(!query){ searchResults.style.display="none"; return; }
+  try{
+    const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+    const products = await res.json();
+    currentResults = products;
+    renderResults(products);
+  } catch(err){ console.error(err); }
+}
+
+// render dropdown
+function renderResults(products){
+  searchResults.innerHTML="";
+  selectedIndex=-1;
+
+  if(products.length===0){
+    searchResults.style.display="none";
+    return;
+  }
+
+  products.forEach((p,i)=>{
+
+    const div=document.createElement("div");
+
+    div.innerHTML = `
+      <strong>${p.name}</strong>
+      <br>
+      <small>${Number(p.price).toLocaleString()} VND</small>
+    `;
+
+    div.dataset.index=i;
+
+    div.addEventListener("click",()=>{
+      window.location.href = `/search.html?q=${encodeURIComponent(p.name)}`;
+    });
+
+    searchResults.appendChild(div);
+  });
+
+  positionSearchResults();
+  searchResults.style.display="block";
+}
+
+// xử lý arrow & enter
+searchInput.addEventListener("keydown", (e)=>{
+  const items = searchResults.querySelectorAll("div");
+  if(items.length === 0) return;
+
+  if(e.key === "ArrowDown"){
+    selectedIndex = (selectedIndex + 1) % items.length;
+    updateHighlight(items);
+    e.preventDefault();
+  } else if(e.key === "ArrowUp"){
+    selectedIndex = (selectedIndex - 1 + items.length) % items.length;
+    updateHighlight(items);
+    e.preventDefault();
+  } else if(e.key === "Enter"){
+    if(selectedIndex >= 0 && currentResults[selectedIndex]){
+      window.location.href = `/search.html?q=${encodeURIComponent(currentResults[selectedIndex].name)}`;
+    } else {
+      const query = searchInput.value.trim();
+      if(query) window.location.href = `/search.html?q=${encodeURIComponent(query)}`;
+    }
+    e.preventDefault();
+  }
+});
+
+// highlight khi di chuyển bằng arrow
+function updateHighlight(items){
+  items.forEach((item, i)=>{
+    if(i === selectedIndex) item.classList.add("active");
+    else item.classList.remove("active");
+  });
+}
+
+// ẩn dropdown khi click ngoài
+document.addEventListener("click", (e)=>{
+  if(!searchResults.contains(e.target) && e.target !== searchInput){
+    searchResults.style.display="none";
+  }
+});
+// UPLOAD BANNER
+document.getElementById("uploadBannerBtn").addEventListener("click", async ()=>{
+  const file=document.getElementById("bannerFile").files[0];
+  if(!file){ alert("Chọn ảnh banner!"); return; }
+  const formData=new FormData();
+  formData.append("image",file);
+  formData.append("username",localStorage.getItem("username"));
+  try{
+    const res=await fetch("/api/banner/upload",{method:"POST", body:formData});
+    const data=await res.json();
+    if(data.error){ alert("Upload lỗi: "+data.error); return; }
+    alert("Upload banner thành công!");
+    document.getElementById("bannerFile").value="";
+    loadBanners();
+  } catch(err){ console.error(err); alert("Upload banner thất bại!"); }
+});
+
+async function deleteBanner(id){ await fetch("/api/banner/"+id,{method:"DELETE"}); loadBanners(); }
+
+// INITIAL
+updateCartCount(); loadProducts(); loadBanners();
+</script>
 </body>
-</html>
+</html> 

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Xác Nhận Đơn Hàng</title>
+<style>
+body { font-family: Arial, sans-serif; background:#f0f2f5; margin:0; padding:0; }
+.container { max-width:600px; margin:50px auto; background:#fff; padding:20px; border-radius:8px; text-align:center; }
+h1 { color:#ff6f00; }
+p { font-size:16px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🎉 Thanh toán thành công!</h1>
+  <p id="order-info"></p>
+  <a href="index.html">← Quay về trang chủ</a>
+</div>
+
+<script>
+const order = JSON.parse(localStorage.getItem("lastOrder"))
+if(order){
+  document.getElementById("order-info").innerText = 
+    `Cảm ơn ${order.name}!\nTổng đơn hàng: ${order.total.toLocaleString()} VND\nChúng tôi sẽ liên hệ bạn sớm.`
+  // Xóa tạm để không hiển thị lại lần sau
+  localStorage.removeItem("lastOrder")
+}else{
+  document.getElementById("order-info").innerText = "Không có thông tin đơn hàng."
+}
+</script>
+</body>
+</html>
