@@ -124,10 +124,12 @@ async function loadSearchResults(){
       const card = document.createElement("div");
       card.className = "card";
       card.innerHTML = `
-        <img src="${p.image}" alt="${p.name}">
-        <div class="card-content">
-          <h3>${p.name}</h3>
-          <p>${Number(p.price).toLocaleString()} VND</p>
+  <a href="/product.html?id=${p._id}">
+    <img src="${p.image}" alt="${p.name}">
+  </a>
+  <div class="card-content">
+    <h3 onclick="window.location.href='/product.html?id=${p._id}'" style="cursor:pointer">${p.name}</h3>
+    <p>${Number(p.price).toLocaleString()} VND</p>
           ${userRole==="admin"
             ? `<button onclick="deleteProduct('${p._id}')">❌ Xoá</button>`
             : `<button onclick="addToCart('${p._id}','${p.name}',${p.price},'${p.image}')">🛒 Thêm vào giỏ</button>`}

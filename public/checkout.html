@@ -2,253 +2,166 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Thanh Toán</title>
-<link rel="stylesheet" href="style.css">
+<title>Thanh Toán - Fruit Shop</title>
 <style>
-    body { 
-      font-family: Arial, sans-serif; 
-      background:#e6f2d9; /* nền xanh nhạt */ 
-      margin:0; 
-      padding:0; 
-    }
-    header { 
-      background:#78bc16; 
-      color:white; 
-      padding:15px 20px; 
-      text-align:center;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-    }
-    header h1 { 
-      margin:0; 
-      font-size:24px; 
-    }
-    .container { 
-      max-width:900px; 
-      margin:20px auto; 
-      background:#fff; 
-      padding:20px; 
-      border-radius:8px; 
-      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-    }
-    .cart-summary { 
-      margin-bottom:20px; 
-      border-bottom:1px solid #d4e8a2; 
-      padding-bottom:15px;
-    }
-    .cart-item { 
-      display:flex; 
-      align-items:center; 
-      margin-bottom:10px;
-      background:#f7fff0; 
-      padding:8px; 
-      border-radius:8px;
-      transition:0.3s;
-    }
-    .cart-item:hover {
-      background:#e1f0c4;
-    }
-    .cart-item img { 
-      width:60px; 
-      height:60px; 
-      object-fit:cover; 
-      margin-right:10px; 
-      border-radius:8px; 
-      border:1px solid #d4e8a2;
-    }
-    .cart-info { 
-      flex:1; 
-    }
-    .cart-info p { 
-      margin:3px 0; 
-      font-size:14px; 
-      color:#333;
-    }
-    .total-price { 
-      text-align:right; 
-      font-weight:bold; 
-      margin-top:10px; 
-      font-size:16px; 
-      color:#333;
-    }
-    form { 
-      display:flex; 
-      flex-direction:column; 
-      gap:10px; 
-    }
-    form label { 
-      font-weight:bold; 
-      color:#333;
-    }
-    form input, form select { 
-      padding:10px; 
-      border-radius:8px; 
-      border:1px solid #ccc; 
-      width:100%; 
-      font-size:14px;
-      transition:0.3s;
-    }
-    form input:focus, form select:focus {
-      outline:none;
-      border-color:#78bc16;
-      box-shadow: 0 0 5px rgba(120,188,22,0.5);
-    }
-    form button { 
-      background:#78bc16; 
-      color:white; 
-      padding:12px; 
-      border:none; 
-      border-radius:25px; 
-      font-size:16px; 
-      cursor:pointer; 
-      margin-top:10px; 
-      transition:0.3s;
-      box-shadow: 0 3px 6px rgba(0,0,0,0.2);
-    }
-    form button:hover { 
-      background:#4e8c0b; 
-      box-shadow: 0 5px 10px rgba(0,0,0,0.3);
-    }
-    .back-btn { 
-      display:inline-block; 
-      text-decoration:none; 
-      color:white; 
-      background:#4caf50; 
-      padding:8px 15px; 
-      border-radius:25px; 
-      margin-bottom:15px; 
-      transition:0.3s;
-    }
-    .back-btn:hover {
-      background:#388e3c;
-    }
-    </style>
+/* BODY */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f0f2f5;
+  margin:0; padding:0;
+}
+/* HEADER / FOOTER */
+header, footer {
+  background:#145b1e;
+  color:white;
+  text-align:center;
+  padding:15px 20px;
+}
+header h1 { margin:0; font-size:24px; }
+footer { margin-top:40px; }
+
+/* CONTAINER */
+.container {
+  max-width:900px;
+  margin:20px auto;
+  background:#fff;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 3px 10px rgba(0,0,0,0.1);
+}
+
+/* CART */
+.cart-summary { margin-bottom:20px; border-bottom:1px solid #e0f0d9; padding-bottom:15px; }
+.cart-item { display:flex; align-items:center; margin-bottom:10px; background:#f7fff0; padding:10px; border-radius:8px; transition:0.3s; }
+.cart-item:hover { background:#e1f0c4; }
+.cart-item img { width:70px; height:70px; object-fit:cover; margin-right:12px; border-radius:8px; border:1px solid #d4e8a2; }
+.cart-info { flex:1; }
+.cart-info p { margin:3px 0; font-size:14px; color:#333; }
+.total-price { text-align:right; font-weight:bold; margin-top:10px; font-size:16px; color:#145b1e; }
+
+/* FORM */
+form { display:flex; flex-direction:column; gap:12px; }
+form label { font-weight:bold; color:#333; }
+form input { padding:10px; border-radius:8px; border:1px solid #ccc; font-size:14px; width:100%; }
+form input:focus { outline:none; border-color:#145b1e; box-shadow:0 0 5px rgba(20,91,30,0.5); }
+form button {
+  background:#145b1e;
+  color:white;
+  padding:12px;
+  border:none;
+  border-radius:25px;
+  font-size:16px;
+  cursor:pointer;
+  margin-top:10px;
+  transition:0.3s;
+}
+form button:hover { background:#0d4014; }
+
+.back-btn { display:inline-block; text-decoration:none; color:white; background:#78bc16; padding:8px 15px; border-radius:25px; margin-bottom:15px; transition:0.3s; }
+.back-btn:hover { background:#4e8c0b; }
+</style>
 </head>
 <body>
 
 <header>
-  <h1>THANH TOÁN</h1>
+  <h1>Thanh Toán - Fruit Shop</h1>
 </header>
 
 <div class="container">
   <a href="cart.html" class="back-btn">← Quay về giỏ hàng</a>
 
-  <div class="cart-summary" id="cart-summary">
-    <!-- Danh sách sản phẩm giỏ hàng sẽ hiện ở đây -->
-  </div>
+  <div class="cart-summary" id="cart-summary"></div>
 
   <form id="checkout-form">
     <label for="name">Họ và tên</label>
     <input type="text" id="name" required>
-
     <label for="phone">Số điện thoại</label>
     <input type="tel" id="phone" required>
-
     <label for="email">Email</label>
     <input type="email" id="email" required>
-
     <label for="address">Địa chỉ nhận hàng</label>
     <input type="text" id="address" required>
-<!-- 
-    <label for="payment">Phương thức thanh toán</label>
-    <select id="payment" required>
-      <option value="">-- Chọn phương thức --</option>
-      <option value="cod">Thanh toán khi nhận hàng (COD)</option>
-      <option value="bank">Chuyển khoản ngân hàng</option>
-      <option value="momo">Ví Momo</option> -->
-    </select>
-
-    <button type="submit">Xác Nhận </button>
+    <button type="submit">Xác Nhận Đơn Hàng</button>
   </form>
 </div>
 
+<footer>© 2026 Fruit Shop | 103 Lạc Long Quân | 0909xxx</footer>
+
 <script>
-  // Lấy giỏ hàng từ localStorage
-  function getCart() {
-    return JSON.parse(localStorage.getItem("cart")) || []
-  }
-  
-  // Hiển thị giỏ hàng
-  function renderCartSummary() {
-    const cart = getCart()
-    const summary = document.getElementById("cart-summary")
-    summary.innerHTML = ""
-    let total = 0
-  
-    if(cart.length === 0){
-      summary.innerHTML = "<p>Giỏ hàng trống!</p>"
-      return
-    }
-  
-    cart.forEach(p=>{
-      const itemTotal = p.price * p.qty
-      total += itemTotal
-      const div = document.createElement("div")
-      div.className = "cart-item"
-      div.innerHTML = `
-        <img src="${p.image}" alt="${p.name}">
-        <div class="cart-info">
-          <p>${p.name} x ${p.qty} = ${itemTotal.toLocaleString()} VND</p>
-        </div>
-      `
-      summary.appendChild(div)
-    })
-  
-    const totalDiv = document.createElement("div")
-    totalDiv.className = "total-price"
-    totalDiv.innerText = "Tổng tiền: " + total.toLocaleString() + " VND"
-    summary.appendChild(totalDiv)
-  }
-  
-  // Xử lý form
-  document.getElementById("checkout-form").addEventListener("submit", async function(e){
-    e.preventDefault()
-    
-    const name = document.getElementById("name").value.trim()
-    const phone = document.getElementById("phone").value.trim()
-    const email = document.getElementById("email").value.trim()
-    const address = document.getElementById("address").value.trim()
-    const cart = getCart()
-  
-    if(cart.length === 0){
-      alert("Giỏ hàng trống!")
-      return
-    }
-  
-    if(!name || !phone || !email || !address){
-      alert("Vui lòng điền đầy đủ thông tin")
-      return
-    }
-  
-    // Tính tổng tiền
-    let total = 0
-    cart.forEach(p=> total += p.price*p.qty)
-  
-    // Gửi đơn hàng lên server
-    try {
-      const res = await fetch("http://localhost:3000/api/order", {
-        method: "POST",
-        headers: {"Content-Type":"application/json"},
-        body: JSON.stringify({ name, phone, email, address, total, cart })
-      })
-      const data = await res.json()
-      if(data.success){
-        // Lưu tạm thông tin để confirm.html đọc
-        localStorage.setItem("lastOrder", JSON.stringify({ name, phone, email, address, total }))
-        // Xóa giỏ hàng
-        localStorage.removeItem("cart")
-        // Chuyển sang trang confirm
-        window.location.href = "confirm.html"
-      } else {
-        alert("Gửi đơn hàng thất bại: " + (data.message || "Lỗi server"))
-      }
-    } catch(err){
-      console.error(err)
-      alert("Không thể gửi đơn hàng, vui lòng thử lại sau.")
-    }
+// URL server
+const API_URL = "http://localhost:3000"; // thay bằng server của bạn
+
+// Lấy giỏ hàng
+function getCart() { return JSON.parse(localStorage.getItem("cart")) || []; }
+
+// Hiển thị giỏ hàng
+function renderCartSummary() {
+  const cart = getCart();
+  const summary = document.getElementById("cart-summary");
+  summary.innerHTML="";
+  if(cart.length===0){ summary.innerHTML="<p>Giỏ hàng trống!</p>"; return; }
+
+  let total=0;
+  cart.forEach(p=>{
+    const itemTotal=p.price*p.qty;
+    total+=itemTotal;
+    const div=document.createElement("div");
+    div.className="cart-item";
+    div.innerHTML=`<img src="${p.image}" alt="${p.name}">
+      <div class="cart-info">
+        <p>${p.name} x ${p.qty}</p>
+        <p>Thành tiền: ${itemTotal.toLocaleString()} VND</p>
+      </div>`;
+    summary.appendChild(div);
+  });
+  const totalDiv=document.createElement("div");
+  totalDiv.className="total-price";
+  totalDiv.innerText="Tổng tiền: "+total.toLocaleString()+" VND";
+  summary.appendChild(totalDiv);
+}
+
+// Submit form
+const form = document.getElementById("checkout-form");
+const submitBtn = form.querySelector("button");
+
+form.addEventListener("submit", function(e){
+  e.preventDefault();
+
+  const name = document.getElementById("name").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const address = document.getElementById("address").value.trim();
+  const cart = getCart();
+
+  if(cart.length===0){ alert("Giỏ hàng trống!"); return; }
+  if(!name||!phone||!email||!address){ alert("Vui lòng điền đầy đủ thông tin"); return; }
+
+  let total=0; cart.forEach(p=>total+=p.price*p.qty);
+
+  // 1️⃣ khóa nút và đổi text
+  submitBtn.disabled = true;
+  submitBtn.innerText = "Đang xử lý...";
+
+  // 2️⃣ lưu localStorage để confirm.html đọc
+  localStorage.setItem("lastOrder", JSON.stringify({name,phone,email,address,total,cart}));
+  localStorage.removeItem("cart");
+
+  // 3️⃣ redirect ngay
+  window.location.href="confirm.html";
+
+  // 4️⃣ gửi order async background
+  fetch(`${API_URL}/api/order`, {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({name,phone,email,address,total,cart})
   })
-  
-  renderCartSummary()
-  </script>
+  .then(res=>res.json())
+  .then(data=>console.log("Order gửi server:", data))
+  .catch(err=>console.error("Gửi order lỗi:", err));
+});
+
+renderCartSummary();
+</script>
 
 </body>
 </html>

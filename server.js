@@ -57,15 +57,14 @@ const orderSchema = new mongoose.Schema({
 const Order = mongoose.model("Order", orderSchema)
 
 // ===== Tạo folder uploads nếu chưa có =====
-if(!fs.existsSync("uploads")) fs.mkdirSync("uploads")
+
 
 // ===== Multer config =====
 const storage = multer.diskStorage({
-  destination:(req,file,cb)=> cb(null,"uploads/"),
-  filename:(req,file,cb)=> cb(null,Date.now()+path.extname(file.originalname))
-})
-const upload = multer({storage})
-
+  destination: (req, file, cb) => cb(null, uploadPath),
+  filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname))
+});
+const upload = multer({ storage });
 // ===== GET tất cả sản phẩm =====
 app.get("/api/fruits", async (req,res)=>{
   try{
@@ -85,7 +84,7 @@ app.delete("/api/fruits/:id", async (req,res)=>{
 
     const fruit = await Fruit.findById(req.params.id)
     if(!fruit) return res.status(404).json({error:"Not found"})
-    const imagePath = path.join(__dirname, fruit.image)
+      const imagePath = path.join(__dirname, "uploads", path.basename(fruit.image));
     if(fs.existsSync(imagePath)) fs.unlinkSync(imagePath)
     await Fruit.findByIdAndDelete(req.params.id)
     res.json({message:"Deleted"})
@@ -200,7 +199,8 @@ app.post("/api/order", async (req, res) => {
         <thead>
           <tr>
             <th>Sản phẩm</th>
-            <th>Giá 1 sp (VND)</th>
+            <th>Hình ảnh</th>
+            <th>Đơn vị</th>
             <th>Số lượng</th>
             <th>Thành tiền (VND)</th>
           </tr>
@@ -209,7 +209,8 @@ app.post("/api/order", async (req, res) => {
           ${cart.map(p => `
             <tr>
               <td>${p.name}</td>
-              <td>${p.price.toLocaleString()}</td>
+              <td><img src="https://coutsaigon.onrender.com${p.image}" width="60"></td>
+              <td>${p.unit || ''}</td>
               <td>${p.qty}</td>
               <td>${(p.price * p.qty).toLocaleString()}</td>
             </tr>
@@ -359,18 +360,45 @@ app.post("/api/fruits/:id/thumb", upload.single("thumb"), async (req,res)=>{
     res.status(500).json({success:false,message:err.message}); 
   }
 }); 
-//xoá thumbnail
-app.delete("/api/fruits/:id/thumb/:index", async (req,res)=>{
-  const {id,index} = req.params;
-  try{
-    const product = await Fruit.findById(id);
-    if(!product) return res.json({success:false,message:"Không tìm thấy sản phẩm"});
-    product.thumbs.splice(index,1); // xoá ảnh
-    await product.save();
-    res.json({success:true,product});
-  }catch(err){ res.json({success:false,message:"Lỗi server"}); }
-});
+
 
 // ===== Run server =====
 const PORT = 3000
 app.listen(PORT,()=>console.log("Server running on http://localhost:"+PORT))
+// ===== DELETE THUMB =====
+app.delete("/api/fruits/:id/thumb", async (req,res)=>{
+
+  try{
+  
+  const {username,image} = req.body
+  
+  if(username!=="admin"){
+  return res.status(403).json({message:"Chỉ admin mới được xoá"})
+  }
+  
+  const fruit = await Fruit.findById(req.params.id)
+  
+  if(!fruit) return res.status(404).json({message:"Không tìm thấy sản phẩm"})
+  
+  // xoá khỏi database
+  fruit.thumbs = fruit.thumbs.filter(t=>t!==image)
+  
+  await fruit.save()
+  
+  // xoá file vật lý
+  const filePath = path.join(__dirname, "uploads", path.basename(image));
+  
+  if(fs.existsSync(filePath)){
+  fs.unlinkSync(filePath)
+  }
+  
+  res.json({success:true})
+  
+  }catch(err){
+  
+  console.error(err)
+  res.status(500).json({message:"Lỗi xoá ảnh"})
+  
+  }
+  
+  })

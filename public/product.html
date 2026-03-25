@@ -2,357 +2,869 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Chi tiết sản phẩm - Fruit Shop</title>
+<title>Chi tiết sản phẩm</title>
 <link rel="stylesheet" href="style.css">
+
 <style>
-/* === PRODUCT DETAIL === */
-.product-detail {
-  display: flex;
-  flex-wrap: wrap;
-  background: white;
-  margin: 20px;
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
-  gap: 20px;
+
+/* PRODUCT */
+.product-detail{
+display:flex;
+flex-wrap:wrap;
+gap:30px;
+background:white;
+margin:20px;
+padding:20px;
+border-radius:10px;
+box-shadow:0 4px 15px rgba(0,0,0,0.1);
 }
 
-.product-images {
-  flex: 1 1 300px;
-  max-width: 400px;
-  width: 100%;
+.product-images{
+flex:1;
+min-width:300px;
 }
 
-.product-images img#mainImage {
-  width: 100%;
-  max-height: 350px;
-  height: auto;
-  object-fit: contain;
-  border-radius: 12px;
-  display: block;
-  margin-bottom: 10px;
+#mainImage{
+width:100%;
+max-height:350px;
+object-fit:contain;
+border-radius:10px;
 }
 
 .thumbs {
   display: flex;
   gap: 10px;
-  overflow-x: auto;
-  max-width: 100%;
+  overflow-x: auto;   /* cuộn ngang */
   padding-bottom: 5px;
+  max-width: 100%;
 }
 
+.thumbs::-webkit-scrollbar {
+  height: 6px;
+}
+
+.thumbs::-webkit-scrollbar-thumb {
+  background: #145b1e;
+  border-radius: 3px;
+}
+
+/* div bao quanh ảnh thumbnail */
+.thumbs div {
+  flex: 0 0 auto;     /* quan trọng: không co dãn */
+  position: relative;
+}
+
+/* ảnh thumbnail */
+
+
+.thumbs img.selected {
+  border-color: #145b1e;
+}
+
+/* nút xoá admin */
+.thumbs div span {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: white;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 2px 6px;
+}
+/* Ảnh thumbnail */
 .thumbs img {
   width: 60px;
   height: 60px;
-  border-radius: 6px;
+
   object-fit: cover;
+  border-radius: 6px;
   cursor: pointer;
   border: 2px solid transparent;
-  flex: 0 0 auto;
+  flex: 0 0 auto;   /* quan trọng: không co dãn */
 }
 
-.thumbs img.selected { border-color: #145b1e; }
-
-.product-info {
-  flex: 1 1 300px;
+.thumbs img.selected {
+  border-color: #145b1e;
 }
 
-.product-info h1 { margin-top:0; }
-.product-info p { margin:8px 0; line-height:1.5; color:#333; }
-.product-info .price { font-size:20px; font-weight:bold; color:#145b1e; margin:12px 0; }
-.product-info button { padding:10px 20px; background:#145b1e; color:white; border:none; border-radius:6px; cursor:pointer; font-size:16px; }
-.product-info button:hover { background:#145b1e; }
-
-/* ADMIN EDIT */
-#adminEdit {
-  background:#f9f9f9;
-  padding:15px;
-  margin:20px;
-  border-radius:12px;
-  box-shadow:0 4px 10px rgba(0,0,0,0.1);
-  display:none;
+.product-info{
+flex:1;
+min-width:300px;
 }
 
-#adminThumbs {
-  display:flex;
-  gap:10px;
-  overflow-x:auto;
-  padding:5px 0;
-  border-radius:6px;
+.price{
+font-size:22px;
+font-weight:bold;
+color:#145b1e;
+margin:10px 0;
 }
 
-#adminThumbs img {
-  width:60px;
-  height:60px;
-  object-fit:cover;
-  cursor:pointer;
-  border:2px solid transparent;
-  flex:0 0 auto;
-  border-radius:6px;
+.cart-qty{
+display:flex;
+align-items:center;
+gap:10px;
+margin:10px 0;
 }
 
-#adminThumbs img.selected { border-color:#145b1e; }
-
-/* ALERT ADD TO CART */
-#cartAlert {
-  position:fixed;
-  top:20px;
-  right:20px;
-  background:#145b1e;
-  color:white;
-  padding:10px 20px;
-  border-radius:8px;
-  display:none;
-  z-index:1000;
+.cart-qty button{
+width:35px;
+height:35px;
+font-size:18px;
 }
 
-/* POPUP LOGIN */
-#authPopup{
-  display:none;
-  position:fixed;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-  background:white;
-  padding:25px;
-  border-radius:12px;
-  box-shadow:0 10px 30px rgba(0,0,0,0.3);
+.cart-qty input{
+width:60px;
+text-align:center;
+}
+
+#addToCartBtn{
+background:#145b1e;
+color:white;
+padding:12px 20px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+font-size:16px;
+}
+
+#addToCartBtn:hover{
+background:#0d4014;
+}
+
+/* ADMIN */
+#adminEdit{
+margin:20px;
+padding:20px;
+background:#f5f5f5;
+border-radius:10px;
+display:none;
+}
+
+#adminThumbs{
+display:flex;
+gap:10px;
+margin-top:10px;
+overflow-x:auto;
+}
+
+#adminThumbs img{
+width:60px;
+height:60px;
+object-fit:cover;
+border-radius:6px;
+cursor:pointer;
+}
+
+#cartAlert{
+position:fixed;
+top:20px;
+right:20px;
+background:#145b1e;
+color:white;
+padding:10px 20px;
+border-radius:6px;
+display:none;
+}
+.search-box{
+  position:relative;
   width:300px;
-  z-index:1000;
 }
-#authPopup h3{ text-align:center; margin-bottom:15px; color:#2e7d32; }
-#authPopup input{ width:100%; padding:8px; margin:8px 0; border-radius:8px; border:1px solid #ccc; }
-#authPopup button{ width:48%; padding:8px; border:none; border-radius:8px; font-weight:bold; cursor:pointer; }
-#authPopup button:first-child{ background:#2e7d32; color:white; margin-right:4%; }
-#authPopup button:last-child{ background:#999; color:white; }
 
-/* RESPONSIVE */
-@media (max-width:768px){
-  .product-detail { flex-direction: column; }
-  .product-images { max-width: 100%; margin-right: 0; }
-  .product-images img#mainImage { max-height: 300px; }
+#searchInput{
+  width:300px;
+}
+
+.header-left{
+  position:relative;
+}
+
+.header-left{
+  position:relative;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+/* ô tìm kiếm */
+#searchInput{
+  width:300px;
+  padding:8px 12px;
+  border-radius:6px;
+  border:1px solid #ccc;
+}
+
+/* popup search */
+#searchResults{
+  position:absolute;
+  top:100%;
+  left:0;
+  width:300px;
+
+  background:white;
+  border:1px solid #ddd;
+  border-radius:6px;
+
+  box-shadow:0 4px 10px rgba(0,0,0,0.15);
+
+  max-height:250px;
+  overflow-y:auto;
+
+  display:none;
+  z-index:9999;
+}
+
+/* item */
+#searchResults div{
+  padding:10px;
+  cursor:pointer;
+  border-bottom:1px solid #eee;
+}
+
+#searchResults div:hover{
+  background:#f5f5f5;
 }
 </style>
 </head>
+
 <body>
 
-<!-- POPUP LOGIN -->
-<div id="authPopup">
-  <h3>Admin Login</h3>
-  <input id="username" placeholder="Username">
-  <input id="password" type="password" placeholder="Password">
-  <button id="loginBtnPopup">Login</button>
-  <button onclick="closePopup()">Close</button>
+<!-- LOGIN POPUP -->
+<div id="authPopup" style="display:none">
+<h3>Admin Login</h3>
+<input id="username" placeholder="Username">
+<input id="password" type="password" placeholder="Password">
+<button id="loginBtnPopup">Login</button>
+<button onclick="closePopup()">Close</button>
 </div>
 
 <!-- HEADER -->
 <header class="header">
-  <div class="header-left">
-    <a href="index.html">
-      <img src="/logo.png" class="logo" alt="Fruit Shop">
-    </a>
-    <input type="text" id="searchInput" placeholder="Tìm sản phẩm...">
-    <div id="searchResults"></div>
-  </div>
-  <div class="header-right">
-    
-    <a href="cart.html" class="cart">🛒 Giỏ (<span id="cartCount">0</span>)</a>
-  </div>
-  
+
+<div class="header-left">
+
+<a href="index.html">
+<img src="/logo.png" class="logo">
+</a>
+<input type="text" id="searchInput" placeholder="Tìm sản phẩm...">
+<div id="searchResults"></div>
+
+</div>
+
+<div class="header-right">
+
+<a href="cart.html" class="cart">
+🛒 Giỏ (<span id="cartCount">0</span>)
+</a>
+
+</div>
+
 </header>
+<!-- NAVBAR -->
+<nav>
+  <a href="import.html">Trái cây nhập khẩu</a>
+  <a href="local.html">Trái cây nội địa</a>
+  <a href="cut.html">Trái cây cắt gọt</a>
+  <a href="food.html">Thực phẩm công nghệ</a>
+  <a href="gift.html">Giỏ quà tặng</a>
+  <a href="box.html">Hộp quà tặng</a>
+</nav>
 
-<!-- BREADCRUMB -->
-<div class="breadcrumb">
-  <a href="index.html">Trang chủ</a> &gt; <span id="breadcrumbProduct">...</span>
-</div>
 
-<!-- PRODUCT DETAIL -->
+<!-- PRODUCT -->
+
 <div class="product-detail">
-  <div class="product-images">
-    <img id="mainImage" src="" alt="Ảnh sản phẩm">
-    <div class="thumbs" id="thumbContainer"></div>
-  </div>
-  <div class="product-info">
-    <h1 id="productName">...</h1>
-    <p class="price" id="productPrice">...</p>
-    <p id="productUnit">...</p>
-    <p id="productDesc">...</p>
-  
-    <!-- SỐ LƯỢNG VÀ TỔNG TIỀN -->
-    <div class="cart-qty">
-      <button id="qtyMinus">-</button>
-      <input type="number" id="qtyInput" value="1" min="1">
-      <button id="qtyPlus">+</button>
-    </div>
-    <p>Tổng: <span id="totalPrice">...</span></p>
-  
-    <button id="addToCartBtn">🛒 Thêm vào giỏ</button>
-  </div>
 
-<!-- ADMIN EDIT -->
-<div id="adminEdit">
-  <h3>Chỉnh sửa sản phẩm (Admin)</h3>
-  <textarea id="editDesc" placeholder="Mô tả sản phẩm..."></textarea>
-  <button id="saveBtn">💾 Lưu mô tả</button>
-  <hr>
-  <h4>Upload ảnh phụ</h4>
-  <input type="file" id="uploadThumb">
-  <button id="saveThumbBtn">💾 Thêm ảnh</button>
-  <div id="adminThumbs"></div>
+<div class="product-images">
+
+<img id="mainImage">
+
+<div class="thumbs" id="thumbContainer"></div>
+
 </div>
 
-<!-- ALERT -->
-<div id="cartAlert">Đã thêm vào giỏ hàng!</div>
+<div class="product-info">
 
+<h1 id="productName"></h1>
+
+<p class="price" id="productPrice"></p>
+
+<p id="productUnit"></p>
+
+<div id="productDesc" style="white-space: pre-wrap;"></div>
+
+<div class="cart-qty">
+<button id="qtyMinus">-</button>
+<input id="qtyInput" value="1" type="number" min="1">
+<button id="qtyPlus">+</button>
+</div>
+
+<p>Tổng: <span id="totalPrice"></span></p>
+
+<button id="addToCartBtn">🛒 Thêm vào giỏ</button>
+
+</div>
+
+</div>
+<!-- CONTACT -->
+<section style="background:#f5f5f5; padding:20px; text-align:center; margin-top:40px;">
+  <p>📍 103 Lạc Long Quân</p>
+  <p>📞 0909xxx</p>
+  <p>Zalo: 0909xxx | Facebook: <a href="#" target="_blank">https://www.facebook.com</a></p>
+</section>
 <!-- FOOTER -->
+<footer>© 2026 Fruit Shop</footer>
+<button id="loginBtn">Login</button>
+  <button id="logoutBtn" style="display:none;">Logout</button>
 
+<!-- ADMIN -->
+
+<div id="adminEdit">
+
+<h3>Chỉnh sửa mô tả</h3>
+
+<!-- Editor rich text -->
+<div id="editor" contenteditable="true" 
+     style="height:200px; border:1px solid #ccc; border-radius:6px; padding:5px; overflow:auto;">
+</div>
+<br>
+<button id="saveBtn">💾 Lưu</button>
+
+<hr>
+
+<h3>Upload ảnh phụ</h3>
+
+<input type="file" id="uploadThumb">
+
+<button id="saveThumbBtn">Upload</button>
+
+<div id="adminThumbs"></div>
+
+</div>
+
+<div id="cartAlert">Đã thêm vào giỏ</div>
 
 <script>
-const productId = new URLSearchParams(window.location.search).get("id");
-let userRole = localStorage.getItem("userRole") || null;
-let productPrice = 0;
+  //thêm
+  // ===== LOGIN POPUP =====
+const loginBtnPopup = document.getElementById("loginBtnPopup");
+const loginBtn = document.getElementById("loginBtn");
+const logoutBtn = document.getElementById("logoutBtn");
+const authPopup = document.getElementById("authPopup");
 
-// CART
-function getCart(){ return JSON.parse(localStorage.getItem("cart")||"[]"); }
-function saveCart(cart){ localStorage.setItem("cart", JSON.stringify(cart)); updateCartCount(); }
-function updateCartCount(){ document.getElementById("cartCount").innerText = getCart().reduce((sum,p)=>sum+p.qty,0); }
-updateCartCount();
+loginBtn.onclick = () => {
+    authPopup.style.display = "block";
+};
 
-// THUMBNAIL
-function setSelectedThumb(selected){
-  document.querySelectorAll("#thumbContainer img, #adminThumbs img").forEach(i=>i.classList.remove("selected"));
-  selected.classList.add("selected");
-  selected.scrollIntoView({behavior:"smooth", inline:"center"});
+function closePopup() {
+    authPopup.style.display = "none";
 }
-function createThumb(url, container){
-  const img = document.createElement("img");
-  img.src=url;
-  img.addEventListener("click",()=>{ document.getElementById("mainImage").src=url; setSelectedThumb(img); });
-  container.appendChild(img);
-  return img;
-}
-function loadThumbs(product){
-  const container = document.getElementById("thumbContainer");
-  container.innerHTML="";
-  if(product.thumbs && product.thumbs.length) product.thumbs.forEach(url=>createThumb(url,container));
-}
-function loadAdminThumbs(product){
-  const container = document.getElementById("adminThumbs");
-  container.innerHTML="";
-  if(product.thumbs && product.thumbs.length){
-    product.thumbs.forEach((url,index)=>{
-      const wrapper=document.createElement("div");
-      const img=document.createElement("img"); img.src=url;
-      img.addEventListener("click",()=>{ document.getElementById("mainImage").src=url; setSelectedThumb(img); });
-      const delBtn=document.createElement("button"); delBtn.innerText="×"; delBtn.addEventListener("click", async e=>{
-        e.stopPropagation();
-        if(!confirm("Xác nhận xoá ảnh này?")) return;
-        const res = await fetch(`/api/fruits/${productId}/thumb/${index}`,{method:"DELETE"});
+
+// Click Login trong popup
+loginBtnPopup.onclick = async () => {
+    const username = document.getElementById("username").value.trim();
+    const password = document.getElementById("password").value.trim();
+
+    if(!username || !password){
+        alert("Điền username & password");
+        return;
+    }
+
+    try {
+        const res = await fetch("/api/login", {
+            method: "POST",
+            headers: {"Content-Type":"application/json"},
+            body: JSON.stringify({ username, password })
+        });
+
         const data = await res.json();
-        if(data.success){ loadThumbs(data.product); loadAdminThumbs(data.product); if(data.product.thumbs.length>0) document.getElementById("mainImage").src=data.product.thumbs[0]; }
-      });
-      wrapper.appendChild(img); wrapper.appendChild(delBtn);
-      container.appendChild(wrapper);
-    });
-  }
+
+        if(data.success){
+            localStorage.setItem("username", username);
+            localStorage.setItem("userRole", data.role);
+
+            alert("Login thành công!");
+            authPopup.style.display = "none";
+
+            loginBtn.style.display = "none";
+            logoutBtn.style.display = "inline-block";
+
+            // Nếu trang product có adminEdit, bật lên
+            const adminEdit = document.getElementById("adminEdit");
+            if(adminEdit) adminEdit.style.display = "block";
+
+        } else {
+            alert(data.message || "Login thất bại");
+        }
+
+    } catch(err) {
+        console.error(err);
+        alert("Lỗi kết nối server");
+    }
+};
+
+// Logout
+logoutBtn.onclick = () => {
+    localStorage.removeItem("username");
+    localStorage.removeItem("userRole");
+
+    alert("Đã logout");
+    logoutBtn.style.display = "none";
+    loginBtn.style.display = "inline-block";
+
+    const adminEdit = document.getElementById("adminEdit");
+    if(adminEdit) adminEdit.style.display = "none";
+};
+
+// Kiểm tra trạng thái login khi load trang
+window.addEventListener("load", ()=>{
+    const role = localStorage.getItem("userRole");
+    if(role === "admin"){
+        loginBtn.style.display = "none";
+        logoutBtn.style.display = "inline-block";
+        const adminEdit = document.getElementById("adminEdit");
+        if(adminEdit) adminEdit.style.display = "block";
+    }
+});
+  //thêm
+
+const productId = new URLSearchParams(window.location.search).get("id")
+
+let productPrice = 0
+let userRole = localStorage.getItem("userRole")
+
+/* CART */
+
+function getCart(){
+return JSON.parse(localStorage.getItem("cart")||"[]")
 }
 
-// QUANTITY + / -
-const qtyInput = document.getElementById("qtyInput");
-document.getElementById("qtyPlus").addEventListener("click",()=>{ qtyInput.value=Number(qtyInput.value)+1; updateTotalPrice(); });
-document.getElementById("qtyMinus").addEventListener("click",()=>{ if(Number(qtyInput.value)>1){ qtyInput.value=Number(qtyInput.value)-1; updateTotalPrice(); }});
-qtyInput.addEventListener("input",()=>{ if(qtyInput.value<1) qtyInput.value=1; updateTotalPrice(); });
+function saveCart(cart){
+localStorage.setItem("cart",JSON.stringify(cart))
+updateCartCount()
+}
 
-// TỔNG TIỀN
-function updateTotalPrice(){ document.getElementById("totalPrice").innerText=(productPrice*Number(qtyInput.value)).toLocaleString()+" VND"; }
+function updateCartCount(){
 
-// LOAD PRODUCT
+let cart = getCart()
+
+let total = cart.reduce((sum,p)=>sum+p.qty,0)
+
+document.getElementById("cartCount").innerText = total
+
+}
+
+updateCartCount()
+
+/* LOAD PRODUCT */
+
 async function loadProduct(){
-  const res = await fetch(`/api/fruits/product/${productId}`);
-  const p = await res.json();
-  if(p.error){ alert("Không tìm thấy sản phẩm"); return; }
 
-  productPrice = Number(p.price);
-  document.getElementById("mainImage").src = p.image;
-  document.getElementById("productName").innerText = p.name;
-  document.getElementById("productPrice").innerText = productPrice.toLocaleString()+" VND";
-  document.getElementById("productUnit").innerText = "Đơn vị: "+p.unit;
-  document.getElementById("productDesc").innerText = p.description||"Chưa có mô tả sản phẩm";
-  document.getElementById("breadcrumbProduct").innerText = p.name;
+const res = await fetch("/api/fruits/product/"+productId)
 
-  loadThumbs(p);
-  if(userRole==="admin"){
-    document.getElementById("adminEdit").style.display="block";
-    document.getElementById("editDesc").value=p.description||"";
-    loadAdminThumbs(p);
+const p = await res.json()
+
+productPrice = Number(p.price)
+
+document.getElementById("mainImage").src = p.image
+
+document.getElementById("productName").innerText = p.name
+
+document.getElementById("productPrice").innerText = productPrice.toLocaleString()+" VND"
+
+document.getElementById("productUnit").innerText = "Đơn vị: "+p.unit
+
+document.getElementById("productDesc").innerHTML = p.description || "Chưa có mô tả";
+
+updateTotalPrice()
+
+if(p.thumbs){
+  p.thumbs.forEach((url)=>{
+    const div = document.createElement("div"); // div bao quanh ảnh
+    const img = document.createElement("img");
+    img.src = url;
+
+    img.onclick = () => {
+      document.getElementById("mainImage").src = url;
+    };
+
+    div.appendChild(img);
+
+    // nếu admin hiện nút xoá
+    if(userRole === "admin"){
+  const del = document.createElement("span");
+  del.innerText = "❌";
+  del.onclick = () => deleteThumb(img.src, div); // dùng img.src
+  div.appendChild(del);
+}
+
+    document.getElementById("thumbContainer").appendChild(div);
+  });
+}
+
+if(userRole==="admin"){
+
+document.getElementById("adminEdit").style.display="block"
+
+document.getElementById("editor").innerHTML = p.description;
+
+}
+
+}
+
+loadProduct()
+// ... hết phần loadProduct() và các chức năng khác
+
+loadProduct().then(()=>{
+    enableSwipeThumbs();  // gọi hàm kéo ngang sau khi thumbnails đã được tạo
+});
+
+// --- Thêm hàm enableSwipeThumbs() ở đây ---
+function enableSwipeThumbs() {
+    const thumbContainer = document.getElementById("thumbContainer");
+    const mainImage = document.getElementById("mainImage");
+
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+    let animationFrame;
+
+    function animateScroll() {
+        thumbContainer.scrollLeft = scrollLeft;
+        animationFrame = null;
+    }
+
+    thumbContainer.addEventListener("mousedown", (e) => {
+        isDown = true;
+        startX = e.pageX - thumbContainer.offsetLeft;
+        scrollLeft = thumbContainer.scrollLeft;
+    });
+
+    thumbContainer.addEventListener("mouseleave", () => isDown = false);
+    thumbContainer.addEventListener("mouseup", () => isDown = false);
+
+    thumbContainer.addEventListener("mousemove", (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - thumbContainer.offsetLeft;
+        const walk = (x - startX) * 2; // tốc độ
+        scrollLeft = thumbContainer.scrollLeft - walk;
+
+        if (!animationFrame) {
+            animationFrame = requestAnimationFrame(animateScroll);
+        }
+    });
+
+    // Touch events
+    thumbContainer.addEventListener("touchstart", (e) => {
+        isDown = true;
+        startX = e.touches[0].pageX - thumbContainer.offsetLeft;
+        scrollLeft = thumbContainer.scrollLeft;
+    });
+
+    thumbContainer.addEventListener("touchend", () => isDown = false);
+
+    thumbContainer.addEventListener("touchmove", (e) => {
+        if (!isDown) return;
+        const x = e.touches[0].pageX - thumbContainer.offsetLeft;
+        const walk = (x - startX) * 2;
+        scrollLeft = thumbContainer.scrollLeft - walk;
+
+        if (!animationFrame) {
+            animationFrame = requestAnimationFrame(animateScroll);
+        }
+    });
+
+    // Click chọn ảnh
+    function bindClickThumbs() {
+        const thumbs = thumbContainer.querySelectorAll("img");
+        thumbs.forEach(img => {
+            img.onclick = () => {
+                mainImage.src = img.src;
+                thumbs.forEach(t => t.classList.remove("selected"));
+                img.classList.add("selected");
+            }
+        });
+    }
+
+    bindClickThumbs();
+    window.bindClickThumbs = bindClickThumbs;
+}
+
+  function handleEnd(endX) {
+    if (!isDragging) return;
+    const diff = endX - startX;
+    const thumbs = Array.from(thumbContainer.querySelectorAll("img"));
+    if (!thumbs.length) return;
+
+    const currentIndex = thumbs.findIndex(img => img.src === mainImage.src);
+    let newIndex = currentIndex;
+
+    if (diff > 30) {
+      newIndex = currentIndex > 0 ? currentIndex - 1 : thumbs.length - 1;
+    } else if (diff < -30) {
+      newIndex = currentIndex < thumbs.length - 1 ? currentIndex + 1 : 0;
+    }
+
+    mainImage.src = thumbs[newIndex].src;
+    isDragging = false;
   }
 
-  updateTotalPrice();
+//thumb
+async function deleteThumb(src, element){
+    if(!confirm("Xoá ảnh này?")) return;
+
+    const res = await fetch("/api/fruits/"+productId+"/thumb", {
+        method:"DELETE",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({
+            username: localStorage.getItem("username"),
+            image: src
+        })
+    });
+
+    const data = await res.json();
+
+    if(data.success){
+        element.remove();
+        // xoá khỏi adminThumbs nếu có
+        const adminImgs = document.querySelectorAll("#adminThumbs img");
+        adminImgs.forEach(img=>{
+            if(img.src === src) img.remove();
+        });
+
+        alert("Đã xoá ảnh");
+    }else{
+        alert(data.message);
+    }
 }
-loadProduct();
 
-// ADD TO CART
-document.getElementById("addToCartBtn").addEventListener("click", async ()=>{
-  const res = await fetch(`/api/fruits/product/${productId}`);
-  const p = await res.json();
-  if(p.error){ alert("Sản phẩm không tồn tại!"); return; }
-  const cart = getCart();
-  const qty = Number(qtyInput.value);
-  const idx = cart.findIndex(i=>i.id===p._id);
-  if(idx>=0) cart[idx].qty+=qty; else cart.push({id:p._id,name:p.name,price:p.price,image:p.image,qty});
-  saveCart(cart);
-  const alertBox=document.getElementById("cartAlert"); alertBox.style.display="block";
-  setTimeout(()=>alertBox.style.display="none",1500);
-});
+/* QTY */
 
-// ADMIN EDIT DESCRIPTION
-document.getElementById("saveBtn").addEventListener("click", async ()=>{
-  const desc=document.getElementById("editDesc").value;
-  const username=localStorage.getItem("username");
-  if(!username){ alert("Bạn chưa login!"); return; }
-  const res=await fetch(`/api/fruits/${productId}/description`,{
-    method:"PUT", headers:{"Content-Type":"application/json"}, body:JSON.stringify({description:desc,username})
-  });
-  const data=await res.json();
-  if(data.success){ alert("Cập nhật thành công!"); document.getElementById("productDesc").innerText=desc; }
-});
+const qtyInput = document.getElementById("qtyInput")
 
-// ADMIN UPLOAD THUMB
-document.getElementById("saveThumbBtn").addEventListener("click", async ()=>{
-  const file=document.getElementById("uploadThumb").files[0];
-  const username=localStorage.getItem("username");
-  if(!file||!username){ alert("Chọn file và login!"); return; }
-  const formData=new FormData(); formData.append("thumb",file); formData.append("username",username);
-  const res=await fetch(`/api/fruits/${productId}/thumb`,{method:"POST",body:formData});
-  const data=await res.json();
-  if(data.success){ loadThumbs(data.product); loadAdminThumbs(data.product); if(data.product.thumbs.length>0) document.getElementById("mainImage").src=data.product.thumbs[data.product.thumbs.length-1]; }
-});
+document.getElementById("qtyPlus").onclick=()=>{
 
-// LOGIN/LOGOUT
-document.getElementById("loginBtn").addEventListener("click",()=>{ document.getElementById("authPopup").style.display="block"; });
-document.getElementById("logoutBtn").addEventListener("click",()=>{
-  localStorage.removeItem("username"); localStorage.removeItem("userRole"); userRole=null;
-  document.getElementById("loginBtn").style.display="inline-block";
-  document.getElementById("logoutBtn").style.display="none";
-  document.getElementById("adminEdit").style.display="none";
-});
-function closePopup(){ document.getElementById("authPopup").style.display="none"; }
-document.getElementById("loginBtnPopup").addEventListener("click", async ()=>{
-  const username=document.getElementById("username").value.trim();
-  const password=document.getElementById("password").value.trim();
-  if(!username||!password){ alert("Điền đầy đủ username/password"); return; }
-  const res=await fetch("/api/login",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({username,password})});
-  const data=await res.json();
-  if(data.success){
-    userRole=data.role;
-    localStorage.setItem("username",username);
-    localStorage.setItem("userRole",userRole);
-    closePopup();
-    document.getElementById("loginBtn").style.display="none";
-    document.getElementById("logoutBtn").style.display="inline-block";
-    if(userRole==="admin") document.getElementById("adminEdit").style.display="block";
-  } else alert(data.message||"Login thất bại");
-});
+qtyInput.value++
+
+updateTotalPrice()
+
+}
+
+document.getElementById("qtyMinus").onclick=()=>{
+
+if(qtyInput.value>1){
+
+qtyInput.value--
+
+updateTotalPrice()
+
+}
+
+}
+
+function updateTotalPrice(){
+
+document.getElementById("totalPrice").innerText =
+
+(productPrice * qtyInput.value).toLocaleString()+" VND"
+
+}
+// ===== UPLOAD THUMB (ADMIN) =====
+
+document.getElementById("saveThumbBtn").onclick = async ()=>{
+
+const file = document.getElementById("uploadThumb").files[0]
+
+const username = localStorage.getItem("username")
+
+if(!file){
+alert("Chọn ảnh trước")
+return
+}
+
+if(!username){
+alert("Bạn chưa login")
+return
+}
+
+const formData = new FormData()
+
+formData.append("thumb",file)
+formData.append("username",username)
+
+const res = await fetch("/api/fruits/"+productId+"/thumb",{
+method:"POST",
+body:formData
+})
+
+const data = await res.json()
+
+if(data.success){
+
+const img = document.createElement("img")
+
+img.src = data.product.thumbs[data.product.thumbs.length-1]
+
+img.onclick=()=>{
+document.getElementById("mainImage").src = img.src
+}
+
+const div = document.createElement("div"); // tạo div bao quanh ảnh
+div.appendChild(img);
+
+// nếu admin thì thêm nút xoá
+if(userRole === "admin"){
+  const del = document.createElement("span");
+  del.innerText = "❌";
+  del.onclick = () => deleteThumb(url, div);
+  div.appendChild(del);
+}
+
+document.getElementById("thumbContainer").appendChild(div);
+
+document.getElementById("adminThumbs").appendChild(img.cloneNode())
+
+alert("Upload thành công")
+
+}else{
+
+alert(data.message)
+
+}
+
+}
+
+
+/* ADD CART */
+
+document.getElementById("addToCartBtn").onclick=async()=>{
+
+const res = await fetch("/api/fruits/product/"+productId)
+
+const p = await res.json()
+
+let cart = getCart()
+
+let qty = Number(qtyInput.value)
+
+const index = cart.findIndex(i=>i.id===p._id)
+
+if(index>=0){
+
+cart[index].qty += qty
+
+}else{
+
+cart.push({
+
+id:p._id,
+name:p.name,
+price:p.price,
+image:p.image,
+qty:qty
+
+})
+
+}
+
+saveCart(cart)
+
+const alertBox = document.getElementById("cartAlert")
+
+alertBox.style.display="block"
+
+setTimeout(()=>alertBox.style.display="none",1500)
+
+}
+// ===== UPDATE DESCRIPTION (ADMIN) =====
+
+document.getElementById("saveBtn").onclick = async () => {
+    const username = localStorage.getItem("username");
+    if(!username){
+        alert("Bạn chưa login admin");
+        return;
+    }
+
+    // Lấy HTML từ editor rich text
+    const desc = document.getElementById("editor").innerHTML;
+
+    const res = await fetch("/api/fruits/"+productId+"/description",{
+        method:"PUT",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({username, description: desc})
+    });
+
+    const data = await res.json();
+
+    if(data.success){
+        document.getElementById("productDesc").innerHTML = desc; // hiển thị rich text
+        alert("Cập nhật mô tả thành công");
+    }else{
+        alert(data.message || "Update thất bại");
+    }
+}
+
+/* SEARCH */
+
+const searchInput = document.getElementById("searchInput")
+const searchResults = document.getElementById("searchResults")
+
+let allProducts = []
+
+fetch("/api/fruits")
+.then(res=>res.json())
+.then(data=>{
+allProducts = data
+})
+
+searchInput.addEventListener("input",()=>{
+
+const keyword = searchInput.value.toLowerCase()
+
+searchResults.innerHTML=""
+
+if(keyword===""){
+searchResults.style.display="none"
+return
+}
+
+const result = allProducts.filter(p=>
+p.name.toLowerCase().includes(keyword)
+)
+
+result.slice(0,5).forEach(p=>{
+
+const div = document.createElement("div")
+
+div.innerHTML = `
+${p.name} <br>
+${Number(p.price).toLocaleString()} VND
+`
+
+div.onclick = ()=>{
+window.location.href="product.html?id="+p._id
+}
+
+searchResults.appendChild(div)
+
+})
+
+searchResults.style.display="block"
+
+})
+
+document.addEventListener("click",(e)=>{
+
+if(!searchResults.contains(e.target) && e.target!==searchInput){
+
+searchResults.style.display="none"
+
+}
+
+})
+
+
 </script>
+
 </body>
-</html>
+</html> 

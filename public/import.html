@@ -139,21 +139,34 @@ async function loadProducts(){
     const products = await res.json();
     const grid = document.getElementById("highlight");
     grid.innerHTML="";
-    products.filter(p=>p.category?.toLowerCase()==="import").forEach(p=>{
+
+    products.filter(p=>p.category?.toLowerCase()==="box").forEach(p=>{
       const card = document.createElement("div");
       card.className="card";
+
       card.innerHTML=`
-        <img src="${p.image}" alt="${p.name}">
+        <img src="${p.image}" 
+             alt="${p.name}" 
+             style="cursor:pointer;" 
+             onclick="window.location.href='product.html?id=${p._id}'">
+
         <div class="card-content">
           <h3>${p.name}</h3>
           <p>${Number(p.price).toLocaleString()} VND / ${p.unit}</p>
+
           ${userRole==="admin"
             ? `<button onclick="deleteProduct('${p._id}')">❌ Xoá</button>`
             : `<button onclick="addToCart('${p._id}','${p.name}',${p.price},'${p.image}')">🛒 Thêm vào giỏ</button>`}
-        </div>`;
+
+        </div>
+      `;
+
       grid.appendChild(card);
     });
-  } catch(err){ console.error(err); }
+
+  }catch(err){
+    console.error(err);
+  }
 }
 
 document.getElementById("uploadProductBtn").addEventListener("click", async ()=>{
@@ -244,6 +257,11 @@ function renderResults(products){
 }
 document.addEventListener("click",(e)=>{
   if(!searchResults.contains(e.target) && e.target!==searchInput){ searchResults.style.display="none"; }
+});
+document.querySelectorAll("nav a").forEach(a => {
+  a.addEventListener("click", () => {
+    document.getElementById("authPopup").style.display = "none";
+  });
 });
 </script>
 </body>
