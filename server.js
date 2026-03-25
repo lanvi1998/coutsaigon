@@ -56,8 +56,10 @@ const orderSchema = new mongoose.Schema({
 })
 const Order = mongoose.model("Order", orderSchema)
 
-// ===== Tạo folder uploads nếu chưa có =====
 
+// ===== Tạo folder uploads nếu chưa có =====
+const uploadPath = path.join(__dirname, "uploads");
+if (!fs.existsSync(uploadPath)) fs.mkdirSync(uploadPath, { recursive: true });
 
 // ===== Multer config =====
 const storage = multer.diskStorage({
