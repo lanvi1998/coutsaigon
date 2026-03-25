@@ -184,10 +184,11 @@ window.addEventListener("load", () => {
 // ====== PRODUCTS ======
 
 
-function addToCart(id,name,price,image){
-  let cart = JSON.parse(localStorage.getItem("cart")) || [];
-  const existing = cart.find(p=>p.id===id);
-  if(existing) existing.qty+=1; else cart.push({id,name,price,image,qty:1});
+function addToCart(id,name,price,image,unit){
+  let cart = JSON.parse(localStorage.getItem("cart"))||[];
+  const exist = cart.find(p=>p.id===id);
+  if(exist) exist.qty+=1;
+  else cart.push({id,name,price,image,unit,qty:1});
   localStorage.setItem("cart", JSON.stringify(cart));
   updateCartCount();
   alert("Đã thêm vào giỏ hàng 🛒");
@@ -497,7 +498,7 @@ updateCartCount(); loadProducts(); loadBanners();
 
 <!-- Popup lựa chọn -->
 <div id="contactPopup">
-  <a href="https://zalo.me/0909xxx" target="_blank" title="Chat Zalo">
+  <a href="http://Zalo.me/0905276510" target="_blank" title="Chat Zalo">
     <img src="/zalo.jpg" alt="Zalo">
   </a>
   <a href="https://m.me/co.ut.trai.cay.2025" target="_blank" title="Chat Messenger">
@@ -506,7 +507,7 @@ updateCartCount(); loadProducts(); loadBanners();
   <a href="https://www.tiktok.com/@uphan6510" target="_blank" title="TikTok Shop">
     <img src="/tiktok.jpg" alt="TikTok">
   </a>
-  <a href="tel:0909xxx" title="Gọi điện">
+  <a href="tel:0905276510" title="Gọi điện">
     <img src="/call.jpg" alt="Call">
   </a>
 </div>

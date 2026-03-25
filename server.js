@@ -99,9 +99,13 @@ app.delete("/api/fruits/:id", async (req,res)=>{
 app.post("/api/upload", upload.single("image"), async (req,res)=>{
   try{
     const { name, price, category, description, username, unit } = req.body;
-    const user = await User.findOne({ username })
-    if(!user || user.role!=="admin") return res.status(403).json({error:"Chỉ admin mới được phép"})
-    if(!req.file) return res.status(400).json({error:"Chưa chọn ảnh"})
+    const user = await User.findOne({ username });
+    if(!user || user.role!=="admin") return res.status(403).json({error:"Chỉ admin mới được phép"});
+    if(!req.file) return res.status(400).json({error:"Chưa chọn ảnh"});
+
+    // Lấy URL đầy đủ
+    const protocol = req.protocol; // http hoặc https
+    const host = req.get('host');  // localhost:3000 hoặc domain
 
     const fruit = new Fruit({
       name,
@@ -109,15 +113,16 @@ app.post("/api/upload", upload.single("image"), async (req,res)=>{
       unit,
       category: category.toLowerCase(),
       description,
-      image:"/uploads/"+req.file.filename
-    })
-    await fruit.save()
-    res.json(fruit)
+      image: `${protocol}://${host}/uploads/${req.file.filename}` // ✅ URL đầy đủ
+    });
+
+    await fruit.save();
+    res.json(fruit);
   }catch(err){
-    console.log(err)
-    res.status(500).json({error:err.message})
+    console.log(err);
+    res.status(500).json({error:err.message});
   }
-})
+});
 
 // ===== REGISTER =====
 app.post("/api/register", async (req,res)=>{
@@ -195,33 +200,37 @@ app.post("/api/order", async (req, res) => {
     const order = new Order({ name, phone, email, address, total, cart });
     await order.save();
 
-    // Tạo HTML giỏ hàng chi tiết
-    let cartHtml = `
-      <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; width: 100%;">
-        <thead>
-          <tr>
-            <th>Sản phẩm</th>
-            <th>Hình ảnh</th>
-            <th>Đơn vị</th>
-            <th>Số lượng</th>
-            <th>Thành tiền (VND)</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${cart.map(p => `
-            <tr>
-              <td>${p.name}</td>
-              <td><img src="https://coutsaigon.onrender.com${p.image}" width="60"></td>
-              <td>${p.unit || ''}</td>
-              <td>${p.qty}</td>
-              <td>${(p.price * p.qty).toLocaleString()}</td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-      <p><b>Tổng tiền:</b> ${total.toLocaleString()} VND</p>
-    `;
-
+   // Tạo HTML giỏ hàng chi tiết (fix lỗi)
+let cartHtml = `
+<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+  <thead>
+    <tr>
+    <th>Hình ảnh</th>
+      <th>Sản phẩm</th>
+      
+      <th>Đơn vị</th>
+      <th>Số lượng</th>
+      <th>Thành tiền (VND)</th>
+    </tr>
+  </thead>
+  <tbody>
+    ${cart.map(p => {
+      const imageUrl = p.image ? `https://coutsaigon.onrender.com${p.image}` : "https://via.placeholder.com/60";
+      return `
+        <tr>
+        <td><img src="${imageUrl}" width="60"></td>
+          <td>${p.name || ''}</td>
+          
+          <td>${p.unit || ''}</td>
+          <td>${p.qty || 0}</td>
+          <td>${((p.price || 0) * (p.qty || 0)).toLocaleString()}</td>
+        </tr>
+      `;
+    }).join('')}
+  </tbody>
+</table>
+<p><b>Tổng tiền:</b> ${(total || 0).toLocaleString()} VND</p>
+`;
     // Cấu hình transporter
     const transporter = nodemailer.createTransport({
       service: "gmail",
@@ -251,10 +260,10 @@ app.post("/api/order", async (req, res) => {
     // Gửi mail
     transporter.sendMail(mailOptions, (err, info) => {
       if (err) {
-        console.error("Lỗi gửi mail:", err);
+        console.error("Lỗi gửi mail:", err); // sẽ in chi tiết lý do fail
         return res.status(500).json({ success: false, message: "Gửi đơn hàng thất bại" });
       } else {
-        console.log("Mail đã gửi:", info.response);
+        console.log("Mail đã gửi:", info); // in info đầy đủ
         return res.json({ success: true, message: "Đơn hàng đã gửi và lưu thành công" });
       }
     });

@@ -140,7 +140,8 @@ async function loadProducts(){
     const grid = document.getElementById("highlight");
     grid.innerHTML="";
 
-    products.filter(p=>p.category?.toLowerCase()==="box").forEach(p=>{
+    // Lọc category import
+    products.filter(p=>p.category?.toLowerCase()==="import").forEach(p=>{
       const card = document.createElement("div");
       card.className="card";
 
@@ -152,12 +153,11 @@ async function loadProducts(){
 
         <div class="card-content">
           <h3>${p.name}</h3>
-          <p>${Number(p.price).toLocaleString()} VND / ${p.unit}</p>
+          <p>${Number(p.price).toLocaleString()} VND / ${p.unit || ''}</p>
 
           ${userRole==="admin"
             ? `<button onclick="deleteProduct('${p._id}')">❌ Xoá</button>`
-            : `<button onclick="addToCart('${p._id}','${p.name}',${p.price},'${p.image}')">🛒 Thêm vào giỏ</button>`}
-
+            : `<button onclick="addToCart('${p._id}','${p.name}',${p.price},'${p.image}','${p.unit}')">🛒 Thêm vào giỏ</button>`}
         </div>
       `;
 
@@ -207,10 +207,11 @@ function deleteProduct(id){
 }
 
 // ===== CART =====
-function addToCart(id,name,price,image){
+function addToCart(id,name,price,image,unit){
   let cart = JSON.parse(localStorage.getItem("cart"))||[];
   const exist = cart.find(p=>p.id===id);
-  if(exist) exist.qty+=1; else cart.push({id,name,price,image,qty:1});
+  if(exist) exist.qty+=1;
+  else cart.push({id,name,price,image,unit,qty:1});
   localStorage.setItem("cart", JSON.stringify(cart));
   updateCartCount();
   alert("Đã thêm vào giỏ hàng 🛒");

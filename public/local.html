@@ -133,6 +133,7 @@ window.addEventListener("load",()=>{
 });
 
 // ===== PRODUCTS =====
+// ===== PRODUCTS =====
 async function loadProducts(){
   try{
     const res = await fetch("/api/fruits");
@@ -140,7 +141,8 @@ async function loadProducts(){
     const grid = document.getElementById("highlight");
     grid.innerHTML="";
 
-    products.filter(p=>p.category?.toLowerCase()==="box").forEach(p=>{
+    // Lọc category local
+    products.filter(p=>p.category?.toLowerCase()==="local").forEach(p=>{
       const card = document.createElement("div");
       card.className="card";
 
@@ -152,12 +154,11 @@ async function loadProducts(){
 
         <div class="card-content">
           <h3>${p.name}</h3>
-          <p>${Number(p.price).toLocaleString()} VND / ${p.unit}</p>
+          <p>${Number(p.price).toLocaleString()} VND / ${p.unit || ''}</p>
 
           ${userRole==="admin"
             ? `<button onclick="deleteProduct('${p._id}')">❌ Xoá</button>`
-            : `<button onclick="addToCart('${p._id}','${p.name}',${p.price},'${p.image}')">🛒 Thêm vào giỏ</button>`}
-
+            : `<button onclick="addToCart('${p._id}','${p.name}',${p.price},'${p.image}','${p.unit}')">🛒 Thêm vào giỏ</button>`}
         </div>
       `;
 
@@ -169,6 +170,7 @@ async function loadProducts(){
   }
 }
 
+// ===== UPLOAD SẢN PHẨM ADMIN =====
 document.getElementById("uploadProductBtn").addEventListener("click", async ()=>{
   const name = document.getElementById("name").value;
   const price = document.getElementById("price").value;
@@ -181,7 +183,7 @@ document.getElementById("uploadProductBtn").addEventListener("click", async ()=>
   formData.append("name", name);
   formData.append("price", price);
   formData.append("unit", unit);
-  formData.append("category", "local");
+  formData.append("category", "local"); // ✅ category local
   formData.append("username", localStorage.getItem("username"));
   formData.append("image", image);
 
