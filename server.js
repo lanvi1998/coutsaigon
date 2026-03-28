@@ -162,8 +162,8 @@ app.post("/api/banner/upload", upload.single("image"), async (req,res)=>{
       const host = req.get("host")
       
       const banner = new Banner({
-        image: `${protocol}://${host}/uploads/${req.file.filename}`
-      })
+        image: `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`
+      });
     await banner.save()
     res.json({success:true, banner})
   }catch(err){
@@ -365,9 +365,9 @@ app.post("/api/fruits/:id/thumb", upload.single("thumb"), async (req,res)=>{
     if(!fruit.thumbs) fruit.thumbs=[];
     const protocol = req.protocol;
 const host = req.get("host");
-const thumbPath = `${protocol}://${host}/uploads/${req.file.filename}`;
+const thumbPath = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
 fruit.thumbs.push(thumbPath);
-    await fruit.save();
+await fruit.save();
 
     // Trả về product đã update để front-end hiển thị ngay
     res.json({success:true, product: fruit});
