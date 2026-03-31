@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thanh Toán </title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+/* BODY */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f0f2f5;
+  margin:0; padding:0;
+}
+/* HEADER / FOOTER */
+header, footer {
+  background:white;
+  color:white;
+  text-align:center;
+  padding:15px 20px;
+}
+header h1 { margin:0; font-size:24px; }
+footer { margin-top:40px; }
+
+/* CONTAINER */
+.container {
+  max-width:900px;
+  margin:20px auto;
+  background:#fff;
+  padding:20px;
+  border-radius:12px;
+  box-shadow:0 3px 10px rgba(0,0,0,0.1);
+}
+
+/* CART */
+.cart-summary { margin-bottom:20px; border-bottom:1px solid #e0f0d9; padding-bottom:15px; }
+.cart-item { display:flex; align-items:center; margin-bottom:10px; background:#f7fff0; padding:10px; border-radius:8px; transition:0.3s; }
+.cart-item:hover { background:#e1f0c4; }
+.cart-item img { width:70px; height:70px; object-fit:cover; margin-right:12px; border-radius:8px; border:1px solid #d4e8a2; }
+.cart-info { flex:1; }
+.cart-info p { margin:3px 0; font-size:14px; color:#333; }
+.total-price { text-align:right; font-weight:bold; margin-top:10px; font-size:16px; color:#145b1e; }
+
+/* FORM */
+form { display:flex; flex-direction:column; gap:12px; }
+form label { font-weight:bold; color:#333; }
+form input { padding:10px; border-radius:8px; border:1px solid #ccc; font-size:14px; width:100%; }
+form input:focus { outline:none; border-color:#145b1e; box-shadow:0 0 5px rgba(20,91,30,0.5); }
+form button {
+  background:#66bb6a;
+  color:white;
+  padding:12px;
+  border:none;
+  border-radius:25px;
+  font-size:16px;
+  cursor:pointer;
+  margin-top:10px;
+  transition:0.3s;
+}
+form button:hover { background:#0d4014; }
+
+.back-btn { display:inline-block; text-decoration:none; color:white; background:#78bc16; padding:8px 15px; border-radius:25px; margin-bottom:15px; transition:0.3s; }
+.back-btn:hover { background:#4e8c0b; }
+</style>
+</head>
+<body>
+
+<header>
+  <!-- HEADER -->
+<header class="header">
+  <div class="header-left">
+    <a href="index.html">
+      <img src="/logo.png" class="logo">
+    </a>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Tìm sản phẩm..." />
+      <div id="searchResults"></div>
+    </div>
+   
+  </div>
+  <div class="header-right">
+    
+    <a href="cart.html" class="cart-icon">
+      <i class="fa-solid fa-cart-shopping"></i>
+      <span id="cartCount" class="cart-count">0</span>
+      </a>
+  </div>
+</header>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="import.html">Trái cây nhập khẩu</a>
+  <a href="local.html">Trái cây nội địa</a>
+  <a href="cut.html">Trái cây cắt gọt</a>
+  <a href="food.html">Thực phẩm công nghệ</a>
+  <a href="gift.html">Giỏ quà tặng</a>
+  <a href="box.html">Hộp quà tặng</a>
+</nav>
+
+  <h1>Thanh Toán </h1>
+</header>
+
+<div class="container">
+  <a href="cart.html" class="back-btn">← Quay về giỏ hàng</a>
+
+  <div class="cart-summary" id="cart-summary"></div>
+
+  <form id="checkout-form">
+    <label for="name">Họ và tên</label>
+    <input type="text" id="name" required>
+    <label for="phone">Số điện thoại</label>
+    <input type="tel" id="phone" required>
+    <label for="email">Email</label>
+    <input type="email" id="email" required>
+    <label for="address">Địa chỉ nhận hàng</label>
+    <input type="text" id="address" required>
+    <label for="note">Ghi chú (tùy chọn)</label>
+  <textarea id="note" rows="3" placeholder="Ví dụ: Giao giờ hành chính..."></textarea>
+    <button type="submit">Xác Nhận Đơn Hàng</button>
+  </form>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-container">
+
+    <div class="footer-col">
+      <h3>Thông tin công ty</h3>
+      <p>CÔNG TY TRÁI CÂY</p>
+      <p>Địa chỉ: 103 Lạc Long Quân, Phường Minh Phụng, TPHCM
+
+      </p>
+      <p>Hotline: 0905276510</p>
+      <p>Email: fruitshop@gmail.com</p>
+    </div>
+
+    <div class="footer-col">
+      <h3>Chính sách và dịch vụ</h3>
+      <p>Đổi trả 48h</p>
+      <p>Chính sách khách hàng</p>
+      <p>Bảo mật thông tin</p>
+      <p>Hướng dẫn mua hàng</p>
+    </div>
+
+    <div class="footer-col">
+      <h3>Kênh liên hệ</h3>
+    
+      <div class="social">
+    
+        <!-- Facebook -->
+        <a href="https://www.facebook.com/co.ut.trai.cay.2025/" target="_blank">
+          <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png">
+        </a>
+    
+        <!-- Zalo -->
+        <a href="https://zalo.me/0905276510" target="_blank">
+          <img src="zalo.jpg">
+        </a>
+    
+        <!-- TikTok -->
+        <a href="https://www.tiktok.com/@uphan6510" target="_blank">
+          <img src="tiktok.jpg">
+        </a>
+    
+      </div>
+    </div>
+
+  </div>
+  <div class="footer-bottom">
+    <p> 📞 Hotline: 0905276510<p>
+    <p> 📍 Địa chỉ : 103 Lạc Long Quân, Phường Minh Phụng, TPHCM</p> 
+  </div>
+</footer>
+<!-- <footer>© 2026 Fruit Shop</footer> -->
+<script>
+// ===== CẤU HÌNH =====
+const API_URL = "http://localhost:3000"; // Thay server của bạn
+const summary = document.getElementById("cart-summary");
+const urlParams = new URLSearchParams(window.location.search);
+const isBuyNow = urlParams.get("buyNow");
+
+// ===== HÀM LẤY GIỎ HÀNG =====
+function getCart() {
+    return JSON.parse(localStorage.getItem("cart") || "[]");
+}
+
+// ===== LOAD GIỎ HÀNG HOẶC MUA NGAY =====
+let orders = [];
+
+if(isBuyNow){
+    const buyNowOrder = JSON.parse(localStorage.getItem("buyNowOrder") || "{}");
+    if(buyNowOrder.id) orders.push(buyNowOrder);
+}else{
+    orders = getCart();
+}
+
+// ===== HIỂN THỊ GIỎ HÀNG =====
+function renderCartSummary() {
+    summary.innerHTML = "";
+    if(orders.length === 0){
+        summary.innerHTML = "<p>Giỏ hàng trống!</p>";
+        return;
+    }
+
+    let total = 0;
+    orders.forEach(p => {
+        const itemTotal = p.price * p.qty;
+        total += itemTotal;
+
+        const div = document.createElement("div");
+        div.className = "cart-item";
+        div.innerHTML = `
+            <img src="${p.image}" alt="${p.name}">
+            <div class="cart-info">
+                <p>${p.name} x ${p.qty}</p>
+                <p>Thành tiền: ${itemTotal.toLocaleString()} VND</p>
+            </div>
+        `;
+        summary.appendChild(div);
+    });
+
+    const totalDiv = document.createElement("div");
+    totalDiv.className = "total-price";
+    totalDiv.innerText = "Tổng tiền: " + total.toLocaleString() + " VND";
+    summary.appendChild(totalDiv);
+
+    // Xóa order tạm nếu mua ngay
+    if(isBuyNow) localStorage.removeItem("buyNowOrder");
+}
+
+renderCartSummary();
+
+// ===== XỬ LÝ SUBMIT FORM =====
+const form = document.getElementById("checkout-form");
+const submitBtn = form.querySelector("button");
+
+form.addEventListener("submit", async function(e){
+    e.preventDefault();
+
+    const name = document.getElementById("name").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const address = document.getElementById("address").value.trim();
+    const note = document.getElementById("note").value.trim(); // <-- Lấy ghi chú
+
+    if(orders.length === 0){ alert("Giỏ hàng trống!"); return; }
+    if(!name || !phone || !email || !address){ alert("Vui lòng điền đầy đủ thông tin"); return; }
+
+    let total = 0;
+    orders.forEach(p => total += p.price * p.qty);
+
+    // xử lý cart để luôn có unit
+    const cartToSend = orders.map(p => ({
+        name: p.name || "",
+        price: p.price || 0,
+        qty: p.qty || 1,
+        unit: p.unit || "1",
+        image: p.image || ""
+    }));
+
+    // khóa nút
+    submitBtn.disabled = true;
+    submitBtn.innerText = "Đang xử lý...";
+
+    // lưu localStorage cho confirm.html
+    localStorage.setItem("lastOrder", JSON.stringify({
+        name, phone, email, address, note, total, cart: cartToSend
+    }));
+
+    if(!isBuyNow) localStorage.removeItem("cart");
+
+    try {
+        const res = await fetch(`${API_URL}/api/order`, {
+            method: "POST",
+            headers: {"Content-Type":"application/json"},
+            body: JSON.stringify({name, phone, email, address, note, total, cart: cartToSend})
+        });
+        const data = await res.json();
+        console.log("Order gửi server:", data);
+    } catch(err) {
+        console.error("Gửi order lỗi:", err);
+    }
+
+    // redirect ngay sau khi fetch xong
+    window.location.href = "confirm.html";
+});
+</script>
+
+</body>
+</html>

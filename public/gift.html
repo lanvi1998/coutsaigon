@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Giỏ quà tặng</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- Popup Login -->
+<div id="authPopup" class="popup" style="display:none;">
+  <h3>Admin Login</h3>
+  <input id="username" placeholder="Username"><br><br>
+  <input id="password" type="password" placeholder="Password"><br><br>
+  <button id="loginBtnPopup">Login</button>
+  <button onclick="closePopup()">Close</button>
+</div>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-left">
+    <a href="index.html">
+      <img src="/logo.png" class="logo">
+    </a>
+    <input type="text" id="searchInput" placeholder="Tìm sản phẩm..." />
+    <div id="searchResults"></div>
+  </div>
+  <div class="header-right">
+    <a href="cart.html" class="cart-icon">
+      <i class="fa-solid fa-cart-shopping"></i>
+      <span id="cartCount" class="cart-count">0</span>
+      </a>
+  </div>
+</header>
+
+<!-- NAVBAR -->
+<nav>
+  <a href="import.html">Trái cây nhập khẩu</a>
+  <a href="local.html">Trái cây nội địa</a>
+  <a href="cut.html">Trái cây cắt gọt</a>
+  <a href="food.html">Thực phẩm công nghệ</a>
+  <a href="gift.html">Giỏ quà tặng</a>
+  <a href="box.html">Hộp quà tặng</a>
+</nav>
+
+<!-- TITLE -->
+<h2 style="text-align:center; margin-top:20px;">Giỏ quà tặng</h2>
+
+<!-- SẢN PHẨM GIFT -->
+<div id="highlight" class="grid"></div>
+
+<!-- ADMIN UPLOAD -->
+<div class="admin" style="display:none;">
+  <h2>Admin Upload sản phẩm giỏ quà tặng</h2>
+  <input id="name" placeholder="Tên sản phẩm">
+  <input id="price" placeholder="Giá">
+  <input id="unit" placeholder="Đơn vị (kg, hộp, phần...)">
+  <input type="file" id="image">
+  <button id="uploadProductBtn">Upload</button>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-container">
+
+    <div class="footer-col">
+      <h3>Thông tin công ty</h3>
+      <p>CÔNG TY TRÁI CÂY</p>
+      <p>Địa chỉ: 103 Lạc Long Quân, Phường Minh Phụng, TPHCM
+
+      </p>
+      <p>Hotline: 0905276510</p>
+      <p>Email: fruitshop@gmail.com</p>
+    </div>
+
+    <div class="footer-col">
+      <h3>Chính sách và dịch vụ</h3>
+      <p>Đổi trả 48h</p>
+      <p>Chính sách khách hàng</p>
+      <p>Bảo mật thông tin</p>
+      <p>Hướng dẫn mua hàng</p>
+    </div>
+
+    <div class="footer-col">
+      <h3>Kênh liên hệ</h3>
+    
+      <div class="social">
+    
+        <!-- Facebook -->
+        <a href="https://www.facebook.com/co.ut.trai.cay.2025/" target="_blank">
+          <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png">
+        </a>
+    
+        <!-- Zalo -->
+        <a href="https://zalo.me/0905276510" target="_blank">
+          <img src="zalo.jpg">
+        </a>
+    
+        <!-- TikTok -->
+        <a href="https://www.tiktok.com/@uphan6510" target="_blank">
+          <img src="tiktok.jpg">
+        </a>
+    
+      </div>
+    </div>
+
+  </div>
+  <div class="footer-bottom">
+    <p> 📞 Hotline: 0905276510<p>
+    <p> 📍 Địa chỉ : 103 Lạc Long Quân, Phường Minh Phụng, TPHCM</p> 
+  </div>
+</footer>
+<!-- Nút login/logout -->
+<div id="loginWrapper" style="position:fixed; bottom:10px; left:10px; z-index:1000;">
+  <button id="loginBtn">Login</button>
+  <button id="logoutBtn" style="display:none;">Logout</button>
+</div>
+
+<script>
+// ===== GLOBAL =====
+let userRole = null;
+updateCartCount();
+
+// ===== SHOW/HIDE POPUP =====
+document.getElementById("loginBtn").addEventListener("click",()=>{ document.getElementById("authPopup").style.display="block"; });
+function closePopup(){ document.getElementById("authPopup").style.display="none"; }
+
+// ===== LOGIN =====
+document.getElementById("loginBtnPopup").addEventListener("click", async ()=>{
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+  if(!username || !password){ alert("Điền đầy đủ username và password!"); return; }
+
+  try{
+    const res = await fetch("/api/login",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({username,password})
+    });
+    const data = await res.json();
+    if(data.success){
+      userRole = data.role;
+      localStorage.setItem("username", username);
+      localStorage.setItem("userRole", userRole);
+      closePopup();
+
+      document.getElementById("loginBtn").style.display="none";
+      document.getElementById("logoutBtn").style.display="inline-block";
+
+      if(userRole==="admin"){ document.querySelector(".admin").style.display="block"; }
+
+      loadProducts();
+    } else { alert(data.message || "Login thất bại!"); }
+  } catch(err){ console.error(err); alert("Login lỗi, thử lại!"); }
+});
+
+// ===== LOGOUT =====
+document.getElementById("logoutBtn").addEventListener("click", ()=>{
+  userRole = null;
+  localStorage.removeItem("username");
+  localStorage.removeItem("userRole");
+  document.getElementById("loginBtn").style.display="inline-block";
+  document.getElementById("logoutBtn").style.display="none";
+  document.querySelector(".admin").style.display="none";
+  loadProducts();
+});
+
+// ===== CHECK LOGIN =====
+window.addEventListener("load",()=>{
+  const storedRole = localStorage.getItem("userRole");
+  if(storedRole){
+    userRole = storedRole;
+    document.getElementById("loginBtn").style.display="none";
+    document.getElementById("logoutBtn").style.display="inline-block";
+    if(userRole==="admin"){ document.querySelector(".admin").style.display="block"; }
+  }
+  updateCartCount();
+  loadProducts();
+});
+
+// ===== PRODUCTS =====
+// ===== PRODUCTS =====
+async function loadProducts(){
+  try{
+    const res = await fetch("/api/fruits");
+    const products = await res.json();
+    const grid = document.getElementById("highlight");
+    grid.innerHTML="";
+
+    // Lọc category local
+    products.filter(p=>p.category?.toLowerCase()==="gift").forEach(p=>{
+      const card = document.createElement("div");
+      card.className="card";
+
+      card.innerHTML=`
+        <img src="${p.image}" 
+             alt="${p.name}" 
+             style="cursor:pointer;" 
+             onclick="window.location.href='product.html?id=${p._id}'">
+
+        <div class="card-content">
+          <h3>${p.name}</h3>
+          <p>${Number(p.price).toLocaleString()} VND / ${p.unit || ''}</p>
+
+          ${userRole==="admin"
+            ? `<button onclick="deleteProduct('${p._id}')">❌ Xoá</button>`
+            : `<button onclick="addToCart('${p._id}','${p.name}',${p.price},'${p.image}','${p.unit}')">🛒 Thêm vào giỏ</button>`}
+        </div>
+      `;
+
+      grid.appendChild(card);
+    });
+
+  }catch(err){
+    console.error(err);
+  }
+}
+
+// ===== UPLOAD SẢN PHẨM ADMIN =====
+document.getElementById("uploadProductBtn").addEventListener("click", async ()=>{
+  const name = document.getElementById("name").value;
+  const price = document.getElementById("price").value;
+  const unit = document.getElementById("unit").value;
+  const image = document.getElementById("image").files[0];
+
+  if(!name || !price || !unit || !image){ alert("Điền đủ thông tin và chọn ảnh!"); return; }
+
+  const formData = new FormData();
+  formData.append("name", name);
+  formData.append("price", price);
+  formData.append("unit", unit);
+  formData.append("category", "gift"); // ✅ category local
+  formData.append("username", localStorage.getItem("username"));
+  formData.append("image", image);
+
+  try{
+    const res = await fetch("/api/upload",{method:"POST", body:formData});
+    const data = await res.json();
+    if(data.error){ alert("Upload lỗi: "+data.error); return; }
+    alert("Upload sản phẩm thành công!");
+    document.getElementById("name").value="";
+    document.getElementById("price").value="";
+    document.getElementById("unit").value="";
+    document.getElementById("image").value="";
+    loadProducts();
+  } catch(err){ console.error(err); alert("Upload thất bại!"); }
+});
+function deleteProduct(id){
+  fetch("/api/fruits/"+id,{
+    method:"DELETE",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({username: localStorage.getItem("username")})
+  }).then(()=>loadProducts());
+}
+
+// ===== CART =====
+function addToCart(id,name,price,image){
+  let cart = JSON.parse(localStorage.getItem("cart"))||[];
+  const exist = cart.find(p=>p.id===id);
+  if(exist) exist.qty++; else cart.push({id,name,price,image,qty:1});
+  localStorage.setItem("cart", JSON.stringify(cart));
+  updateCartCount();
+  alert("Đã thêm vào giỏ hàng 🛒");
+}
+function updateCartCount(){
+  let cart = JSON.parse(localStorage.getItem("cart"))||[];
+  let total = cart.reduce((t,p)=>t+p.qty,0);
+  document.getElementById("cartCount").innerText = total;
+}
+
+// ===== SEARCH POPUP HEADER =====
+const searchInput = document.getElementById("searchInput");
+const searchResults = document.getElementById("searchResults");
+let timer, selectedIndex=-1, currentResults=[];
+searchInput.addEventListener("input", ()=>{
+  clearTimeout(timer);
+  timer = setTimeout(()=> fetchSearchPopup(searchInput.value.trim()),300);
+});
+
+async function fetchSearchPopup(query){
+  if(!query){ searchResults.style.display="none"; return; }
+  try{
+    const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+    const products = await res.json();
+    currentResults = products;
+    renderResults(products);
+  } catch(err){ console.error(err); }
+}
+
+function renderResults(products){
+  searchResults.innerHTML="";
+  selectedIndex=-1;
+  if(products.length===0){ searchResults.style.display="none"; return; }
+  products.forEach((p,i)=>{
+    const div = document.createElement("div");
+    div.innerHTML = `
+  <div style="display:flex; align-items:center; gap:8px;">
+    <img src="${p.image}" alt="${p.name}" style="width:40px; height:40px; object-fit:cover; border-radius:6px;">
+    <div>
+      <strong>${p.name}</strong><br>
+      <small>${Number(p.price).toLocaleString()} VND</small>
+    </div>
+  </div>
+`;
+    div.dataset.index = i;
+    div.addEventListener("click",()=> window.location.href=`/product.html?id=${p._id}`);
+    searchResults.appendChild(div);
+  });
+  const rect = searchInput.getBoundingClientRect();
+  searchResults.style.top = rect.bottom + window.scrollY + "px";
+  searchResults.style.left = rect.left + window.scrollX + "px";
+  searchResults.style.width = rect.width + "px";
+  searchResults.style.display="block";
+}
+
+document.addEventListener("click",(e)=>{
+  if(!searchResults.contains(e.target) && e.target!==searchInput){ searchResults.style.display="none"; }
+});
+</script>
+
+</body>
+</html>
