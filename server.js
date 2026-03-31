@@ -236,77 +236,91 @@ app.delete("/api/banner/:id", async (req,res)=>{
   }
 })
 
-app.post("/api/order", async (req, res) => {
-  try {
-    const { name, phone, email, address, note, total, cart } = req.body;
 
     // Lưu order
-    const order = new Order({ name, phone, email, address, note, total, cart });
-    await order.save();
-
-    // Tạo HTML giỏ hàng
-    const cartHtml = `
-      <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; width: 100%;">
-        <thead>
-          <tr>
-            <th>Hình ảnh</th>
-            <th>Sản phẩm</th>
-            <th>Đơn vị</th>
-            <th>Số lượng</th>
-            <th>Thành tiền (VND)</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${cart.map(p => `
-            <tr>
-              <td><img src="${p.image || 'https://via.placeholder.com/60'}" width="60"></td>
-              <td>${p.name || ''}</td>
-              <td>${p.unit || '1'}</td>
-              <td>${p.qty || 0}</td>
-              <td>${((p.price||0)*(p.qty||0)).toLocaleString()}</td>
-            </tr>
-          `).join('')}
-        </tbody>
-      </table>
-      <p><b>Tổng tiền:</b> ${(total||0).toLocaleString()} VND</p>
-      <p><b>Ghi chú:</b> ${note || "Không có"}</p>
-    `;
-
-    // ===== Mailer =====
-    const transporter = nodemailer.createTransport({
-      host: "smtp.gmail.com",
-      port: 465,
-      secure: true,
-      auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_PASS
+    app.post("/api/order", async (req, res) => {
+      try {
+        const { name, phone, email, address, note, total, cart } = req.body;
+    
+        // Lưu order vào DB
+        const order = new Order({ name, phone, email, address, note, total, cart });
+        await order.save();
+    
+        // ===== URL frontend để admin click =====
+        const FRONTEND_URL = "http://localhost:3000"; // đổi thành domain thật khi deploy
+    
+        // Tạo HTML giỏ hàng với link sản phẩm
+        const cartHtml = `
+          <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+            <thead>
+              <tr>
+                <th>Hình ảnh</th>
+                <th>Sản phẩm</th>
+                <th>Đơn vị</th>
+                <th>Số lượng</th>
+                <th>Thành tiền (VND)</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${cart.map(p => `
+                <tr>
+                  <td>
+                    <a href="${FRONTEND_URL}/product/${p._id}" target="_blank">
+                      <img src="${p.image || 'https://via.placeholder.com/60'}" width="60">
+                    </a>
+                  </td>
+                  <td>
+                    <a href="${FRONTEND_URL}/product/${p._id}" target="_blank">${p.name || ''}</a>
+                  </td>
+                  <td>${p.unit || '1'}</td>
+                  <td>${p.qty || 0}</td>
+                  <td>${((p.price||0)*(p.qty||0)).toLocaleString()}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+          <p><b>Tổng tiền:</b> ${(total||0).toLocaleString()} VND</p>
+          <p><b>Ghi chú:</b> ${note || "Không có"}</p>
+        `;
+    
+        // Link chi tiết đơn hàng admin có thể click
+        const orderLink = `${FRONTEND_URL}/order/${order._id}`;
+    
+        // ===== Mailer =====
+        const transporter = nodemailer.createTransport({
+          service: "gmail",
+          auth: {
+            user: process.env.GMAIL_USER,
+            pass: process.env.GMAIL_PASS
+          },
+          tls: { rejectUnauthorized: false }  // <-- quan trọng
+        });
+    
+        // Gửi mail
+        const info = await transporter.sendMail({
+          from: `"Fruit Shop" <${process.env.GMAIL_USER}>`,
+          to: "lanvihuynh79@gmail.com",
+          subject: `Đơn hàng mới từ ${name}`,
+          html: `
+            <h3>Thông tin khách hàng</h3>
+            <p><b>Họ tên:</b> ${name}</p>
+            <p><b>Điện thoại:</b> ${phone}</p>
+            <p><b>Email:</b> ${email}</p>
+            <p><b>Địa chỉ:</b> ${address}</p>
+            <h3>Giỏ hàng</h3>
+            ${cartHtml}
+            <p><b>Xem chi tiết đơn hàng:</b> <a href="${orderLink}" target="_blank">${orderLink}</a></p>
+          `
+        });
+    
+        console.log("Mail đã gửi:", info.messageId);
+        res.json({ success: true, message: "Đơn hàng đã gửi và lưu thành công" });
+    
+      } catch(err) {
+        console.error("Lỗi gửi mail:", err);
+        res.status(500).json({ success: false, message: "Gửi đơn hàng thất bại" });
       }
     });
-
-    // Gửi mail
-    const info = await transporter.sendMail({
-      from: `"Fruit Shop" <${process.env.GMAIL_USER}>`,
-      to: "lanvihuynh79@gmail.com",
-      subject: `Đơn hàng mới từ ${name}`,
-      html: `<h3>Thông tin khách hàng</h3>
-             <p><b>Họ tên:</b> ${name}</p>
-             <p><b>Điện thoại:</b> ${phone}</p>
-             <p><b>Email:</b> ${email}</p>
-             <p><b>Địa chỉ:</b> ${address}</p>
-             <h3>Giỏ hàng</h3>
-             ${cartHtml}`
-    });
-
-    console.log("Mail đã gửi:", info.messageId);
-
-    res.json({ success: true, message: "Đơn hàng đã gửi và lưu thành công" });
-
-  } catch(err) {
-    console.error("Lỗi gửi mail:", err);
-    res.status(500).json({ success: false, message: "Gửi đơn hàng thất bại" });
-  }
-});
-
 // API tìm kiếm sản phẩm
 // Hàm bỏ dấu tiếng Việt
 const removeVietnameseTones = (str) => {
@@ -435,7 +449,55 @@ app.delete("/api/fruits/:id/thumb", async (req,res)=>{
     res.status(500).json({message:"Lỗi xoá ảnh"});
   }
 });
+// Xem chi tiết đơn hàng
+app.get("/order/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const order = await Order.findById(id).lean();
+    if(!order) return res.status(404).send("Không tìm thấy đơn hàng");
 
+    // HTML giỏ hàng
+    let cartHtml = `
+      <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+        <thead>
+          <tr>
+            <th>Hình ảnh</th>
+            <th>Sản phẩm</th>
+            <th>Đơn vị</th>
+            <th>Số lượng</th>
+            <th>Thành tiền (VND)</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${order.cart.map(p => `
+            <tr>
+              <td><img src="${p.image || 'https://via.placeholder.com/60'}" width="60"></td>
+              <td>${p.name || ''}</td>
+              <td>${p.unit || '1'}</td>
+              <td>${p.qty || 0}</td>
+              <td>${((p.price || 0)*(p.qty || 0)).toLocaleString()}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+      <p><b>Tổng tiền:</b> ${(order.total||0).toLocaleString()} VND</p>
+      <p><b>Ghi chú:</b> ${order.note || "Không có"}</p>
+    `;
+
+    res.send(`
+      <h2>Chi tiết đơn hàng</h2>
+      <p><b>Họ tên:</b> ${order.name}</p>
+      <p><b>Điện thoại:</b> ${order.phone}</p>
+      <p><b>Email:</b> ${order.email}</p>
+      <p><b>Địa chỉ:</b> ${order.address}</p>
+      <h3>Giỏ hàng</h3>
+      ${cartHtml}
+    `);
+  } catch(err) {
+    console.error(err);
+    res.status(500).send("Lỗi server");
+  }
+});
 // ===== Run server =====
 const PORT = 3000
 app.listen(PORT,()=>console.log("Server running on http://localhost:"+PORT))
