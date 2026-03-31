@@ -8,62 +8,206 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-/* BODY */
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f0f2f5;
-  margin:0; padding:0;
+.search-box{
+  position:relative;
 }
-/* HEADER / FOOTER */
-header, footer {
+
+#searchResults{
+  position:absolute;
+  top:100%;
+  left:0;
+  width:100%;
   background:white;
-  color:white;
-  text-align:center;
-  padding:15px 20px;
+  border:1px solid #ddd;
+  border-radius:6px;
+  max-height:250px;
+  overflow-y:auto;
+  display:none;
+  z-index:9999;
 }
-header h1 { margin:0; font-size:24px; }
-footer { margin-top:40px; }
-
-/* CONTAINER */
-.container {
-  max-width:900px;
-  margin:20px auto;
-  background:#fff;
-  padding:20px;
-  border-radius:12px;
-  box-shadow:0 3px 10px rgba(0,0,0,0.1);
-}
-
-/* CART */
-.cart-summary { margin-bottom:20px; border-bottom:1px solid #e0f0d9; padding-bottom:15px; }
-.cart-item { display:flex; align-items:center; margin-bottom:10px; background:#f7fff0; padding:10px; border-radius:8px; transition:0.3s; }
-.cart-item:hover { background:#e1f0c4; }
-.cart-item img { width:70px; height:70px; object-fit:cover; margin-right:12px; border-radius:8px; border:1px solid #d4e8a2; }
-.cart-info { flex:1; }
-.cart-info p { margin:3px 0; font-size:14px; color:#333; }
-.total-price { text-align:right; font-weight:bold; margin-top:10px; font-size:16px; color:#145b1e; }
-
-/* FORM */
-form { display:flex; flex-direction:column; gap:12px; }
-form label { font-weight:bold; color:#333; }
-form input { padding:10px; border-radius:8px; border:1px solid #ccc; font-size:14px; width:100%; }
-form input:focus { outline:none; border-color:#145b1e; box-shadow:0 0 5px rgba(20,91,30,0.5); }
-form button {
-  background:#66bb6a;
-  color:white;
-  padding:12px;
-  border:none;
-  border-radius:25px;
-  font-size:16px;
+.search-item{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:6px 10px;
+  gap:10px;
   cursor:pointer;
-  margin-top:10px;
-  transition:0.3s;
 }
-form button:hover { background:#0d4014; }
 
-.back-btn { display:inline-block; text-decoration:none; color:white; background:#78bc16; padding:8px 15px; border-radius:25px; margin-bottom:15px; transition:0.3s; }
-.back-btn:hover { background:#4e8c0b; }
-</style>
+.search-price{
+  font-size:13px;
+  color:#2e7d32;
+  font-weight:600;
+}
+
+.search-left{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.search-left img{
+  width:32px;
+  height:32px;
+  object-fit:cover;
+  border-radius:6px;
+}
+
+.search-name{
+  font-size:14px;
+}
+
+.search-price{
+  font-size:13px;
+  color:#2e7d32;
+  font-weight:600;
+}
+
+.search-item:hover{
+  background:#f2f2f2;
+}
+  /* BODY */
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #f0f2f5;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* HEADER / FOOTER */
+  header,
+  footer {
+    background: white;
+    color: white;
+    text-align: center;
+    padding: 15px 20px;
+  }
+  
+  header h1 {
+    margin: 0;
+    font-size: 24px;
+  }
+  
+  footer {
+    margin-top: 40px;
+  }
+  
+  /* CONTAINER */
+  .container {
+    max-width: 900px;
+    margin: 20px auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+  }
+  
+  /* CART */
+  .cart-summary {
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e0f0d9;
+    padding-bottom: 15px;
+  }
+  
+  .cart-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    background: #f7fff0;
+    padding: 10px;
+    border-radius: 8px;
+    transition: 0.3s;
+  }
+  
+  .cart-item:hover {
+    background: #e1f0c4;
+  }
+  
+  .cart-item img {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    margin-right: 12px;
+    border-radius: 8px;
+    border: 1px solid #d4e8a2;
+  }
+  
+  .cart-info {
+    flex: 1;
+  }
+  
+  .cart-info p {
+    margin: 3px 0;
+    font-size: 14px;
+    color: #333;
+  }
+  
+  .total-price {
+    text-align: right;
+    font-weight: bold;
+    margin-top: 10px;
+    font-size: 16px;
+    color: #145b1e;
+  }
+  
+  /* FORM */
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  form label {
+    font-weight: bold;
+    color: #333;
+  }
+  
+  form input {
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    width: 100%;
+  }
+  
+  form input:focus {
+    outline: none;
+    border-color: #145b1e;
+    box-shadow: 0 0 5px rgba(20,91,30,0.5);
+  }
+  
+  form button {
+    background: #66bb6a;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: 0.3s;
+  }
+  
+  form button:hover {
+    background: #0d4014;
+  }
+  
+  .back-btn {
+    display: inline-block;
+    text-decoration: none;
+    color: white;
+    background: #78bc16;
+    padding: 8px 15px;
+    border-radius: 25px;
+    margin-bottom: 15px;
+    transition: 0.3s;
+  }
+  
+  .back-btn:hover {
+    background: #4e8c0b;
+  }
+  
+  </style>
 </head>
 <body>
 
@@ -210,14 +354,15 @@ function renderCartSummary() {
         total += itemTotal;
 
         const div = document.createElement("div");
-        div.className = "cart-item";
-        div.innerHTML = `
-            <img src="${p.image}" alt="${p.name}">
-            <div class="cart-info">
-                <p>${p.name} x ${p.qty}</p>
-                <p>Thành tiền: ${itemTotal.toLocaleString()} VND</p>
-            </div>
-        `;
+div.className = "cart-item";
+
+div.innerHTML = `
+<img src="${p.image}" alt="${p.name}">
+<div class="cart-info">
+  <p>${p.name} x ${p.qty}</p>
+  <p>Thành tiền: ${(p.price * p.qty).toLocaleString()} VND</p>
+</div>
+`;
         summary.appendChild(div);
     });
 
@@ -286,7 +431,63 @@ form.addEventListener("submit", async function(e){
     // redirect ngay sau khi fetch xong
     window.location.href = "confirm.html";
 });
+const searchInput = document.getElementById("searchInput");
+const searchResults = document.getElementById("searchResults");
+
+let allProducts = [];
+
+// load tất cả sản phẩm
+async function loadProducts(){
+  try{
+    const res = await fetch(`${API_URL}/api/fruits`);
+    allProducts = await res.json();
+  }catch(err){
+    console.error(err);
+  }
+}
+
+loadProducts();
+
+// search khi gõ
+searchInput.addEventListener("input", function(){
+
+  const keyword = this.value.toLowerCase().trim();
+  searchResults.innerHTML = "";
+
+  if(keyword === ""){
+    searchResults.style.display = "none";
+    return;
+  }
+
+  const results = allProducts.filter(p =>
+    p.name.toLowerCase().includes(keyword)
+  );
+
+  results.slice(0,5).forEach(p=>{
+  const div = document.createElement("div");
+  div.className = "search-item";
+
+  div.innerHTML = `
+  <a href="product.html?id=${p._id}" style="display:flex;justify-content:space-between;width:100%;align-items:center;text-decoration:none;color:black;">
+
+    <div class="search-left">
+      <img src="${p.image}">
+      <span class="search-name">${p.name}</span>
+    </div>
+
+    <span class="search-price">
+      ${Number(p.price).toLocaleString()}đ
+    </span>
+
+  </a>
+  `;
+
+  searchResults.appendChild(div);
+});
+  searchResults.style.display = "block";
+});
 </script>
+
 
 </body>
 </html>

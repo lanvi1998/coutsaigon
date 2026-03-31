@@ -98,15 +98,38 @@ app.get("/api/fruits", async (req,res)=>{
 app.delete("/api/fruits/:id", async (req,res)=>{
   try{
     const { username } = req.body
+
     const user = await User.findOne({ username })
-    if(!user || user.role!=="admin") return res.status(403).json({error:"Chỉ admin mới được phép"})
+    if(!user || user.role!=="admin")
+      return res.status(403).json({error:"Chỉ admin mới được phép"})
 
     const fruit = await Fruit.findById(req.params.id)
-    if(!fruit) return res.status(404).json({error:"Not found"})
-     
+    if(!fruit)
+      return res.status(404).json({error:"Not found"})
+
+    // ===== XOÁ ẢNH CHÍNH CLOUDINARY =====
+    if(fruit.image && fruit.image.includes("cloudinary")){
+      const parts = fruit.image.split("/")
+      const file = parts[parts.length - 1]
+      const publicId = "fruitshop/products/" + file.split(".")[0]
+    
+      await cloudinary.uploader.destroy(publicId)
+    }
+
+    // ===== XOÁ THUMBNAILS =====
+    if(fruit.thumbs && fruit.thumbs.length){
+      for(const t of fruit.thumbs){
+        const fileName = t.split("/").pop().split(".")[0]
+        await cloudinary.uploader.destroy("fruitshop/thumbs/" + fileName)
+      }
+    }
+
     await Fruit.findByIdAndDelete(req.params.id)
+
     res.json({message:"Deleted"})
+
   }catch(err){
+    console.error(err)
     res.status(500).json({error:err.message})
   }
 })
@@ -296,22 +319,17 @@ const removeVietnameseTones = (str) => {
 // Tìm sản phẩm theo tên (không phân biệt hoa/thường và dấu)
 app.get("/api/search", async (req, res) => {
   try {
-    const q = req.query.q || "";
+    const q = req.query.q?.trim() || "";
     if (!q) return res.json([]);
 
-    const qNormalized = removeVietnameseTones(q);
-
-    const products = await Fruit.find();
-
-    const filtered = products.filter(p => {
-      const name = removeVietnameseTones(p.name);
-      return name.includes(qNormalized);
+    const products = await Fruit.find({
+      name: { $regex: q, $options: "i" }   // tìm không phân biệt hoa thường
     });
 
-    res.json(filtered);
+    res.json(products || []);
 
   } catch (err) {
-    console.error(err);
+    console.error("Search error:", err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -380,25 +398,32 @@ app.post("/api/fruits/:id/thumb", upload.single("thumb"), async (req,res)=>{
 
 // ===== DELETE THUMB =====
 // ===== DELETE THUMB =====
+// ===== DELETE THUMB =====
 app.delete("/api/fruits/:id/thumb", async (req,res)=>{
   try{
 
     const { username, image } = req.body;
 
     const user = await User.findOne({ username });
-
     if(!user || user.role !== "admin"){
       return res.status(403).json({message:"Chỉ admin"});
     }
 
     const fruit = await Fruit.findById(req.params.id);
-
-    if(!fruit)
+    if(!fruit){
       return res.status(404).json({message:"Không tìm thấy sản phẩm"});
+    }
 
-    // xoá khỏi database
+    // ===== XOÁ CLOUDINARY =====
+    if(image && image.includes("cloudinary")){
+      const file = image.split("/").pop().split(".")[0];
+      const publicId = "fruitshop/thumbs/" + file;
+
+      await cloudinary.uploader.destroy(publicId);
+    }
+
+    // ===== XOÁ DATABASE =====
     fruit.thumbs = fruit.thumbs.filter(t => t !== image);
-
     await fruit.save();
 
     res.json({success:true});

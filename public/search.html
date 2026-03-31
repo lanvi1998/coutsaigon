@@ -121,21 +121,24 @@ async function loadSearchResults(){
     if(data.length === 0){ grid.innerHTML="<p style='padding:20px'>Không tìm thấy sản phẩm</p>"; return; }
 
     data.forEach(p=>{
-      const card = document.createElement("div");
-      card.className = "card";
-      card.innerHTML = `
+  if(!p || !p._id) return;
+
+  const card = document.createElement("div");
+  card.className = "card";
+  card.innerHTML = `
   <a href="/product.html?id=${p._id}">
-    <img src="${p.image}" alt="${p.name}">
+    <img src="${p.image || '/no-image.png'}">
   </a>
   <div class="card-content">
     <h3 onclick="window.location.href='/product.html?id=${p._id}'" style="cursor:pointer">${p.name}</h3>
     <p>${Number(p.price).toLocaleString()} VND</p>
-          ${userRole==="admin"
-            ? `<button onclick="deleteProduct('${p._id}')">❌ Xoá</button>`
-            : `<button onclick="addToCart('${p._id}','${p.name}',${p.price},'${p.image}')">🛒 Thêm vào giỏ</button>`}
-        </div>`;
-      grid.appendChild(card);
-    });
+    ${userRole==="admin"
+      ? `<button onclick="deleteProduct('${p._id}')">❌ Xoá</button>`
+      : `<button onclick="addToCart('${p._id}','${p.name}',${p.price},'${p.image}')">🛒 Thêm vào giỏ</button>`}
+  </div>`;
+  
+  grid.appendChild(card);
+});
 
   } catch(err){ console.error(err); }
 }
