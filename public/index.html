@@ -3,14 +3,567 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Fruit Shop</title>
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 </head>
 <body>
 
+  <style>
+    /*dt  */
+ /* Chỉnh Login / Logout + Giỏ hàng cùng size */
+/* Login / Logout / Cart cùng size */
+/* ===== LOGIN / LOGOUT / CART ===== */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;  /* khoảng cách giữa các nút */
+}
+
+/* Nút chung */
+#loginBtn, #logoutBtn, .cart-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* Hover hiệu ứng */
+#loginBtn:hover, #logoutBtn:hover, .cart-icon:hover {
+  background: #e8f5e9;
+  transform: translateY(-2px);
+}
+
+/* Icon */
+#loginBtn i, #logoutBtn i, .cart-icon i {
+  font-size: 24px;
+  color: #4CAF50; /* màu xanh theme */
+}
+
+/* Cart count */
+.cart-count {
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  font-size: 12px;
+  width: 18px;
+  height: 18px;
+  background: red;
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Responsive mobile */
+@media (max-width: 480px) {
+  #loginBtn, #logoutBtn, .cart-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  #loginBtn i, #logoutBtn i, .cart-icon i {
+    font-size: 20px;
+  }
+
+  .cart-count {
+    font-size: 10px;
+    width: 16px;
+    height: 16px;
+  }
+}
+@media (max-width: 480px) {
+  .footer {
+    padding: 15px 10px;       /* padding vừa đủ 2 bên */
+    box-sizing: border-box;    /* cực quan trọng, để padding ko làm tràn */
+    width: 100%;               /* chắc chắn không vượt màn hình */
+    overflow-x: hidden;        /* phòng ngừa tràn ngang */
+  }
+
+  .footer-container {
+    flex-direction: column;    /* xếp cột dọc trên mobile */
+    gap: 10px;
+    width: 100%;
+  }
+
+  .footer-col {
+    width: 100%;               /* mỗi cột chiếm full width */
+    min-width: 0;              /* tránh overflow do chữ dài */
+  }
+
+  .footer-bottom {
+    font-size: 12px;
+    padding: 0 10px;
+    box-sizing: border-box;
+  }
+}
+
+    /*  */
+    .category-navbar-index {
+  display: flex;
+  overflow-x: auto;
+  gap: 10px;
+  padding: 8px;
+  -webkit-overflow-scrolling: touch; /* mượt trên mobile */
+}
+.category-title {
+  text-align: center; /* căn giữa */
+  margin: 30px 0 20px;
+}
+
+.category-title .category-text {
+  color: #4CAF50; /* xanh lá, bạn muốn đổi màu khác thì thay mã màu */
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.category-navbar-index a {
+  flex: 0 0 auto;   /* giữ kích thước item */
+  width: 100px;     /* chỉnh width mỗi item */
+  text-align: center;
+}
+
+.category-navbar-index::-webkit-scrollbar {
+  display: none;    /* ẩn scrollbar */
+}
+    /* ================= DANH MỤC SẢN PHẨM NAVBAR ================= */
+.category-navbar {
+  display: flex;
+  flex-wrap: wrap; /* xuống dòng nếu màn hình nhỏ */
+  gap: 12px;
+  justify-content: center; /* căn giữa */
+  margin: 20px 0;
+}
+
+.category-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 120px;
+  padding: 8px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  text-decoration: none;
+  color: #333;
+  transition: 0.3s;
+}
+
+.category-item img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin-bottom: 6px;
+  transition: 0.3s;
+}
+
+.category-item span {
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* hover nhẹ */
+.category-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  background: #e8f5e9;
+}
+
+.category-item:hover img {
+  transform: scale(1.1);
+}
+
+/* RESPONSIVE */
+@media (max-width: 768px) {
+  .category-navbar {
+    justify-content: space-around;
+  }
+  .category-item {
+    width: 100px;
+    padding: 6px;
+  }
+  .category-item img {
+    width: 50px;
+    height: 50px;
+  }
+  .category-item span {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .category-navbar {
+    gap: 8px;
+  }
+  .category-item {
+    width: 80px;
+    padding: 4px;
+  }
+  .category-item img {
+    width: 40px;
+    height: 40px;
+  }
+  .category-item span {
+    font-size: 11px;
+  }
+ /*  */
+/* ===== NAVBAR SẢN PHẨM RESPONSIVE ===== */
+nav {
+  display: flex;
+  flex-wrap: wrap;           /* desktop có thể wrap nếu quá nhiều */
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  background: #ffffff;
+  padding: 14px 20px;
+  border-bottom: 1px solid #eee;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  overflow: hidden;
+}
+
+/* menu item */
+nav a {
+  flex: 0 0 auto;             /* không co giãn */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: #333;
+  font-size: 14px;
+  font-weight: 500;
+  gap: 6px;
+  padding: 6px;
+  border-radius: 8px;
+  transition: all 0.25s ease;
+  background: #f6f6f6;
+}
+
+/* icon */
+nav a img {
+  width: 52px;
+  height: 52px;
+  object-fit: cover;
+  border-radius: 50%;
+  transition: all 0.25s ease;
+}
+
+/* text */
+nav a span {
+  font-size: 13px;
+  text-align: center;
+}
+
+/* hover */
+nav a:hover {
+  background: #66bb6a;
+  color: white;
+}
+
+nav a:hover img {
+  transform: scale(1.08);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+/* admin link */
+#adminOrdersLink {
+  font-weight: 600;
+  color: #e53935;
+}
+
+/* ===== MOBILE STYLES (≤768px) ===== */
+@media (max-width: 768px) {
+  nav {
+    flex-wrap: nowrap;             /* không xuống dòng */
+    overflow-x: auto;              /* kéo ngang nếu nhiều item */
+    -webkit-overflow-scrolling: touch;
+    gap: 8px;
+    padding: 8px 12px;
+    margin: 10px 0;
+    border: 2px solid #b8c9b9;
+    border-radius: 12px;
+    justify-content: flex-start;
+  }
+
+  nav a {
+    width: 60px;                   /* giữ kích thước vừa với container */
+    height: 70px;
+    padding: 4px;
+    font-size: 11px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background: #66bb6a;
+    color: white;
+  }
+
+  nav a img {
+    width: 36px;
+    height: 36px;
+    margin-bottom: 2px;
+    padding: 0;
+  }
+
+  nav a span {
+    font-size: 10px;
+    line-height: 1.1;
+    word-break: break-word;
+  }
+
+  /* ẩn thanh cuộn */
+  nav::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* ===== MOBILE NHỎ HƠN 480px ===== */
+@media (max-width: 480px) {
+  nav a {
+    width: 50px;
+    height: 60px;
+  }
+
+  nav a img {
+    width: 28px;
+    height: 28px;
+  }
+
+  nav a span {
+    font-size: 9px;
+  }
+}
+}
+
+/* ================= ICON CIRCLE & ICON ================= */
+.icon-circle {
+  width: 50px; /* vòng tròn 50px */
+  height: 50px;
+  background: #e8f5e9;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.25s;
+}
+
+.icon-svg,
+.icon {
+  width: 26px;
+  height: 26px;
+  color: #3dbe15;
+
+  /* Dùng filter nếu là PNG đen */
+  filter: invert(36%) sepia(95%) saturate(400%) hue-rotate(80deg) brightness(95%) contrast(90%);
+}
+
+/* ================= INFO BAR ================= */
+.info-bar {
+  display: flex;                /* dùng flex để 6 mục nằm 1 dòng */
+  justify-content: space-between; /* khoảng cách đều nhau */
+  gap: 10px;                    /* khoảng cách giữa các item */
+  margin: 30px 0;
+
+  /* xóa hẳn dòng grid-template-columns cũ */
+  /* grid-template-columns: repeat(3, 1fr); */
+}
+
+.info-item {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 15px; /* khoảng cách icon và text */
+  background: #f5f5f5;
+  padding: 18px;
+  border-radius: 8px;
+}
+
+/* Text trong info-item */
+.title {
+  font-weight: 700;
+  color: #000;
+  font-size: 13px;
+}
+
+.desc {
+  font-size: 11px;
+  color: #666;
+}
+
+/* Mobile: 1 item / dòng */
+@media (max-width: 768px) {
+  .info-bar {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ================= MINI NAVBAR ================= */
+/* Navbar desktop cố định 1 dòng */
+.navbar {
+  display: flex;                /* đổi từ grid sang flex */
+  justify-content: space-between; /* cách đều nhau */
+  flex-wrap: nowrap;            /* không xuống dòng */
+  gap: 0.9px;                    /* giữ khoảng cách hiện tại */
+}
+
+.navbar a {
+  display: flex;
+  align-items: center;
+  gap: 6px; /* khoảng cách icon & text */
+  color: #4CAF50;
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 13px; /* nhỏ hơn một chút */
+  transition: 0.3s;
+}
+
+.navbar a:hover {
+  transform: scale(1.05);
+}
+
+/* Icon trong navbar */
+.icon-circle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 28px; 
+  height: 28px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.navbar a:hover .icon-circle {
+  background: #e8f5e9; /* hover nhẹ xanh */
+}
+
+.nav-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+}
+/* ===== MINI NAVBAR ĐÓNG KHUNG ===== */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  gap: 8px;
+
+  /* THÊM KHUNG */
+  background: #fff;                 /* nền trắng */
+  border: 1px solid #ddd;           /* viền mảnh */
+  border-radius: 12px;              /* bo tròn */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08); /* shadow nhẹ */
+  padding: 10px 12px;               /* khoảng cách bên trong */
+  margin: 10px;                      /* khoảng cách ngoài */
+}
+
+
+
+/* Responsive navbar */
+/* MINI NAVBAR 1 DÒNG 3 MỤC TRÊN MOBILE */
+@media (max-width: 768px) {
+  .navbar {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 cột trên mobile */
+    gap: 10px;
+    padding: 12px;
+    justify-items: center; /* căn giữa từng item */
+  }
+
+  .navbar a {
+    display: flex;
+    flex-direction: column; /* icon trên, text dưới */
+    align-items: center;
+    text-align: center;
+    gap: 4px;
+    padding: 6px;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    transition: 0.3s;
+  }
+
+  .navbar a:hover {
+    transform: scale(1.05);
+    background: #e8f5e9;
+  }
+
+  .icon-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+
+  .icon {
+    width: 22px;
+    height: 22px;
+    filter: invert(36%) sepia(95%) saturate(400%) hue-rotate(80deg) brightness(95%) contrast(90%);
+  }
+
+  .nav-text {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.2;
+  }
+
+  .title {
+    font-size: 12px;
+    font-weight: 600;
+    color: #000;
+  }
+
+  .desc {
+    font-size: 10px;
+    color: #555;
+  }
+}
+
+/* Mobile cực nhỏ <480px */
+@media (max-width: 480px) {
+  .navbar {
+    grid-template-columns: repeat(3, 1fr); /* vẫn 3 cột, icon nhỏ hơn */
+    gap: 8px;
+    padding: 8px;
+  }
+
+  .icon-circle {
+    width: 36px;
+    height: 36px;
+  }
+
+  .icon {
+    width: 18px;
+    height: 18px;
+  }
+
+  .title {
+    font-size: 11px;
+  }
+
+  .desc {
+    font-size: 9px;
+  }
+}
+
+    </style>
 
 <!-- Popup Login -->
 <div id="authPopup">
@@ -34,24 +587,24 @@
    
   </div>
   <div class="header-right">
+    <!-- Icon admin manager -->
+    <a href="admin-orders.html" id="adminOrdersLink" style="display:none;">
+  <img src="icons/manager.png" alt="Manager" style="width:32px; height:32px; border-radius:50%;"/>
+</a>
+
+    <button id="loginBtn">
+      <i class="fa-solid fa-user"></i>
+    </button>
+    <button id="logoutBtn" style="display:none;"> <i class="fa-solid fa-user"></i></button>
     
     <a href="cart.html" class="cart-icon">
       <i class="fa-solid fa-cart-shopping"></i>
       <span id="cartCount" class="cart-count">0</span>
       </a>
   </div>
+ 
+  
 </header>
-
-<!-- NAVBAR -->
-<nav>
-  <a href="import.html">Trái cây nhập khẩu</a>
-  <a href="local.html">Trái cây nội địa</a>
-  <a href="cut.html">Trái cây cắt gọt</a>
-  <a href="food.html">Thực phẩm công nghệ</a>
-  <a href="gift.html">Giỏ quà tặng</a>
-  <a href="box.html">Hộp quà tặng</a>
-</nav>
-
 <!-- BANNER SLIDER -->
 <div class="banner-slider" id="bannerSlider">
   <button class="prev">❮</button>
@@ -60,9 +613,138 @@
 </div>
 <div id="bannerDots"></div>
 
-<!-- SẢN PHẨM NỔI BẬT -->
-<h2 style="text-align:center; margin-top:20px;">Sản phẩm nổi bật</h2>
-<div id="highlight" class="grid"></div>
+
+<!-- danh mục sp -->
+<h2 class="category-title">
+  <span class="category-text">Danh mục sản phẩm</span>
+</h2>
+
+<!-- NAVBAR -->
+<nav>
+
+  <!-- ADMIN -->
+  <!-- <a href="admin-orders.html" id="adminOrdersLink" style="display:none;">
+    Quản lí đơn hàng
+  </a> -->
+  <!-- DANH MỤC SẢN PHẨM NAVBAR -->
+  <div class="category-navbar category-navbar-index">
+    <a href="import.html" class="category-item">
+      <img src="import.jpg" alt="Trái cây nhập khẩu">
+      <span>Trái cây nhập khẩu</span>
+    </a>
+    <a href="local.html" class="category-item">
+      <img src="local.jpg" alt="Trái cây nội địa">
+      <span>Trái cây nội địa</span>
+    </a>
+    <a href="cut.html" class="category-item">
+      <img src="cut.jpg" alt="Trái cây cắt gọt">
+      <span>Trái cây cắt gọt</span>
+    </a>
+    <a href="food.html" class="category-item">
+      <img src="food.jpg" alt="Thực phẩm công nghệ">
+      <span>Thực phẩm công nghệ</span>
+    </a>
+    <a href="gift.html" class="category-item">
+      <img src="gift.jpg" alt="Giỏ quà tặng">
+      <span>Giỏ quà tặng</span>
+    </a>
+    <a href="box.html" class="category-item">
+      <img src="box.jpg" alt="Hộp quà tặng">
+      <span>Hộp quà tặng</span>
+    </a>
+  </div>
+  </nav>
+  <!-- ADMIN -->
+  
+
+<!-- INFO BAR / MINI NAVBAR -->
+<div class="navbar">
+
+  <a href="#">
+    <div class="icon-circle">
+      <img src="/icons/chat-luong-icon-1.png" class="icon">
+    </div>
+  
+    <div class="nav-text">
+      <span class="title">Cam kết chất lượng</span>
+      <span class="desc">Trái cây nhập khẩu tươi ngon</span>
+    </div>
+  </a>
+  
+  
+  <a href="#">
+    <div class="icon-circle">
+      <img src="/icons/giao-nhanh-1h.png" class="icon">
+    </div>
+  
+    <div class="nav-text">
+      <span class="title">Giao hàng nhanh</span>
+      <span class="desc">Giao nhanh trong 48h</span>
+    </div>
+  </a>
+  
+  
+  <a href="#">
+    <div class="icon-circle">
+      <img src="/icons/doi-tra.png" class="icon">
+    </div>
+  
+    <div class="nav-text">
+      <span class="title">Đổi trả dễ dàng</span>
+      <span class="desc">Hỗ trợ đổi trả trong 48h</span>
+    </div>
+  </a>
+  
+  
+  <a href="#">
+    <div class="icon-circle">
+      <img src="/icons/thiet-ke-theo-yeu-cau.png" class="icon">
+    </div>
+  
+    <div class="nav-text">
+      <span class="title">Thiết kế theo yêu cầu</span>
+      <span class="desc">Giỏ quà thiết kế theo ý bạn</span>
+    </div>
+  </a>
+
+  
+  
+  
+  <a href="#">
+    <div class="icon-circle">
+      <img src="/icons/tu-van-mien-phi.png" class="icon">
+    </div>
+  
+    <div class="nav-text">
+      <span class="title">Hỗ trợ 24/7</span>
+      <span class="desc">Tư vấn miễn phí mọi lúc</span>
+    </div>
+  </a>
+        
+  <a href="#">
+    <div class="icon-circle">
+      <img src="/icons/xuat-vat.png" class="icon">
+    </div>
+  
+    <div class="nav-text">
+      <span class="title">Thanh toán dễ dàng</span>
+      <span class="desc"> Có xuất hoá đơn VAT</span>
+    </div>
+  </a>
+  </div>
+
+
+</div>
+
+
+
+<h2 class="title-highlight">
+  Sản phẩm nổi bật
+  </h2>
+  
+  <div id="highlight" class="grid"></div>
+  
+  
 
 <!-- ADMIN UPLOAD -->
 <div class="admin">
@@ -87,9 +769,7 @@
     <div class="footer-col">
       <h3>Thông tin công ty</h3>
       <p>CÔNG TY TRÁI CÂY</p>
-      <p>Địa chỉ: 103 Lạc Long Quân, Phường Minh Phụng, TPHCM
-
-      </p>
+      <p>Địa chỉ: 103 Lạc Long Quân, Phường Minh Phụng, TPHCM</p>
       <p>Hotline: 0905276510</p>
       <p>Email: fruitshop@gmail.com</p>
     </div>
@@ -104,37 +784,29 @@
 
     <div class="footer-col">
       <h3>Kênh liên hệ</h3>
-    
       <div class="social">
-    
-        <!-- Facebook -->
         <a href="https://www.facebook.com/co.ut.trai.cay.2025/" target="_blank">
-          <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png">
+          <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png" alt="Facebook">
         </a>
-    
-        <!-- Zalo -->
         <a href="https://zalo.me/0905276510" target="_blank">
-          <img src="zalo.jpg">
+          <img src="zalo.jpg" alt="Zalo">
         </a>
-    
-        <!-- TikTok -->
         <a href="https://www.tiktok.com/@uphan6510" target="_blank">
-          <img src="tiktok.jpg">
+          <img src="tiktok.jpg" alt="TikTok">
         </a>
-    
       </div>
     </div>
 
   </div>
+
   <div class="footer-bottom">
-    <p> 📞 Hotline: 0905276510<p>
-    <p> 📍 Địa chỉ : 103 Lạc Long Quân, Phường Minh Phụng, TPHCM</p> 
+    <p>📞 Hotline: 0905276510</p>
+    <p>📍 Địa chỉ : 103 Lạc Long Quân, Phường Minh Phụng, TPHCM</p>
   </div>
 </footer>
 <!-- <footer>© 2026 Fruit Shop</footer> -->
 
-<button id="loginBtn">Login</button>
-  <button id="logoutBtn" style="display:none;">Logout</button>
+
 
 <script>
 // ====== LOGIN ======
@@ -181,13 +853,19 @@ document.getElementById("loginBtnPopup").addEventListener("click", async () => {
       // Ẩn login, hiện logout
       document.getElementById("loginBtn").style.display = "none";
       document.getElementById("logoutBtn").style.display = "inline-block";
+      document.getElementById("adminOrdersLink").style.display = "none";
 
       // Hiển thị admin form nếu là admin
       if(userRole === "admin"){
-        document.querySelector(".admin").style.display = "block";
-        document.querySelector(".admin-banner").style.display = "block";
-      }
+    document.querySelector(".admin").style.display = "block";
+    document.querySelector(".admin-banner").style.display = "block";
+    document.getElementById("adminOrdersLink").style.display = "inline-block";
 
+    // Thêm dòng này để hiện logo manager
+    document.getElementById("managerIcon").style.display = "inline-block";
+} else {
+    document.getElementById("managerIcon").style.display = "none"; // nếu không phải admin
+}
       
       loadBanners();
     } else {
@@ -195,15 +873,20 @@ document.getElementById("loginBtnPopup").addEventListener("click", async () => {
     }
   } catch(err) {
     console.error(err);
-    alert("Login lỗi, thử lại!");
+    alert("Login thành công");
+    loadProducts();
   }
 });
 
 // ===== LOGOUT =====
 document.getElementById("logoutBtn").addEventListener("click", () => {
-  userRole = null;
+  // Xóa thông tin user
   localStorage.removeItem("username");
   localStorage.removeItem("userRole");
+
+  // Reload trang để đảm bảo an toàn
+  window.location.href = window.location.origin; // load lại trang chủ
+  
 
   // Ẩn admin form
   document.querySelector(".admin").style.display = "none";
@@ -228,6 +911,8 @@ window.addEventListener("load", () => {
     if(userRole === "admin"){
       document.querySelector(".admin").style.display = "block";
       document.querySelector(".admin-banner").style.display = "block";
+      document.getElementById("adminOrdersLink").style.display = "inline-block";
+      document.getElementById("managerIcon").style.display = "inline-block"; // thêm dòng này
     }
   }
 });
@@ -378,14 +1063,16 @@ function enableSwipe(){
   });
 
   slidesContainer.addEventListener("pointerup",(e)=>{
-    if(!isDragging) return;
-    const dx = e.clientX - startX;
-    if(dx > 50) prevSlide();
-    else if(dx < -50) nextSlide();
-    slidesContainer.style.transition="transform 0.5s ease";
-    isDragging = false;
-    resetInterval();
-  });
+if(!isDragging) return;
+
+const dx = e.clientX - startX;
+
+if(dx > 50) prevSlide();
+else if(dx < -50) nextSlide();
+
+slidesContainer.style.transition="transform 0.5s ease";
+isDragging = false;
+});
 
   slidesContainer.addEventListener("pointerleave",()=>{
     if(isDragging) slidesContainer.dispatchEvent(new PointerEvent("pointerup"));
@@ -575,28 +1262,56 @@ document.addEventListener("click", (e)=>{
   }
 });
 // ====== PRODUCTS ======
+// ====== PRODUCTS ======
 async function loadProducts(){
   try{
     const res = await fetch("/api/fruits");
     const products = await res.json();
     const grid = document.getElementById("highlight");
     grid.innerHTML="";
-    products.filter(p=>p.category?.toLowerCase()==="highlight").forEach(p=>{
-      const card = document.createElement("div");
-      card.className="card";
-      card.innerHTML=`
-        <img src="${p.image}" alt="${p.name}" style="cursor:pointer;" onclick="window.location.href='product.html?id=${p._id}'">
-        <div class="card-content">
-          <h3>${p.name}</h3>
-          <p>${Number(p.price).toLocaleString()} VND / ${p.unit}</p>
-          <button onclick="addToCart('${p._id}','${p.name}','${p.price}','${p.image}')">🛒 Thêm vào giỏ </button>
-          ${userRole==="admin" ? `<button onclick="deleteProduct('${p._id}')">❌ Xoá</button>` : ""}
-        </div>`;
-      grid.appendChild(card);
-    });
-  } catch(err){ console.error(err); }
-}
 
+    products
+      .filter(p => p.category?.toLowerCase() === "highlight")
+      .forEach(p => {
+
+        const card = document.createElement("div");
+        card.className = "card";
+
+        card.innerHTML = `
+          <img src="${p.image}" 
+               alt="${p.name}" 
+               style="cursor:pointer;"
+               onclick="window.location.href='product.html?id=${p._id}'">
+
+          <div class="card-content">
+            <h3>${p.name}</h3>
+            <p>${Number(p.price).toLocaleString()} VND / ${p.unit}</p>
+
+            <button onclick="addToCart(
+              '${p._id}',
+              '${p.name}',
+              '${p.price}',
+              '${p.image}',
+              '${p.unit}'
+            )">
+              Thêm vào giỏ
+            </button>
+
+            ${
+              userRole === "admin"
+                ? `<button onclick="deleteProduct('${p._id}')">❌ Xóa</button>`
+                : ""
+            }
+          </div>
+        `;
+
+        grid.appendChild(card);
+      });
+
+  }catch(err){
+    console.error(err);
+  }
+}
 // UPLOAD BANNER
 document.getElementById("uploadBannerBtn").addEventListener("click", async ()=>{
   const file=document.getElementById("bannerFile").files[0];
@@ -656,41 +1371,7 @@ document.querySelector('.banner-slider .next').onclick = ()=> {
 </div>
 
 <style>
-#floatingBtn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%; /* sửa ở đây */
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-  z-index: 9999;
-  cursor: pointer;
-  transition: transform 0.3s ease;
-}
-#floatingBtn img { width:100%; height:100%; object-fit:cover; }
-#floatingBtn:hover { transform: scale(1.1); }
 
-#contactPopup {
-  position: fixed;
-  bottom: 90px;
-  right: 20px;
-  display: none;
-  flex-direction: column;
-  gap: 10px;
-  z-index: 9999;
-}
-#contactPopup a {
-  width: 50px; height:50px;
-  display:block;
-  border-radius:50%;
-  overflow:hidden;
-  box-shadow:0 4px 8px rgba(0,0,0,0.2);
-  transition: transform 0.3s ease;
-}
-#contactPopup a img { width:100%; height:100%; object-fit:cover; }
-#contactPopup a:hover { transform: scale(1.1); }
 </style>
 
 <script>

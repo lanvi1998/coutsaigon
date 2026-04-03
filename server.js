@@ -6,12 +6,43 @@ const mongoose = require("mongoose")
 const multer = require("multer")
 const cloudinary = require("cloudinary").v2
 const nodemailer = require("nodemailer")
+//
+const axios = require("axios")
+const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN
+const TELEGRAM_CHAT_ID = process.env.CHAT_ID
+
+// gửi text
+async function sendTelegram(text){
+  try{
+    await axios.post(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage`,{
+      chat_id: TELEGRAM_CHAT_ID,
+      text: text,
+      parse_mode:"HTML"
+    })
+  }catch(err){
+    console.log("Telegram error:", err.message)
+  }
+}
+
+// gửi ảnh
+async function sendTelegramPhoto(photo, caption){
+  try{
+    await axios.post(`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendPhoto`,{
+      chat_id: TELEGRAM_CHAT_ID,
+      photo: photo,
+      caption: caption,
+      parse_mode:"HTML"
+    })
+  }catch(err){
+    console.log("Telegram photo error:", err.message)
+  }
+}
 
 // ===== Cloudinary config =====
 cloudinary.config({
-  cloud_name: "dnrillagh",
-  api_key: "984556969348289",
-  api_secret: "bSt9Rx9JP80MvUTNpTyBhtZGotg"
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_API_SECRET
 })
 
 // ===== Multer memory storage =====
@@ -70,7 +101,11 @@ const bannerSchema = new mongoose.Schema({
 const Banner = mongoose.model("Banner", bannerSchema)
 
 // Order Schema
+
+
+
 const orderSchema = new mongoose.Schema({
+  orderCode: String,
   name: String,
   phone: String,
   email: String,
@@ -78,12 +113,38 @@ const orderSchema = new mongoose.Schema({
   note: String,
   total: Number,
   cart: Array,
+  status: { type:String, default:"pending" }, // pending | confirmed | delivered
   createdAt: { type: Date, default: Date.now }
 })
+
 const Order = mongoose.model("Order", orderSchema)
 
+//
+// ===== GET ALL ORDERS =====
+app.get("/api/orders", async (req,res)=>{
+  try{
+    const orders = await Order.find().sort({createdAt:-1})
+    res.json(orders)
+  }catch(err){
+    res.status(500).json({error:err.message})
+  }
+})
+// ===== UPDATE ORDER STATUS =====
+app.put("/api/orders/:id/status", async (req,res)=>{
+  try{
+    const { status } = req.body
 
+    const order = await Order.findByIdAndUpdate(
+      req.params.id,
+      { status },
+      { new:true }
+    )
 
+    res.json(order)
+  }catch(err){
+    res.status(500).json({error:err.message})
+  }
+})
 
 
 // ===== GET tất cả sản phẩm =====
@@ -238,50 +299,97 @@ app.delete("/api/banner/:id", async (req,res)=>{
 
 
     // Lưu order
-    app.post("/api/order", async (req, res) => {
-      try {
-        const { name, phone, email, address, note, total, cart } = req.body;
     
-        // Lưu order vào DB
-        const order = new Order({ name, phone, email, address, note, total, cart });
-        await order.save();
+      
+      app.post("/api/order", async (req, res) => {
+        try {
+      
+          const { name, phone, email, address, note, total, cart } = req.body;
+      
+          // ===== TẠO MÃ ĐƠN =====
+const count = await Order.countDocuments()
+const orderCode = "DH" + Date.now()
+
+// Lưu order
+const order = new Order({
+  orderCode,
+  name,
+  phone,
+  email,
+  address,
+  note,
+  total,
+  cart
+})
+
+await order.save()
+        // ===== GỬI TELEGRAM =====
+let cartText = cart.map(p =>
+  `- ${p.name} x${p.qty} = ${(p.price*p.qty).toLocaleString()} VND`
+  ).join("\n")
+  
+  const message = `
+🛒 ĐƠN HÀNG MỚI
+
+📦 Mã đơn: ${orderCode}
+
+👤 Khách: ${name}
+📞 ${phone}
+📍 ${address}
+
+${cartText}
+
+💰 Tổng: ${total.toLocaleString()} VND
+`
+  
+  await sendTelegram(message)
+  // ===== GỬI ẢNH SẢN PHẨM TELEGRAM =====
+for(const p of cart){
+
+  const caption = `
+🛒 ${p.name}
+SL: ${p.qty}
+Giá: ${(p.price*p.qty).toLocaleString()} VND
+`
+
+  if(p.image){
+    await sendTelegramPhoto(p.image, caption)
+  }
+
+}
+  
+
     
         // ===== URL frontend để admin click =====
-        const FRONTEND_URL = "http://localhost:3000"; // đổi thành domain thật khi deploy
+        const FRONTEND_URL = "https://coutsaigon.onrender.com/"; // đổi thành domain thật khi deploy
     
         // Tạo HTML giỏ hàng với link sản phẩm
         const cartHtml = `
-          <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; width: 100%;">
-            <thead>
-              <tr>
-                <th>Hình ảnh</th>
-                <th>Sản phẩm</th>
-                <th>Đơn vị</th>
-                <th>Số lượng</th>
-                <th>Thành tiền (VND)</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${cart.map(p => `
-                <tr>
-                  <td>
-                    <a href="${FRONTEND_URL}/product/${p._id}" target="_blank">
-                      <img src="${p.image || 'https://via.placeholder.com/60'}" width="60">
-                    </a>
-                  </td>
-                  <td>
-                    <a href="${FRONTEND_URL}/product/${p._id}" target="_blank">${p.name || ''}</a>
-                  </td>
-                  <td>${p.unit || '1'}</td>
-                  <td>${p.qty || 0}</td>
-                  <td>${((p.price||0)*(p.qty||0)).toLocaleString()}</td>
-                </tr>
-              `).join('')}
-            </tbody>
-          </table>
-          <p><b>Tổng tiền:</b> ${(total||0).toLocaleString()} VND</p>
-          <p><b>Ghi chú:</b> ${note || "Không có"}</p>
-        `;
+<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse; width: 100%;">
+<thead>
+<tr>
+<th>Sản phẩm</th>
+<th>Đơn vị</th>
+<th>Số lượng</th>
+<th>Thành tiền (VND)</th>
+</tr>
+</thead>
+<tbody>
+${cart.map(p => `
+<tr>
+<td>${p.name || ''}</td>
+<td>${p.unit || '1'}</td>
+<td>${p.qty || 0}</td>
+<td>${((p.price||0)*(p.qty||0)).toLocaleString()}</td>
+</tr>
+`).join('')}
+</tbody>
+</table>
+
+<p><b>Tổng tiền:</b> ${(total||0).toLocaleString()} VND</p>
+<p><b>Ghi chú:</b> ${note || "Không có"}</p>
+`;
+          
     
         // Link chi tiết đơn hàng admin có thể click
         const orderLink = `${FRONTEND_URL}/order/${order._id}`;
@@ -499,5 +607,9 @@ app.get("/order/:id", async (req, res) => {
   }
 });
 // ===== Run server =====
-const PORT = 3000
-app.listen(PORT,()=>console.log("Server running on http://localhost:"+PORT))
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log("Server running on port " + PORT);
+});

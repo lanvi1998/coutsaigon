@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Quản Lý Đơn Hàng</title>
+<link rel="stylesheet" href="style.css">
+<style>
+    /* ICON */
+.navbar-icon {
+    width: 18px;       /* nhỏ hơn */
+    height: 18px;      /* nhỏ hơn */
+}
+
+/* OPTION: vòng tròn nền trắng */
+.icon-circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 28px;       /* giảm size vòng tròn */
+    height: 28px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+    transition: 0.25s;
+
+}
+.navbar a:hover .icon-circle {
+    background: #e8f5e9; /* hover nhẹ xanh */
+}
+    
+body {
+    font-family: Arial;
+    background: #e8f5e9;
+    margin: 0;
+    padding: 40px;
+}
+
+
+
+
+
+.filter-container {
+    text-align: center;
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.filter-container input, .filter-container button {
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+th {
+    background: #4caf50;
+    color: white;
+}
+
+.badge {
+    padding: 5px 10px;
+    border-radius: 6px;
+    color: white;
+    font-size: 12px;
+}
+
+.pending { background: #ff9800; }
+.confirmed { background: #07a346; }
+.delivered { background: #07a346; }
+
+button.detail { background: #555; color: white; border: none; border-radius: 4px; cursor: pointer; }
+button.confirm { background: #4caf50; color: white; border: none; border-radius: 4px; cursor: pointer; }
+button.deliveredBtn { background: #2196f3; color: white; border: none; border-radius: 4px; cursor: pointer; }
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.4);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    width: 420px;
+    border-radius: 6px;
+    max-height: 80%;
+    overflow: auto;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.item img {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+.header-title {
+    text-align: center;
+    font-size: 70px;
+    color: #08ab41;
+    font-weight: bold;
+}
+
+
+</style>
+</head>
+
+<body>
+<!-- HEADER -->
+<header class="header">
+    <div class="header-left">
+      <a href="index.html">
+        <img src="/logo.png" class="logo">
+      </a>
+      <h1 class="header-title">Quản Lý Đơn Hàng</h1>
+   
+    
+  </header>
+  <h1></h1>
+
+<div class="filter-container">
+    <input type="text" id="searchInput" placeholder="Tìm theo mã đơn / tên / số điện thoại">
+    <input type="date" id="fromDate">
+    <input type="date" id="toDate">
+    <button onclick="resetFilters()">Reset</button>
+    <button onclick="exportExcel()">Xuất Excel</button>
+</div>
+
+<table>
+<thead>
+<tr>
+    <th>Mã đơn</th>
+    <th>Tên</th>
+    <th>Điện thoại</th>
+    <th>Địa chỉ</th>
+    <th>Tổng tiền</th>
+    <th>Trạng thái</th>
+    <th>Ngày giờ</th>
+    <th>Đơn Hàng</th>
+</tr>
+</thead>
+<tbody id="orderTable"></tbody>
+</table>
+
+<!-- popup -->
+<div class="modal" id="modal">
+<div class="modal-content" id="modalContent"></div>
+</div>
+
+<script>
+let allOrders = [];
+
+// Chuyển trạng thái sang tiếng Việt
+function statusVN(status) {
+    if(status==="pending") return "Chờ xác nhận";
+    if(status==="confirmed") return "Đã xác nhận";
+    if(status==="delivered") return "Đã giao";
+    return status;
+}
+
+// Render bảng
+function renderTable(orders) {
+    const table = document.getElementById("orderTable");
+    table.innerHTML = "";
+    if(orders.length === 0){
+        table.innerHTML = `<tr><td colspan="8">Không có đơn hàng</td></tr>`;
+        return;
+    }
+    orders.forEach(o => {
+    table.innerHTML += `
+<tr>
+    <td><b>${o.orderCode || ""}</b></td>
+    <td>${o.name}</td>
+    <td>${o.phone}</td>
+    <td>${o.address}</td>
+    <td>${o.total.toLocaleString()}đ</td>
+    <td><span class="badge ${o.status}">${statusVN(o.status)}</span></td>
+    <td>${new Date(o.createdAt).toLocaleString("vi-VN")}</td>
+    <td>
+        <button class="detail" onclick="showOrder('${o._id}')">Chi tiết</button>
+    </td>
+</tr>
+`;
+});
+}
+
+// Load đơn hàng từ server
+async function loadOrders() {
+    try{
+        const res = await fetch("/api/orders");
+        const orders = await res.json();
+
+        console.log("Orders:",orders);
+
+        if(!Array.isArray(orders)){
+            console.error("API không trả về mảng");
+            return;
+        }
+
+        allOrders = orders.map(o => ({
+            ...o,
+            _id: o._id?.toString ? o._id.toString() : o._id
+        }));
+
+        renderTable(allOrders);
+
+    }catch(err){
+        console.error("Lỗi loadOrders:",err);
+    }
+}
+
+// Lọc theo tên, sđt và khoảng ngày
+const searchInput = document.getElementById("searchInput");
+const fromDate = document.getElementById("fromDate");
+const toDate = document.getElementById("toDate");
+
+function applyFilters() {
+    const query = searchInput.value.toLowerCase().trim();
+    const from = fromDate.value ? new Date(fromDate.value) : null;
+    const to = toDate.value ? new Date(toDate.value) : null;
+
+    let filtered = allOrders.filter(o =>
+    (o.name && o.name.toLowerCase().includes(query)) ||
+    (o.phone && o.phone.includes(query)) ||
+    (o.orderCode && o.orderCode.toLowerCase().includes(query))
+);
+
+    if(from) filtered = filtered.filter(o => new Date(o.createdAt) >= from);
+    if(to) filtered = filtered.filter(o => new Date(o.createdAt) <= new Date(to.getFullYear(), to.getMonth(), to.getDate(),23,59,59));
+
+    renderTable(filtered);
+}
+
+searchInput.addEventListener("input", applyFilters);
+fromDate.addEventListener("change", applyFilters);
+toDate.addEventListener("change", applyFilters);
+
+function resetFilters() {
+    searchInput.value = "";
+    fromDate.value = "";
+    toDate.value = "";
+    renderTable(allOrders);
+}
+
+// Hiển thị chi tiết đơn hàng
+function showOrder(id){
+
+    const o = allOrders.find(x => x._id === id);
+    if(!o) return;
+
+    let items = "";
+
+    (o.cart || []).forEach(p => {
+        items += `
+        <div class="item">
+            <img src="${p.image}">
+            <div>
+                ${p.name}<br>
+                SL: ${p.qty}
+            </div>
+        </div>
+        `;
+    });
+
+    document.getElementById("modalContent").innerHTML = `
+        <h3>Chi tiết đơn hàng</h3>
+
+        <p><b>Mã đơn:</b> ${o.orderCode || ""}</p>
+        <p><b>Khách:</b> ${o.name}</p>
+        <p><b>Phone:</b> ${o.phone}</p>
+        <p><b>Địa chỉ:</b> ${o.address}</p>
+
+        <h4>Sản phẩm</h4>
+        ${items}
+
+        <p><b>Tổng tiền:</b> ${o.total.toLocaleString()}đ</p>
+
+        <button class="confirm" onclick="updateStatus('${id}','confirmed')">Xác nhận</button>
+        <button class="deliveredBtn" onclick="updateStatus('${id}','delivered')">Đã giao</button>
+        <button onclick="closeModal()">Đóng</button>
+    `;
+
+    document.getElementById("modal").style.display = "flex";
+}
+
+function closeModal(){ document.getElementById("modal").style.display="none"; }
+
+// Cập nhật trạng thái
+async function updateStatus(id,status){
+    await fetch("/api/orders/"+id+"/status",{
+        method:"PUT",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({status})
+    });
+    closeModal();
+    loadOrders();
+}
+
+// Xuất Excel
+function exportExcel(){
+    let rows = [["Tên","Điện thoại","Địa chỉ","Tổng tiền","Trạng thái","Ngày giờ"]];
+    const filteredOrders = document.querySelectorAll("#orderTable tr");
+    filteredOrders.forEach(tr=>{
+        const cols = Array.from(tr.querySelectorAll("td")).map(td => td.innerText);
+        if(cols.length) rows.push(cols);
+    });
+
+    let csvContent = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "don_hang.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+// Load lần đầu
+loadOrders();
+</script>
+
+</body>
+</html>

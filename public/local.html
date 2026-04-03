@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Trái cây nội địa</title>
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -20,20 +21,31 @@
 </div>
 
 <!-- HEADER -->
+<!-- HEADER -->
 <header class="header">
   <div class="header-left">
     <a href="index.html">
       <img src="/logo.png" class="logo">
     </a>
-    <input type="text" id="searchInput" placeholder="Tìm sản phẩm..." />
-    <div id="searchResults"></div>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Tìm sản phẩm..." />
+      <div id="searchResults"></div>
+    </div>
+   
   </div>
   <div class="header-right">
+    <button id="loginBtn">
+      <i class="fa-solid fa-user"></i>
+    </button>
+    <button id="logoutBtn" style="display:none;"> <i class="fa-solid fa-user"></i></button>
+    
     <a href="cart.html" class="cart-icon">
       <i class="fa-solid fa-cart-shopping"></i>
       <span id="cartCount" class="cart-count">0</span>
       </a>
   </div>
+ 
+  
 </header>
 
 <!-- NAVBAR -->
@@ -112,10 +124,7 @@
   </div>
 </footer>
 <!-- Nút login/logout -->
-<div id="loginWrapper" style="position:fixed; bottom:10px; left:10px; z-index:1000;">
-  <button id="loginBtn">Login</button>
-  <button id="logoutBtn" style="display:none;">Logout</button>
-</div>
+
 
 <script>
 // ===== GLOBAL =====
