@@ -1,4 +1,14 @@
 require('dotenv').config();
+
+const cloudinary = require('cloudinary').v2;  // 🔹 phải đứng trên cùng
+const nodemailer = require("nodemailer");
+const express = require("express");
+const cors = require("cors");
+const mongoose = require("mongoose");
+const multer = require("multer");
+const axios = require("axios");
+
+// Telegram & FRONTEND_URL
 const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN;
 const TELEGRAM_CHAT_ID = process.env.CHAT_ID;
 const FRONTEND_URL = process.env.FRONTEND_URL;
@@ -6,12 +16,14 @@ if (!FRONTEND_URL) {
   console.warn("⚠️ FRONTEND_URL chưa được cấu hình trong .env!");
 }
 
+// Cloudinary config
 cloudinary.config({
   cloud_name: process.env.CLOUD_NAME,
   api_key: process.env.CLOUD_API_KEY,
   api_secret: process.env.CLOUD_API_SECRET
 });
 
+// Nodemailer config
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
