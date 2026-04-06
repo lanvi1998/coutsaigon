@@ -231,6 +231,17 @@ nav{
     padding:20px;
     margin:0 20px;
   }
+  /* chỉ nút mua ngay */
+  button.buy-now {
+    background: #c53b09 !important; /* đỏ cam */
+    color: white !important;
+  }
+  
+  button.buy-now:hover {
+    background: #ff6347 !important; /* đỏ cam sáng hơn khi hover */
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+  }
   /* ===== CARD ===== */
   .card{
     background:white;
@@ -1024,5 +1035,65 @@ nav{
     font-size: 14px;
     padding: 5px 6px;
     
+  }
+  /* ===== Nút mua ngay + thêm giỏ cùng hàng ===== */
+.btn-group {
+  display: flex;
+  gap: 10px;          /* khoảng cách giữa 2 nút */
+  margin-top: auto;    /* đẩy xuống đáy card */
+  flex-wrap: wrap;     /* xuống dòng nếu quá nhỏ */
+}
+
+/* nút Mua ngay */
+button.buy-now {
+  background: #ff4500 !important; 
+  color: white !important;
+  flex: 1;             /* chiếm đều hàng */
+}
+
+}
+/* /* Ẩn nút Mua ngay trên điện thoại <=768px */
+@media (max-width: 768px) {
+  .buy-now {
+    display: none !important;
+  }}
+/* Ẩn nút Mua ngay trên điện thoại <=768px
+
+/* ===== MOBILE: 2 nút bằng nhau, căn giữa ===== */
+/* ===== MOBILE: 2 nút bằng nhau và căn giữa ===== */
+/* ===== MOBILE: 2 nút bằng nhau và căn giữa ===== */
+@media (max-width: 768px) {
+  /* nhóm 2 nút */
+  .card-content .btn-group {
+    display: flex !important;         /* dùng flex */
+    justify-content: center !important; /* căn giữa nhóm */
+    gap: 10px;                        /* khoảng cách giữa 2 nút */
+    margin-top: 12px;
+    width: 100%;
+    flex-wrap: nowrap;                 /* không xuống dòng */
+    box-sizing: border-box;
+  }
+
+  /* mỗi nút bằng nhau */
+  .card-content .btn-group button {
+    flex: 1 1 45% !important;         /* 2 nút bằng nhau */
+    max-width: 150px;                  /* tối đa cho nút */
+    min-width: 120px;                  /* tối thiểu */
+    padding: 10px 0;
+    text-align: center;
+    font-size: 14px;
+    border-radius: 8px;
+    box-sizing: border-box;
+  }
+
+  /* màu nút */
+  .card-content .btn-group .buy-now {
+    background: #ff4500 !important;
+    color: white !important;
+  }
+
+  .card-content .btn-group .add-cart {
+    background: #2e7d32 !important;
+    color: white !important;
   }
 }

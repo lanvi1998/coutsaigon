@@ -9,29 +9,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  .product-layout{
-  display:grid;
-  grid-template-columns: 1fr 1fr;
-  gap:30px;
-  max-width:1200px;
-  margin:auto;
-}
-
-/* PC */
-.product-images{
-  grid-column:1;
-}
-
-.product-desc-wrapper{
-  grid-column:1;
-}
-
-.product-info{
-  grid-column:2;
-  grid-row:1 / span 2;
-}
-
-
     .product-commit{
   margin-top:15px;
   display:flex;
@@ -97,6 +74,16 @@
 }
 
 /* PRODUCT */
+.product-detail{
+display:flex;
+flex-wrap:wrap;
+gap:30px;
+background:white;
+margin:20px;
+padding:20px;
+border-radius:10px;
+box-shadow:0 4px 15px rgba(0,0,0,0.1);
+}
 
 .product-images{
 flex:1;
@@ -307,246 +294,40 @@ z-index:9999;
 }
 
 /* MOBILE: đưa mô tả xuống cuối */
-/* MOBILE: đưa mô tả xuống cuối */
-@media (max-width:768px){
+/* MOBILE: ép mô tả xuống cuối */
+/* MOBILE layout */
+/* MOBILE sắp xếp lại layout */
+/* MOBILE: mô tả xuống cuối */
+@media (max-width:480px){
 
-.product-layout{
+.product-detail{
   display:flex;
   flex-direction:column;
 }
 
+/* ảnh + thumb */
 .product-images{
   order:1;
 }
 
+/* thông tin sản phẩm */
 .product-info{
   order:2;
 }
 
-.product-desc-wrapper{
+/* mô tả xuống cuối */
+.product-images .product-description{
   order:3;
-}
-/* Thanh mua hàng nổi */
-.floating-cart-bar {
-  position: fixed;      /* luôn cố định trên màn hình */
-  bottom: 0;            /* dưới cùng */
-  left: 0;
-  width: 100%;
-  display: flex;
-  gap: 10px;
-  padding: 10px 15px;
-  background: #fff;
-  box-shadow: 0 -3px 15px rgba(0,0,0,0.15);
-  z-index: 9999;
-  align-items: center;
-  justify-content: space-between;
+  width:100%;
+  margin-top:20px;
 }
 
-/* Thanh số lượng */
-.floating-cart-bar .cart-qty {
-  display: inline-flex;
-  gap: 5px;
-}
-
-.floating-cart-bar .cart-qty button {
-  width: 35px;
-  height: 35px;
-  border: 1px solid #000c01;
-  background: white;
-  color: #28a745;
-  font-size: 18px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 6px;
-}
-
-.floating-cart-bar .cart-qty input {
-  width: 50px;
-  border: 1px solid #000c01;
-  text-align: center;
-  font-weight: bold;
-  outline: none;
-}
-
-/* Nút hành động */
-.floating-cart-bar button#addToCartBtn,
-.floating-cart-bar button#buyNowBtn {
-  flex: 1;              /* tự động giãn đều */
-  padding: 10px 0;
-  border-radius: 6px;
-  border: none;
-  color: #fff;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  transition: all 0.2s ease;
-}
-
-#addToCartBtn { background: #28a745; }
-#addToCartBtn:hover { background: #218838; }
-
-#buyNowBtn { background: #dc3545; }
-#buyNowBtn:hover { background: #c82333; }
-
-/* Ẩn trên desktop nếu muốn */
-}
-@media (max-width:768px){
-  .floating-cart-bar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    background: #fff;
-    padding: 8px 10px;
-    box-shadow: 0 -3px 15px rgba(0,0,0,0.15);
-    z-index: 9999;
-    display: flex;
-    flex-direction: column; /* 2 hàng */
-    gap: 6px;
-  }
-
-  /* Hàng 1: số lượng + tổng tiền nằm ngang */
-  .floating-cart-bar .cart-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .floating-cart-bar .cart-qty {
-    display: flex;
-    gap: 4px;
-  }
-
-  .floating-cart-bar .cart-qty button {
-    width: 35px;
-    height: 35px;
-    font-size: 18px;
-    border-radius: 6px;
-  }
-
-  .floating-cart-bar .cart-qty input {
-    width: 50px;
-    text-align: center;
-    font-weight: bold;
-    font-size: 16px;
-    padding: 0 4px;
-  }
-
-  .floating-cart-bar .total-price {
-    font-weight: bold;
-    font-size: 16px;
-    white-space: nowrap;
-  }
-
-  /* Hàng 2: 2 nút hành động */
-  .floating-cart-bar .product-buttons {
-    display: flex;
-    gap: 6px;
-  }
-
-  .floating-cart-bar .product-buttons button {
-    flex: 1; /* chia đều */
-    padding: 10px 0;
-    font-size: 15px;
-    border-radius: 6px;
-  }
-}
-@media (max-width:768px){
-
-/* Bao toàn bộ nội dung product trên mobile */
-.product-layout {
-  padding: 0 15px; /* cách viền trái phải 15px */
-  box-sizing: border-box;
-}
-
-.product-info,
-.product-desc-wrapper,
-.product-description h3,
-.product-description div {
-  padding-left: 5px;   /* tăng khoảng cách nội dung */
-  padding-right: 5px;
-  box-sizing: border-box;
-}
-
-#productName {
-  font-size: 22px;
-  margin-bottom: 8px;
-}
-
-.price, #productUnit {
-  margin: 6px 0;
-}
-
-.product-description {
-  margin-top: 15px;
-}
-
-.product-description h3 {
-  font-size: 18px;
-}
-
-.product-description div {
-  font-size: 15px;
-  line-height: 1.5;
-}
-}
-/* Chỉ áp dụng trên mobile ≤768px */
-@media (max-width:768px){
-  /* Nút nổi */
-  /* Nút liên hệ luôn nổi trên tất cả */
-  #floatingBtn {
-  position: fixed;
-  bottom: 90px;   /* tăng từ 20px lên 80px để nhích lên */
-  right: 0px;
-  z-index: 99999;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  border: none;
-  background: #28a745;
-  color: white;
-  font-size: 24px;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-}
-/* Popup liên hệ nổi trên tất cả */
-#contactPopup {
-  position: fixed;
-  bottom: 160px;
-  right: 5px;
-  display: none;
-  flex-direction: column;
-  gap: 10px;
-  z-index: 9999;
-}
 }
 </style>
 </head>
 
 <body>
-  <!-- Nút chính nổi -->
-<div id="floatingBtn" title="Liên hệ">
-  <img src="/contact.jpg" alt="Liên hệ">
-</div>
 
-<!-- Popup lựa chọn -->
-<div id="contactPopup">
-  <a href="http://Zalo.me/0905276510" target="_blank" title="Chat Zalo">
-    <img src="/zalo.jpg" alt="Zalo">
-  </a>
-  <a href="https://m.me/co.ut.trai.cay.2025" target="_blank" title="Chat Messenger">
-    <img src="/messenger.jpg" alt="Messenger">
-  </a>
-  <a href="https://www.tiktok.com/@uphan6510" target="_blank" title="TikTok Shop">
-    <img src="/tiktok.jpg" alt="TikTok">
-  </a>
-  <a href="tel:0905276510" title="Gọi điện">
-    <img src="/call.jpg" alt="Call">
-  </a>
-</div>
 <!-- LOGIN POPUP -->
 <div id="authPopup" style="display:none">
 <h3>Admin Login</h3>
@@ -595,63 +376,58 @@ z-index:9999;
 
 <!-- PRODUCT -->
 
-<div class="product-layout">
+<div class="product-detail">
 
-  <!-- ẢNH -->
   <div class="product-images">
     <img id="mainImage">
     <div class="thumbs" id="thumbContainer"></div>
-  </div>
 
-  <!-- MÔ TẢ -->
-  <div class="product-desc-wrapper">
-    <div class="product-description">
-      <h3>Mô tả sản phẩm</h3>
-      <div id="productDesc"></div>
+<!-- Tiêu đề mô tả -->
+<div class="product-description">
+  <h3 style="color:red;">Mô tả sản phẩm</h3>
+  <div id="productDesc"></div>
+</div>
+
+      <!-- Mô tả nằm dưới thumbnail -->
+      <!-- <div id="productDesc" style="white-space: pre-wrap; margin-top:10px;"></div> -->
     </div>
-  </div>
-
-  <!-- THÔNG TIN -->
-  <div class="product-info">
-
-    <h1 id="productName"></h1>
-    <p class="price" id="productPrice"></p>
-    <p id="productUnit"></p>
-    <div class="floating-cart-bar">
-      <div class="cart-top">
-        <div class="cart-qty">
-          <button id="qtyMinus">-</button>
-          <input id="qtyInput" value="1" type="number" min="1">
-          <button id="qtyPlus">+</button>
-        </div>
-        <p class="total-price">Tổng: <span id="totalPrice"></span></p>
+  
+    <div class="product-info">
+      <h1 id="productName"></h1>
+      <p class="price" id="productPrice"></p>
+      <p id="productUnit"></p>
+  
+      <div class="cart-qty">
+        <button id="qtyMinus">-</button>
+        <input id="qtyInput" value="1" type="number" min="1">
+        <button id="qtyPlus">+</button>
       </div>
+  
+      <p>Tổng: <span id="totalPrice"></span></p>
+  
       <div class="product-buttons">
         <button id="addToCartBtn">THÊM VÀO GIỎ</button>
         <button id="buyNowBtn">MUA NGAY</button>
       </div>
+      <div class="product-commit">
+        <div class="commit-item">
+          <i class="fas fa-check-circle"></i>
+          Cam kết hàng chất lượng
+        </div>
+      
+        <div class="commit-item">
+          <i class="fas fa-truck"></i>
+          Giao hàng tận nơi
+        </div>
+      
+        <div class="commit-item">
+          <i class="fas fa-headset"></i>
+          Hỗ trợ nhanh chóng
+        </div>
+      </div>
     </div>
-    <!-- CAM KẾT -->
-    <div class="product-commit">
-      <div class="commit-item">
-        <i class="fas fa-check-circle"></i>
-        Cam kết hàng chất lượng
-      </div>
-
-      <div class="commit-item">
-        <i class="fas fa-truck"></i>
-        Giao hàng tận nơi
-      </div>
-
-      <div class="commit-item">
-        <i class="fas fa-headset"></i>
-        Hỗ trợ nhanh chóng
-      </div>
-    </div>
-
+  
   </div>
-
-</div>
 <!-- FOOTER -->
 <footer class="footer">
   <div class="footer-container">
@@ -703,8 +479,8 @@ z-index:9999;
     <p> 📍 Địa chỉ : 103 Lạc Long Quân, Phường Minh Phụng, TPHCM</p> 
   </div>
 </footer>
-<!-- <button id="loginBtn">Login</button>
-  <button id="logoutBtn" style="display:none;">Logout</button> -->
+<button id="loginBtn">Login</button>
+  <button id="logoutBtn" style="display:none;">Logout</button>
  
 </div>
 
@@ -1245,34 +1021,5 @@ document.addEventListener("click",(e)=>{
 
 </script>
 
-<script>
-  // Chạy khi DOM load xong
-  const floatingBtn = document.getElementById("floatingBtn");
-  const contactPopup = document.getElementById("contactPopup");
-  
-  // mở / đóng popup
-  floatingBtn.addEventListener("click",(e)=>{
-    e.stopPropagation();
-  
-    if(contactPopup.style.display==="flex"){
-      contactPopup.style.display="none";
-    }else{
-      contactPopup.style.display="flex";
-    }
-  });
-  
-  // click ra ngoài -> đóng
-  document.addEventListener("click",()=>{
-    contactPopup.style.display="none";
-  });
-  
-  // click trong popup không đóng
-  contactPopup.addEventListener("click",(e)=>{
-    e.stopPropagation();
-  });
-  
-  
-  
-  </script>
 </body>
 </html> 
