@@ -340,24 +340,28 @@ const orderCode = "DH" + Date.now()
 
 // Lưu order
 const order = new Order({
-    orderCode,
-            name,
-            phone,
-            email,
-            address,
-            note,
-            total,
-            cart
+  orderCode,
+  name,
+  phone,
+  email,
+  address,
+  note,
+  total,
+  cart
 })
 
 await order.save()
+
+// ⚡ TRẢ KẾT QUẢ CHO WEB NGAY
+res.json({ success:true })
+
 // ===== GỬI TELEGRAM =====
 let cartText = cart.map(p =>
-        `- ${p.name} x${p.qty} = ${(p.price*p.qty).toLocaleString()} VND`
-        ).join("\n")
-  
-  const message = `
-        🛒 ĐƠN HÀNG MỚI
+  `- ${p.name} x${p.qty} = ${(p.price*p.qty).toLocaleString()} VND`
+).join("\n")
+
+const message = `
+🛒 ĐƠN HÀNG MỚI
 
 📦 Mã đơn: ${orderCode}
 
@@ -371,20 +375,21 @@ ${cartText}
 `
 
 sendTelegram(message)
+
 // ===== GỬI ẢNH SẢN PHẨM TELEGRAM =====
 for(const p of cart){
 
-    const caption = `
-  🛒 ${p.name}
-  SL: ${p.qty}
-  Giá: ${(p.price*p.qty).toLocaleString()} VND
-  `
-  
-    if(p.image){
-      sendTelegramPhoto(p.image, caption)
-    }
+  const caption = `
+🛒 ${p.name}
+SL: ${p.qty}
+Giá: ${(p.price*p.qty).toLocaleString()} VND
+`
+
+  if(p.image){
+    sendTelegramPhoto(p.image, caption)
   }
 
+}
 
           // ===== URL frontend để admin click =====
 
