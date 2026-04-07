@@ -1342,17 +1342,19 @@ document.getElementById("uploadBannerBtn").addEventListener("click", async ()=>{
 });
 
 async function deleteBanner(id){
-  try{
 
-    await fetch("/api/banners/" + id,{
-      method:"DELETE"
-    });
+const res = await fetch(`/api/banner/${id}`,{
+  method:"DELETE"
+})
 
-    loadBanners();
+const data = await res.json()
 
-  }catch(err){
-    console.error("Lỗi xoá banner:",err);
-  }
+if(data.success){
+  loadBanners()
+}else{
+  alert("Xoá banner thất bại")
+}
+
 }
 
 // INITIAL
