@@ -370,22 +370,20 @@ ${cartText}
 💰 Tổng: ${total.toLocaleString()} VND
 `
 
-await sendTelegram(message)
+sendTelegram(message)
 // ===== GỬI ẢNH SẢN PHẨM TELEGRAM =====
 for(const p of cart){
 
-        const caption = `
-        🛒 ${p.name}
-SL: ${p.qty}
-Giá: ${(p.price*p.qty).toLocaleString()} VND
-`
-
-        if(p.image){
-await sendTelegramPhoto(p.image, caption)
+    const caption = `
+  🛒 ${p.name}
+  SL: ${p.qty}
+  Giá: ${(p.price*p.qty).toLocaleString()} VND
+  `
+  
+    if(p.image){
+      sendTelegramPhoto(p.image, caption)
+    }
   }
-
-          }
-
 
 
           // ===== URL frontend để admin click =====
