@@ -376,7 +376,7 @@ res.json({ success:true })
 let cartText = cart.map(p =>
   `- ${p.name} x${p.qty} = ${(p.price*p.qty).toLocaleString()} VND`
 ).join("\n")
-
+const noteText = note && note.trim() ? note.trim() : "Không có";
 const message = `
 🛒 ĐƠN HÀNG MỚI
 
@@ -385,7 +385,7 @@ const message = `
 👤 Khách: ${name}
 📞 ${phone}
 📍 ${address}
-
+📝 Ghi chú: ${note || "Không có"}
 ${cartText}
 
 💰 Tổng: ${total.toLocaleString()} VND

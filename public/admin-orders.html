@@ -164,6 +164,7 @@ button.deliveredBtn { background: #2196f3; color: white; border: none; border-ra
     <th>Tổng tiền</th>
     <th>Trạng thái</th>
     <th>Ngày giờ</th>
+    <th>Ghi chú</th>
     <th>Đơn Hàng</th>
 </tr>
 </thead>
@@ -190,26 +191,28 @@ function statusVN(status) {
 function renderTable(orders) {
     const table = document.getElementById("orderTable");
     table.innerHTML = "";
-    if(orders.length === 0){
-        table.innerHTML = `<tr><td colspan="8">Không có đơn hàng</td></tr>`;
+    if (orders.length === 0) {
+        table.innerHTML = `<tr><td colspan="9">Không có đơn hàng</td></tr>`;
         return;
     }
+
     orders.forEach(o => {
-    table.innerHTML += `
+        table.innerHTML += `
 <tr>
     <td><b>${o.orderCode || ""}</b></td>
     <td>${o.name}</td>
     <td>${o.phone}</td>
     <td>${o.address}</td>
-    <td>${o.total.toLocaleString()}đ</td>
-    <td><span class="badge ${o.status}">${statusVN(o.status)}</span></td>
-    <td>${new Date(o.createdAt).toLocaleString("vi-VN")}</td>
+    <td>${o.total.toLocaleString()}đ</td> <!-- Tổng tiền -->
+    <td><span class="badge ${o.status}">${statusVN(o.status)}</span></td> <!-- Trạng thái -->
+    <td>${new Date(o.createdAt).toLocaleString("vi-VN")}</td> <!-- Ngày giờ -->
+    <td>${o.note || ""}</td> <!-- Ghi chú -->
     <td>
         <button class="detail" onclick="showOrder('${o._id}')">Chi tiết</button>
     </td>
 </tr>
-`;
-});
+        `;
+    });
 }
 
 // Load đơn hàng từ server
@@ -297,6 +300,7 @@ function showOrder(id){
         <p><b>Khách:</b> ${o.name}</p>
         <p><b>Phone:</b> ${o.phone}</p>
         <p><b>Địa chỉ:</b> ${o.address}</p>
+        <p><b>Ghi chú:</b> ${o.note || "Không có"}</p>
 
         <h4>Sản phẩm</h4>
         ${items}
