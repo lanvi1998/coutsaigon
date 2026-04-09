@@ -76,6 +76,7 @@
     object-fit: cover;
     border-radius: 6px;
     margin-bottom: 8px;
+   
   }
   
   /* Button thêm vào giỏ / xoá */
@@ -84,11 +85,15 @@
     padding: 10px;
     border: none;
     border-radius: 8px;
-    background: linear-gradient(135deg, #66bb6a, #2e7d32);
+    background: linear-gradient(135deg, #ec4b4b, #fa0404);
     color: white;
     cursor: pointer;
   }
-  #saleProducts .card button:hover { background: #218838; }
+  #saleProducts .card button:hover { background: 135deg, #ec4b4b, #fa0404 }
+  /*  */
+  .price, .sale-price, .old-price {
+    margin: 4px 0; /* Khoảng cách trên/dưới text */
+}
   
   /* ===== Responsive ===== */
   /* Tablet */
@@ -1526,7 +1531,7 @@ async function loadProducts() {
       }
 
       const cardHTML = `
-        ${salePercent > 0 ? `<div class="sale-badge">-${salePercent}%</div>` : ""}
+        ${salePercent > 0 ? `<div class="sale-badge">SALE-${salePercent}%</div>` : ""}
         <img src="${p.image}" style="cursor:pointer"
              onclick="window.location.href='product.html?id=${p._id}'">
         <div class="card-content">
