@@ -36,7 +36,6 @@ if (!FRONTEND_URL) {
 });
 // ===== Modules =====
 
-
 // const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN
 // const TELEGRAM_CHAT_ID = process.env.CHAT_ID
 
@@ -544,7 +543,47 @@ str = str.trim().replace(/\s+/g, " ");
         }
         });
 // Express route ví dụ:
-// Express route upload thumbnail (server.js)
+// ===== UPDATE PRICE (admin only) =====
+// ===== UPDATE PRICE =====
+// ===== UPDATE PRICE =====
+app.put("/api/fruits/:id/price", async (req,res)=>{
+  try{
+
+    const { username, price } = req.body;
+
+    const user = await User.findOne({ username });
+    if(!user || user.role !== "admin"){
+      return res.status(403).json({
+        success:false,
+        message:"Chỉ admin mới được sửa giá"
+      });
+    }
+
+    const fruit = await Fruit.findByIdAndUpdate(
+      req.params.id,
+      { price: price },
+      { new:true }
+    );
+
+    if(!fruit){
+      return res.status(404).json({
+        success:false,
+        message:"Không tìm thấy sản phẩm"
+      });
+    }
+
+    res.json({
+      success:true,
+      fruit
+    });
+
+  }catch(err){
+    res.status(500).json({
+      success:false,
+      message:err.message
+    });
+  }
+});
 // ===== UPLOAD THUMB =====
         app.post("/api/fruits/:id/thumb", upload.single("thumb"), async (req,res)=>{
         try {

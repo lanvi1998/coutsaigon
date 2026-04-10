@@ -15,7 +15,32 @@
 
   <style>
     /*  */
-    
+    .sub-title{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-size:14px;
+  color:#272626;
+  margin-top:-20px;
+  margin-bottom:30px;
+}
+
+.sub-title::before,
+.sub-title::after{
+  content:"";
+  width:30px;      /* gạch ngắn */
+  height:1px;
+  background:#ccc;
+  margin:0 10px;
+}
+    .sub-title{
+  text-align:center;
+  font-size:14px;
+  color:#272626;
+  margin-top:-20px;
+  margin-bottom:30px;
+}
      /* Grid sale */
   #saleProducts {
     display: grid;
@@ -1065,10 +1090,12 @@ nav a:hover img {
 
 <h2 class="title-highlight">
   Sản phẩm nổi bật
-  </h2>
+</h2>
+<p class="sub-title">Sản phẩm bán chạy</p>
   
   <div id="highlight" class="grid"></div>
-  <h2 class="title-highlight">🔥 Sản phẩm SALE</h2>
+  <h2 class="title-highlight">🔥Sản Phẩm Đang Giảm Giá</h2>
+  <p class="sub-title">Ưu đãi hấp dẫn - Mua ngay kẻo lỡ</p>
 <div id="saleProducts" class="grid"></div>
   
 
@@ -1567,19 +1594,27 @@ async function loadProducts() {
       }
 
       const cardHTML = `
-        ${salePercent > 0 ? `<div class="sale-badge">SALE-${salePercent}%</div>` : ""}
-        <img src="${p.image}" style="cursor:pointer"
-             onclick="window.location.href='product.html?id=${p._id}'">
-        <div class="card-content">
-          <h3>${p.name}</h3>
-          ${priceHTML}
-          ${
-            userRole === "admin"
-            ? `<button onclick="deleteProduct('${p._id}')">❌ Xoá</button>`
-            : `<button onclick="addToCart('${p._id}','${p.name}',${salePrice},'${p.image}','${p.unit}')">🛒 Thêm vào giỏ</button>`
-          }
-        </div>
-      `;
+  ${salePercent > 0 ? `<div class="sale-badge">SALE-${salePercent}%</div>` : ""}
+  <img src="${p.image}" style="cursor:pointer"
+       onclick="window.location.href='product.html?id=${p._id}'">
+
+  <div class="card-content">
+    <h3>${p.name}</h3>
+    ${priceHTML}
+
+    ${
+      userRole === "admin"
+      ? `
+      <div class="buttons">
+        <button onclick="editPrice('${p._id}',${price})">✏️ Sửa giá</button>
+        <button onclick="deleteProduct('${p._id}')">❌ Xoá</button>
+      </div>
+      `
+      : `<button onclick="addToCart('${p._id}','${p.name}',${salePrice},'${p.image}','${p.unit}')">🛒 Thêm vào giỏ</button>`
+    }
+
+  </div>
+`;
 
       // ⭐ Highlight
       if (p.category === "highlight") {
@@ -1642,7 +1677,7 @@ if(data.success){
 // INITIAL
 updateCartCount();
 loadProducts();
-loadSaleProducts();
+// loadSaleProducts();
 loadBanners();
 // Prev / Next dùng cơ chế hiện tại
 document.querySelector('.banner-slider .prev').onclick = ()=> {
@@ -1656,7 +1691,40 @@ document.querySelector('.banner-slider .next').onclick = ()=> {
   goToSlide(currentIndex);
   resetInterval();
 };
+// sữa giá
+async function editPrice(id, oldPrice) {
+  try {
 
+    const newPrice = prompt("Nhập giá mới:", oldPrice);
+    if (!newPrice) return;
+
+    const username = localStorage.getItem("username");
+
+    const res = await fetch(`/api/fruits/${id}/price`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        username,
+        price: Number(newPrice)
+      })
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      alert("✅ Cập nhật giá thành công");
+      loadProducts(); 
+    } else {
+      alert("❌ " + data.message);
+    }
+
+  } catch (err) {
+    console.error(err);
+    alert("❌ Lỗi kết nối server");
+  }
+}
 </script>
 <style>
 

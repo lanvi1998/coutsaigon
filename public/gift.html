@@ -214,9 +214,13 @@ async function loadProducts(){
           <h3>${p.name}</h3>
           <p>${Number(p.price).toLocaleString()} VND / ${p.unit || ''}</p>
 
-          ${userRole==="admin"
-            ? `<button onclick="deleteProduct('${p._id}')">❌ Xoá</button>`
-            : `<button onclick="addToCart('${p._id}','${p.name}',${p.price},'${p.image}','${p.unit}')">🛒 Thêm vào giỏ</button>`}
+        ${userRole==="admin"
+  ? `
+    <button onclick="editPrice('${p._id}', ${p.price})">💰 Sửa giá</button>
+    <button onclick="deleteProduct('${p._id}')">❌ Xoá</button>
+  `
+  : `<button onclick="addToCart('${p._id}','${p.name}',${p.price},'${p.image}','${p.unit}')">🛒 Thêm vào giỏ</button>`
+}
         </div>
       `;
 
@@ -263,6 +267,39 @@ function deleteProduct(id){
     headers:{"Content-Type":"application/json"},
     body:JSON.stringify({username: localStorage.getItem("username")})
   }).then(()=>loadProducts());
+}
+// sua GIA
+async function editPrice(id, oldPrice){
+  const newPrice = prompt("Nhập giá mới:", oldPrice);
+  if(!newPrice || isNaN(newPrice)) return;
+
+  const username = localStorage.getItem("username");
+
+  try{
+    const res = await fetch(`/api/fruits/${id}/price`,{
+      method:"PUT",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({
+        username,
+        price:Number(newPrice)
+      })
+    });
+
+    const data = await res.json();
+
+    if(data.success){
+      alert("✅ Cập nhật giá thành công");
+      loadProducts();
+    }else{
+      alert("❌ "+data.message);
+    }
+
+  }catch(err){
+    console.error(err);
+    alert("❌ Lỗi kết nối server");
+  }
 }
 
 // ===== CART =====
