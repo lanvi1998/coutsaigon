@@ -14,6 +14,264 @@
 <body>
 
   <style>
+   
+    /*  */
+    .sub-title{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-size:14px;
+  color:#272626;
+  margin-top:-20px;
+  margin-bottom:30px;
+}
+
+.sub-title::before,
+.sub-title::after{
+  content:"";
+  width:30px;      /* gạch ngắn */
+  height:1px;
+  background:#ccc;
+  margin:0 10px;
+}
+    .sub-title{
+  text-align:center;
+  font-size:14px;
+  color:#272626;
+  margin-top:-20px;
+  margin-bottom:30px;
+}
+     /* Grid sale */
+  #saleProducts {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr); /* 7 sp / dòng PC */
+    gap: 16px;
+    margin: 20px 0;
+  }
+  
+  /* Card */
+  #saleProducts .card {
+    position: relative;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    background: #fff;
+    text-align: center;
+    transition: transform 0.2s;
+  }
+  #saleProducts .card:hover { transform: translateY(-5px); }
+  
+  /* Sale badge */
+  .sale-badge {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    background: red;
+    color: #fff;
+    font-size: 12px;
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  
+  /* Giá gốc */
+  .old-price {
+    text-decoration: line-through;
+    color: #999;
+    margin: 4px 0;
+  }
+  
+  /* Giá sale */
+  .sale-price {
+    color: red;
+    font-weight: bold;
+    margin: 4px 0;
+  }
+  
+  /* Giá bình thường */
+  .price {
+    font-weight: bold;
+    color: #333;
+    margin: 4px 0;
+  }
+  
+  
+  #saleProducts .card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 6px;
+    margin-bottom: 8px;
+   
+  }
+  
+  /* Button thêm vào giỏ / xoá */
+  #saleProducts .card button {
+    margin-top: auto;
+    padding: 10px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #ec4b4b, #fa0404);
+    color: white;
+    cursor: pointer;
+  }
+  #saleProducts .card button:hover { background: 135deg, #ec4b4b, #fa0404 }
+  /*  */
+  .price, .sale-price, .old-price {
+    margin: 4px 0; /* Khoảng cách trên/dưới text */
+}
+  
+  /* ===== Responsive ===== */
+  /* Tablet */
+  @media (max-width: 1024px) {
+    #saleProducts {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  
+  /* Mobile */
+  @media (max-width: 480px) {
+    #saleProducts {
+      grid-template-columns: repeat(2, 1fr); /* 2 sp / dòng */
+    }
+  
+    #saleProducts .card img {
+      height: 150px;
+    }
+  
+    #saleProducts .card button {
+      padding:6px;
+    font-size:13px;
+}
+  /* Grid container scroll ngang */
+#highlight, #saleProducts {
+  display: flex;
+  overflow-x: auto;
+  gap: 16px;
+  padding-bottom: 10px;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch; /* mượt trên iOS */
+}
+
+/* Card */
+#highlight .card, #saleProducts .card {
+  flex: 0 0 46%; /* chiếm ~50% width - 2 card trên 1 màn hình */
+  min-width: 48%; 
+  box-sizing: border-box;
+  
+}
+/* Container scroll ngang */
+/* Container scroll ngang */
+#highlight, #saleProducts {
+  display: flex;
+  overflow-x: auto;
+  gap: 16px;          /* khoảng cách giữa card */
+  padding-left: 0;    /* bỏ padding trái */
+  padding-right: 16px; /* có thể giữ padding phải cho scroll đẹp */
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  margin: 0;          /* chắc chắn container không bị margin */
+}
+/* Optional: ẩn scrollbar để nhìn đẹp hơn */
+/* #highlight::-webkit-scrollbar,
+#saleProducts::-webkit-scrollbar {
+  display: none;
+} */
+
+}
+  
+    .sale-badge {
+      font-size: 10px;
+      padding: 1px 4px;
+    }
+  
+    
+    /* ===== FIX MINI NAVBAR ICON & TEXT ===== */
+/* FIX MINI NAVBAR TRÊN MOBILE: ICON & CHỮ GẦN NHAU */
+/* CHO .category-navbar-index item trên mobile (<480px) */
+@media (max-width: 480px) {
+  .category-navbar-index .category-item {
+    padding: 4px;           /* giảm padding bên trong */
+    gap: 2px;               /* khoảng cách giữa ảnh và chữ */
+    text-align: center;
+  }
+
+  .category-navbar-index .category-item img {
+    width: 50px;            /* giảm kích thước ảnh nếu muốn */
+    height: 50px;
+    margin-bottom: 2px;     /* khoảng cách ảnh - chữ */
+  }
+
+  .category-navbar-index .category-item span {
+    font-size: 11px;        /* chữ nhỏ hơn */
+    line-height: 1.1;       /* chữ sát ảnh hơn */
+  }
+}
+/* CHO .category-navbar-index item trên mobile */
+@media (max-width: 480px) {
+  .category-navbar-index {
+    gap: 8px;               /* khoảng cách giữa các item */
+    padding: 8px 6px;       
+    overflow-x: auto;
+  }
+
+  .category-navbar-index .category-item {
+    display: flex;
+    flex-direction: column; /* ảnh trên, chữ dưới */
+    align-items: center;
+    justify-content: center;
+    padding: 4px;           /* giảm padding */
+    gap: 2px;               /* ảnh và chữ gần nhau */
+    width: 100px;           /* chiều rộng mỗi item */
+    border-radius: 12px;    /* bo tròn */
+    background-color: #cee2c9; /* xanh nhạt */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1); /* nhẹ shadow */
+    text-align: center;
+    transition: 0.3s;
+  }
+
+  .category-navbar-index .category-item img {
+    width: 50px;            
+    height: 50px;
+    margin-bottom: 2px;     /* khoảng cách ảnh - chữ */
+    border-radius: 50%;     /* tròn */
+  }
+
+  .category-navbar-index .category-item span {
+    font-size: 12px;        
+    line-height: 1.1;       
+    color: #000601;         /* chữ xanh đậm hơn nền */
+    font-weight: 500;
+  }
+
+  /* hover nhẹ */
+  .category-navbar-index .category-item:hover {
+    transform: translateY(-2px);
+    background-color: #b0edac;
+  }
+}
+    /*  */
+   .delete-banner{
+  position:absolute;
+  top:10px;
+  right:10px;
+  width:32px;
+  height:32px;
+  border:none;
+  border-radius:50%;
+  background:red;
+  color:white;
+  font-size:18px;
+  cursor:pointer;
+  z-index:10;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.delete-banner:hover{
+  background:#cc0000;
+}
     /*dt  */
     /* Card */
     .card-content .buttons {
@@ -49,6 +307,7 @@
     /* search trên mobile */
     @media (max-width: 480px){
   .search-box {
+    max-width:350px;
     width: 90vw;
     position: relative;
     touch-action: manipulation;
@@ -176,7 +435,7 @@
 }
 
 .category-title .category-text {
-  color: #2e7d32; /* xanh lá, bạn muốn đổi màu khác thì thay mã màu */
+  color: #2e7d32;; /* xanh lá, bạn muốn đổi màu khác thì thay mã màu */
   font-size: 24px;
   font-weight: 600;
 }
@@ -262,16 +521,17 @@
     gap: 8px;
   }
   .category-item {
-    width: 80px;
+    width: 60px;
     padding: 4px;
   }
   .category-item img {
-    width: 40px;
+    width: 20px;
     height: 40px;
   }
   .category-item span {
     font-size: 11px;
   }
+}
  /*  */
 /* ===== NAVBAR SẢN PHẨM RESPONSIVE ===== */
 nav {
@@ -336,7 +596,7 @@ nav a:hover img {
   font-weight: 600;
   color: #e53935;
 }
-}
+
 /* ===== MOBILE STYLES (≤768px) ===== */
 @media (max-width: 768px) {
   nav {
@@ -396,7 +656,7 @@ nav a:hover img {
   }
 
   nav a span {
-    font-size: px;
+    font-size:12px;
   }
 }
 /*  */
@@ -406,7 +666,7 @@ nav a:hover img {
     gap: 8px;              /* khoảng cách giữa các item */
     padding: 8px 6px;
     border: 2px solid #add1b0; 
-    background-color: #c1f3b2;
+    background-color: hsl(0, 0%, 99%);
     margin: 10px 0;
   }
 
@@ -421,7 +681,8 @@ nav a:hover img {
   }
 
   .category-navbar-index .category-item span {
-    font-size: 14px;        /* chữ to hơn, dễ đọc */
+    font-size: 14px; 
+           /* chữ to hơn, dễ đọc */
   }
 }
 
@@ -490,6 +751,7 @@ nav a:hover img {
 
 /* ================= MINI NAVBAR ================= */
 /* Navbar desktop cố định 1 dòng */
+
 .navbar {
   display: flex;                /* đổi từ grid sang flex */
   justify-content: space-between; /* cách đều nhau */
@@ -499,8 +761,10 @@ nav a:hover img {
 
 .navbar a {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 6px; /* khoảng cách icon & text */
+  text-align: center;
+  gap: 2px; /* khoảng cách icon & text */
   color: #4CAF50;
   text-decoration: none;
   font-weight: 500;
@@ -647,6 +911,7 @@ nav a:hover img {
 
     </style>
 
+<!-- Popup Login -->
 <!-- Popup Login -->
 <div id="authPopup">
   <h3>Admin Login</h3>
@@ -826,21 +1091,36 @@ nav a:hover img {
 
 <h2 class="title-highlight">
   Sản phẩm nổi bật
-  </h2>
+</h2>
+<p class="sub-title">Sản phẩm bán chạy</p>
   
   <div id="highlight" class="grid"></div>
-  
+  <h2 class="title-highlight">🔥Sản Phẩm Đang Giảm Giá</h2>
+  <p class="sub-title">Ưu đãi hấp dẫn - Mua ngay kẻo lỡ</p>
+<div id="saleProducts" class="grid"></div>
   
 
 <!-- ADMIN UPLOAD -->
 <div class="admin">
   <h2>Admin Upload sản phẩm nổi bật</h2>
+
   <input id="name" placeholder="Tên sản phẩm">
   <input id="price" placeholder="Giá">
-  <input id="unit" placeholder="Đơn vị"> 
+  <input id="unit" placeholder="Đơn vị">
+
+  <!-- THÊM CÁI NÀY -->
+  <select id="category">
+    <option value="highlight">⭐ Sản phẩm nổi bật</option>
+    <option value="sale">Sản phẩm giảm giá</option>
+  </select>
+
   <input type="file" id="image">
+
+  <input id="salePercent" placeholder="Sale % (vd: 10)">
+
   <button id="uploadProductBtn">Upload</button>
 </div>
+<!--  -->
 <div class="admin-banner" style="display:none; margin-top:20px; text-align:center;">
   <h2>Admin Upload Banner</h2>
   <input type="file" id="bannerFile"/>
@@ -906,6 +1186,7 @@ let startX = 0;
 document.getElementById("loginBtn").addEventListener("click", () => {
   document.getElementById("authPopup").style.display = "block";
 });
+
 
 function closePopup() {
   document.getElementById("authPopup").style.display = "none";
@@ -1002,9 +1283,64 @@ window.addEventListener("load", () => {
     }
   }
 });
+// /
+document.getElementById("uploadProductBtn").addEventListener("click", async () => {
+  const name = document.getElementById("name").value.trim();
+  const price = document.getElementById("price").value.trim();
+  const unit = document.getElementById("unit").value.trim();
+  const category = document.getElementById("category")?.value.trim() || "";
+  const description = document.getElementById("description")?.value.trim() || "";
+  const image = document.getElementById("image").files[0];
+  const salePercent = parseInt(document.getElementById("salePercent").value.trim()) || 0;
+  const username = localStorage.getItem("username"); // admin username
 
+  if (!name || !price || !image) {
+    alert("Vui lòng điền tên, giá và chọn ảnh!");
+    return;
+  }
+  
+  
+  const formData = new FormData();
+  formData.append("name", name);
+  formData.append("price", price);
+  formData.append("unit", unit || "Chưa có");
+  formData.append("category", category);
+  formData.append("description", description);
+  formData.append("username", username);
+  formData.append("image", image); // bắt buộc "image"
+  formData.append("salePercent", salePercent);
+  try {
+    const res = await fetch("/api/upload", {  // 🔹 sửa endpoint đúng
+      method: "POST",
+      body: formData
+    });
+
+    const data = await res.json();
+
+    if (data.error) {
+      console.error("Server trả lỗi:", data.error);
+      alert("Upload thất bại: " + data.error);
+      return;
+    }
+
+    alert("Upload sản phẩm thành công!");
+
+    // reset form
+    document.getElementById("name").value = "";
+    document.getElementById("price").value = "";
+    document.getElementById("unit").value = "";
+    if(document.getElementById("category")) document.getElementById("category").value = "";
+    if(document.getElementById("description")) document.getElementById("description").value = "";
+    document.getElementById("image").value = "";
+
+    if (typeof loadProducts === "function") loadProducts(); // reload danh sách sản phẩm
+  } catch (err) {
+    console.error("Lỗi fetch:", err);
+    alert("Upload thất bại!");
+  }
+});
 // ====== PRODUCTS ======
-
+window.userRole = localStorage.getItem("userRole");
 
 function addToCart(id,name,price,image,unit){
   let cart = JSON.parse(localStorage.getItem("cart"))||[];
@@ -1031,14 +1367,18 @@ function deleteProduct(id){
 // Load banners từ API
 async function loadBanners(){
   try{
+
     const res = await fetch("/api/banners");
     const banners = await res.json();
+
     const slidesContainer = document.querySelector(".banner-slider .slides");
     const dotsWrapper = document.getElementById("bannerDots");
+
     slidesContainer.innerHTML="";
     dotsWrapper.innerHTML="";
 
     banners.forEach((b,i)=>{
+
       const slide = document.createElement("div");
       slide.style.position="relative";
 
@@ -1047,109 +1387,122 @@ async function loadBanners(){
       img.style.width="100%";
       img.style.height="100%";
       img.style.objectFit="cover";
+
       slide.appendChild(img);
 
-      if(window.userRole==="admin"){
+      /* ===== NÚT XOÁ CHO ADMIN ===== */
+      if(window.userRole === "admin"){
         const btn = document.createElement("button");
-        btn.innerText="❌";
-        btn.style.position="absolute";
-        btn.style.top="10px";
-        btn.style.right="10px";
-        btn.style.zIndex="10";
-        btn.onclick = ()=> deleteBanner(b._id);
+        btn.innerHTML="❌";
+        btn.className="delete-banner";
+
+        btn.onclick = async (e)=>{
+          e.stopPropagation();
+
+          if(confirm("Bạn chắc muốn xoá banner này?")){
+            await deleteBanner(b._id);
+          }
+        };
+
         slide.appendChild(btn);
       }
 
       slidesContainer.appendChild(slide);
 
-      // Dots
+      /* dots */
       const dot = document.createElement("span");
       if(i===0) dot.classList.add("active");
+
       dot.addEventListener("click", ()=> goToSlide(i));
+
       dotsWrapper.appendChild(dot);
+
     });
 
-    goToSlide(0);
-    resetInterval();
-    enableSwipe();
-    window.addEventListener("resize", ()=> goToSlide(currentIndex));
-  }catch(err){ console.error(err); }
-}
+  }catch(err){
+    console.error("Lỗi load banner:",err);
+  }
 
+
+  goToSlide(0);
+  resetInterval();
+  enableSwipe();
+}
 // Slide function
+
+
 function goToSlide(index){
   const slidesContainer = document.querySelector(".banner-slider .slides");
-  const slides = slidesContainer.querySelectorAll("div");
+  const slides = slidesContainer.children;
   const dots = document.querySelectorAll("#bannerDots span");
 
-  currentIndex = index % slides.length;
-  slidesContainer.style.transition="transform 0.5s ease";
-  slidesContainer.style.transform=`translateX(-${currentIndex * 100}%)`;
+  currentIndex = (index + slides.length) % slides.length;
+
+  slidesContainer.style.transition = "transform 0.5s ease";
+  slidesContainer.style.transform = `translateX(-${currentIndex * 100}%)`;
 
   dots.forEach(d=>d.classList.remove("active"));
   if(dots[currentIndex]) dots[currentIndex].classList.add("active");
 }
 
-function nextSlide(){ 
-  const slides = document.querySelectorAll(".banner-slider .slides > div");
-  goToSlide(currentIndex+1);
+function nextSlide(){
+  goToSlide(currentIndex + 1);
 }
 
 function prevSlide(){
-  const slides = document.querySelectorAll(".banner-slider .slides > div");
-  goToSlide((currentIndex-1+slides.length)%slides.length);
+  goToSlide(currentIndex - 1);
+}
+
+function startAutoSlide(){
+
+// nếu màn hình nhỏ (mobile) thì không chạy auto
+if(window.innerWidth <= 768) return;
+
+clearInterval(interval);
+
+interval = setInterval(()=>{
+  nextSlide();
+},5000);
 }
 
 function resetInterval(){
-  clearInterval(interval);
-  interval = setInterval(nextSlide, 5000);
+  startAutoSlide();
 }
+/* THÊM ĐOẠN NÀY Ở CUỐI FILE */
+window.addEventListener("load", ()=>{
+  const images = document.querySelectorAll(".banner-slider img");
+  let loaded = 0;
 
-// Swipe
-function enableSwipe(){
-  const slidesContainer = document.querySelector(".banner-slider .slides");
-  const sliderWidth = slidesContainer.offsetWidth;
-
-  slidesContainer.addEventListener("pointerdown",(e)=>{
-    isDragging = true;
-    startX = e.clientX;
-    slidesContainer.style.transition="none";
-  });
-
-  slidesContainer.addEventListener("pointermove",(e)=>{
-    if(!isDragging) return;
-    const dx = e.clientX - startX;
-    slidesContainer.style.transform = `translateX(${-currentIndex*100 + (dx/sliderWidth)*100}%)`;
-  });
-
-  slidesContainer.addEventListener("pointerup", (e)=>{
-    if(!isDragging) return;
-    const dx = e.clientX - startX;
-    const threshold = 0.2; // 20% width
-    if(dx/sliderWidth > threshold) prevSlide();
-    else if(dx/sliderWidth < -threshold) nextSlide();
-    else goToSlide(currentIndex);
-
-    slidesContainer.style.transition="transform 0.5s ease";
-    isDragging = false;
-    resetInterval();
-  });
-
-  slidesContainer.addEventListener("pointerleave", ()=> {
-    if(isDragging){
-      slidesContainer.dispatchEvent(new PointerEvent("pointerup"));
+  images.forEach(img=>{
+    if(img.complete){
+      loaded++;
+    }else{
+      img.addEventListener("load", ()=>{
+        loaded++;
+        if(loaded === images.length){
+          startAutoSlide();
+        }
+      });
     }
   });
-}
 
-// Prev / Next buttons
-document.querySelector('.banner-slider .prev').onclick = ()=> { prevSlide(); resetInterval(); };
-document.querySelector('.banner-slider .next').onclick = ()=> { nextSlide(); resetInterval(); };
-
-// Init
-window.addEventListener("load", ()=>{
-  loadBanners();
+  if(loaded === images.length){
+    startAutoSlide();
+  }
 });
+
+// Swipe
+
+
+// // Prev / Next buttons
+// document.querySelector('.banner-slider .prev').onclick = ()=> { prevSlide(); resetInterval(); };
+// document.querySelector('.banner-slider .next').onclick = ()=> { nextSlide(); resetInterval(); };
+
+// // Init
+// window.addEventListener("load", ()=>{
+  
+//   loadBanners();
+// });
 //search
 
 const searchInput = document.getElementById("searchInput");
@@ -1214,75 +1567,81 @@ document.addEventListener("click", (e) => {
   }
 });
 // ====== PRODUCTS ======
-// ====== PRODUCTS ======
 async function loadProducts() {
   try {
     const res = await fetch("/api/fruits");
     const products = await res.json();
-    const grid = document.getElementById("highlight");
-    grid.innerHTML = "";
 
-    // Lọc sản phẩm nổi bật
-    const highlightProducts = products.filter(
-      p => p.category?.toLowerCase() === "highlight"
-    );
+    const highlightGrid = document.getElementById("highlight");
+    const saleGrid = document.getElementById("saleProducts");
 
-    highlightProducts.forEach(p => {
-      const card = document.createElement("div");
-      card.className = "card";
+    highlightGrid.innerHTML = "";
+    saleGrid.innerHTML = "";
 
-      card.innerHTML = `
-        <img src="${p.image}" alt="${p.name}" onclick="window.location.href='product.html?id=${p._id}'">
+    products.forEach(p => {
+      const price = Number(p.price) || 0;
+      const salePercent = Number(p.salePercent) || 0;
+      const salePrice = salePercent > 0 ? price - (price * salePercent / 100) : price;
 
-        <div class="card-content">
-          <h3>${p.name}</h3>
-          <p>${Number(p.price).toLocaleString()} VND / ${p.unit}</p>
+      // HTML card
+      let priceHTML = "";
+      if (salePercent > 0) {
+        priceHTML = `
+          <p class="old-price">${price.toLocaleString()} VND</p>
+          <p class="sale-price">${salePrice.toLocaleString()} VND / ${p.unit || ""}</p>
+        `;
+      } else {
+        priceHTML = `<p class="price">${price.toLocaleString()} VND / ${p.unit || ""}</p>`;
+      }
 
-          <div class="buttons">
-            <button class="add-cart" onclick="addToCart(
-              '${p._id}',
-              '${p.name}',
-              '${p.price}',
-              '${p.image}',
-              '${p.unit}'
-            )">Thêm vào giỏ</button>
+      const cardHTML = `
+  ${salePercent > 0 ? `<div class="sale-badge">SALE-${salePercent}%</div>` : ""}
+  <img src="${p.image}" style="cursor:pointer"
+       onclick="window.location.href='product.html?id=${p._id}'">
 
-            <button class="buy-now" onclick="window.location.href='checkout.html?productId=${p._id}'">
-              Mua ngay
-            </button>
+  <div class="card-content">
+    <h3>${p.name}</h3>
+    ${priceHTML}
 
-            ${userRole === "admin" 
-              ? `<button class="delete" onclick="deleteProduct('${p._id}')">❌ Xóa</button>` 
-              : ""
-            }
-          </div>
-        </div>
-      `;
+    ${
+      userRole === "admin"
+      ? `
+      <div class="buttons">
+        <button onclick="editPrice('${p._id}',${price})">✏️ Sửa giá</button>
+        <button onclick="deleteProduct('${p._id}')">❌ Xoá</button>
+      </div>
+      `
+      : `<button onclick="addToCart('${p._id}','${p.name}',${salePrice},'${p.image}','${p.unit}')">🛒 Thêm vào giỏ</button>`
+    }
 
-      grid.appendChild(card);
+  </div>
+`;
+
+      // ⭐ Highlight
+      if (p.category === "highlight") {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = cardHTML;
+        highlightGrid.appendChild(card);
+      }
+
+      // 🔥 Sale: hiển thị tất cả sản phẩm category === "sale"
+      if (p.category === "sale") {
+        const card = document.createElement("div");
+        card.className = "card";
+        card.innerHTML = cardHTML;
+        saleGrid.appendChild(card);
+      }
     });
 
-  } catch (err) {
+  } catch(err) {
     console.error("Lỗi load sản phẩm:", err);
   }
 }
 
-// Hàm xóa sản phẩm (gọi API backend)
-async function deleteProduct(id) {
-  if (!confirm("Bạn có chắc muốn xóa sản phẩm này?")) return;
-  try {
-    const res = await fetch(`/api/fruits/${id}`, { method: "DELETE" });
-    const data = await res.json();
-    if (data.success) {
-      alert("Đã xóa sản phẩm!");
-      loadProducts(); // reload lại danh sách
-    } else {
-      alert("Xóa thất bại!");
-    }
-  } catch (err) {
-    console.error("Lỗi xóa sản phẩm:", err);
-  }
-}
+updateCartCount();
+loadProducts();
+
 // UPLOAD BANNER
 document.getElementById("uploadBannerBtn").addEventListener("click", async ()=>{
   const file=document.getElementById("bannerFile").files[0];
@@ -1300,10 +1659,27 @@ document.getElementById("uploadBannerBtn").addEventListener("click", async ()=>{
   } catch(err){ console.error(err); alert("Upload banner thất bại!"); }
 });
 
-async function deleteBanner(id){ await fetch("/api/banner/"+id,{method:"DELETE"}); loadBanners(); }
+async function deleteBanner(id){
+
+const res = await fetch(`/api/banner/${id}`,{
+  method:"DELETE"
+})
+
+const data = await res.json()
+
+if(data.success){
+  loadBanners()
+}else{
+  alert("Xoá banner thất bại")
+}
+
+}
 
 // INITIAL
-updateCartCount(); loadProducts(); loadBanners();
+updateCartCount();
+loadProducts();
+// loadSaleProducts();
+loadBanners();
 // Prev / Next dùng cơ chế hiện tại
 document.querySelector('.banner-slider .prev').onclick = ()=> {
   currentIndex = (currentIndex - 1 + document.querySelectorAll(".banner-slider .slides > div").length) % document.querySelectorAll(".banner-slider .slides > div").length;
@@ -1316,9 +1692,43 @@ document.querySelector('.banner-slider .next').onclick = ()=> {
   goToSlide(currentIndex);
   resetInterval();
 };
+// sữa giá
+async function editPrice(id, oldPrice) {
+  try {
 
+    const newPrice = prompt("Nhập giá mới:", oldPrice);
+    if (!newPrice) return;
+
+    const username = localStorage.getItem("username");
+
+    const res = await fetch(`/api/fruits/${id}/price`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        username,
+        price: Number(newPrice)
+      })
+    });
+
+    const data = await res.json();
+
+    if (data.success) {
+      alert("✅ Cập nhật giá thành công");
+      loadProducts(); 
+    } else {
+      alert("❌ " + data.message);
+    }
+
+  } catch (err) {
+    console.error(err);
+    alert("❌ Lỗi kết nối server");
+  }
+}
 </script>
 <style>
+
   /* Nút nổi chính */
  
 #floatingBtn {
@@ -1412,8 +1822,8 @@ document.querySelector('.banner-slider .next').onclick = ()=> {
 </div>
 
 <style>
-
-</style>
+ 
+  </style>
 
 <script>
 // Chạy khi DOM load xong
@@ -1442,8 +1852,8 @@ contactPopup.addEventListener("click",(e)=>{
 });
 
 
-
 </script>
+
 
 </script>
 

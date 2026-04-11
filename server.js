@@ -131,10 +131,19 @@ const fruitSchema = new mongoose.Schema({
 
 // Banner
 const bannerSchema = new mongoose.Schema({
-    image: String,
-            createdAt: { type: Date, default: Date.now }
-})
-        const Banner = mongoose.model("Banner", bannerSchema)
+  image: String,
+
+  // vị trí ảnh (kéo)
+  x: { type: Number, default: 0 },
+  y: { type: Number, default: 0 },
+
+  // zoom ảnh
+  scale: { type: Number, default: 1 },
+
+  createdAt: { type: Date, default: Date.now }
+});
+
+const Banner = mongoose.model("Banner", bannerSchema);
 
 // Order Schema
 
@@ -299,48 +308,68 @@ await user.save()
         })
 
 // ===== Banner =====
-        app.post("/api/banner/upload", upload.single("image"), async (req,res)=>{
-        try {
-        const { username } = req.body
-    const user = await User.findOne({ username })
-        if(!user || user.role !== "admin") return res.status(403).json({error:"Chỉ admin mới được phép"})
-        if(!req.file) return res.status(400).json({error:"Chưa chọn ảnh"})
+app.post("/api/banner/upload", upload.single("image"), async (req, res) => {
+  try {
+    const { username } = req.body;
 
-        // Upload lên Cloudinary
-        const result = await uploadToCloudinary(req.file.buffer, "fruitshop/banners")
-    
+    const user = await User.findOne({ username });
+    if (!user || user.role !== "admin")
+      return res.status(403).json({ error: "Chỉ admin mới được phép" });
+
+    if (!req.file)
+      return res.status(400).json({ error: "Chưa chọn ảnh" });
+
+    // Upload Cloudinary
+    const result = await uploadToCloudinary(
+      req.file.buffer,
+      "fruitshop/banners"
+    );
+
+    // ✅ tạo banner chuẩn (có sẵn edit system)
     const banner = new Banner({
-    image: result.secure_url
-})
-await banner.save()
-    res.json({success:true, banner})
-        } catch(err) {
-        console.error(err)
-    res.status(500).json({error:err.message})
-        }
-        })
-        app.get("/api/banners", async (req,res)=>{
-        try{
-        const banners = await Banner.find().sort({createdAt:-1})
-        res.json(banners)
-  }catch(err){
-        res.status(500).json({error:err.message})
-        }
-        })
+      image: result.secure_url,
+      x: 0,
+      y: 0,
+      scale: 1
+    });
 
-        app.delete("/api/banner/:id", async (req,res)=>{
-        try{
-        const { id } = req.params
-    const banner = await Banner.findById(id)
-    if(!banner) return res.status(404).json({error:"Not found"})
+    await banner.save();
 
-await Banner.findByIdAndDelete(id)
-    res.json({success:true})
-        }catch(err){
-        res.status(500).json({error:err.message})
-        }
-        })
+    res.json({ success: true, banner });
 
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
+app.get("/api/banners", async (req, res) => {
+  try {
+    const banners = await Banner.find().sort({ createdAt: -1 });
+    res.json(banners);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+
+app.delete("/api/banner/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const banner = await Banner.findById(id);
+    if (!banner)
+      return res.status(404).json({ error: "Not found" });
+
+    await Banner.findByIdAndDelete(id);
+
+    res.json({ success: true });
+
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 
         // Lưu order
 

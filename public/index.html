@@ -14,6 +14,7 @@
 <body>
 
   <style>
+   
     /*  */
     .sub-title{
   display:flex;
@@ -1428,80 +1429,80 @@ async function loadBanners(){
   enableSwipe();
 }
 // Slide function
+
+
 function goToSlide(index){
   const slidesContainer = document.querySelector(".banner-slider .slides");
-  const slides = slidesContainer.querySelectorAll("div");
+  const slides = slidesContainer.children;
   const dots = document.querySelectorAll("#bannerDots span");
 
-  currentIndex = index % slides.length;
-  slidesContainer.style.transition="transform 0.5s ease";
-  slidesContainer.style.transform=`translateX(-${currentIndex * 100}%)`;
+  currentIndex = (index + slides.length) % slides.length;
+
+  slidesContainer.style.transition = "transform 0.5s ease";
+  slidesContainer.style.transform = `translateX(-${currentIndex * 100}%)`;
 
   dots.forEach(d=>d.classList.remove("active"));
   if(dots[currentIndex]) dots[currentIndex].classList.add("active");
 }
 
-function nextSlide(){ 
-  const slides = document.querySelectorAll(".banner-slider .slides > div");
-  goToSlide(currentIndex+1);
+function nextSlide(){
+  goToSlide(currentIndex + 1);
 }
 
 function prevSlide(){
-  const slides = document.querySelectorAll(".banner-slider .slides > div");
-  goToSlide((currentIndex-1+slides.length)%slides.length);
+  goToSlide(currentIndex - 1);
+}
+
+function startAutoSlide(){
+
+// nếu màn hình nhỏ (mobile) thì không chạy auto
+if(window.innerWidth <= 768) return;
+
+clearInterval(interval);
+
+interval = setInterval(()=>{
+  nextSlide();
+},5000);
 }
 
 function resetInterval(){
-  clearInterval(interval);
-  interval = setInterval(nextSlide, 5000);
+  startAutoSlide();
 }
+/* THÊM ĐOẠN NÀY Ở CUỐI FILE */
+window.addEventListener("load", ()=>{
+  const images = document.querySelectorAll(".banner-slider img");
+  let loaded = 0;
 
-// Swipe
-function enableSwipe(){
-  const slidesContainer = document.querySelector(".banner-slider .slides");
-  const sliderWidth = slidesContainer.offsetWidth;
-
-  slidesContainer.addEventListener("pointerdown",(e)=>{
-    isDragging = true;
-    startX = e.clientX;
-    slidesContainer.style.transition="none";
-  });
-
-  slidesContainer.addEventListener("pointermove",(e)=>{
-    if(!isDragging) return;
-    const dx = e.clientX - startX;
-    slidesContainer.style.transform = `translateX(${-currentIndex*100 + (dx/sliderWidth)*100}%)`;
-  });
-
-  slidesContainer.addEventListener("pointerup", (e)=>{
-    if(!isDragging) return;
-    const dx = e.clientX - startX;
-    const threshold = 0.2; // 20% width
-    if(dx/sliderWidth > threshold) prevSlide();
-    else if(dx/sliderWidth < -threshold) nextSlide();
-    else goToSlide(currentIndex);
-
-    slidesContainer.style.transition="transform 0.5s ease";
-    isDragging = false;
-    resetInterval();
-  });
-
-  slidesContainer.addEventListener("pointerleave", ()=> {
-    if(isDragging){
-      slidesContainer.dispatchEvent(new PointerEvent("pointerup"));
+  images.forEach(img=>{
+    if(img.complete){
+      loaded++;
+    }else{
+      img.addEventListener("load", ()=>{
+        loaded++;
+        if(loaded === images.length){
+          startAutoSlide();
+        }
+      });
     }
   });
-}
 
-// Prev / Next buttons
-document.querySelector('.banner-slider .prev').onclick = ()=> { prevSlide(); resetInterval(); };
-document.querySelector('.banner-slider .next').onclick = ()=> { nextSlide(); resetInterval(); };
-
-// Init
-window.addEventListener("load", ()=>{
-  
-  loadBanners();
+  if(loaded === images.length){
+    startAutoSlide();
+  }
 });
+
+// Swipe
+
+
+// // Prev / Next buttons
+// document.querySelector('.banner-slider .prev').onclick = ()=> { prevSlide(); resetInterval(); };
+// document.querySelector('.banner-slider .next').onclick = ()=> { nextSlide(); resetInterval(); };
+
+// // Init
+// window.addEventListener("load", ()=>{
+  
+//   loadBanners();
+// });
 //search
 
 const searchInput = document.getElementById("searchInput");
@@ -1600,7 +1601,9 @@ async function loadProducts() {
 
   <div class="card-content">
     <h3>${p.name}</h3>
-    ${priceHTML}
+    <div class="card-price">
+      ${priceHTML}
+    </div>
 
     ${
       userRole === "admin"
@@ -1852,6 +1855,7 @@ contactPopup.addEventListener("click",(e)=>{
 
 
 </script>
+
 
 </script>
 

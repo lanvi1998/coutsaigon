@@ -208,7 +208,9 @@ async function loadProducts(){
 
         <div class="card-content">
           <h3>${p.name}</h3>
-          <p>${Number(p.price).toLocaleString()} VND / ${p.unit || ''}</p>
+        <div class="card-price">
+  ${Number(p.price).toLocaleString()} VND / ${p.unit || ''}
+</div>
 
           ${userRole==="admin"
   ? `

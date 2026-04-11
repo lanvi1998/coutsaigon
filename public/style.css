@@ -267,6 +267,7 @@ nav{
   transition: 0.3s;
 }
 
+
 .card:hover {
   transform: translateY(-8px) scale(1.03);
 }
@@ -280,11 +281,38 @@ nav{
 }
 
 /* Card content */
-.card-content {
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
+.card-price{
+  font-size:18px;
+  font-weight:700;
+  color:#070101;
+  margin-top:auto;
+}
+
+.card-price .price{
+  color:#333;
+  font-weight:600;
+}
+
+.card-price .sale-price{
+  color:#e53935;
+  font-weight:700;
+  font-size:18px;
+}
+
+.card-price .old-price{
+  color:#999;
+  text-decoration:line-through;
+  font-size:14px;
+}
+/*  */
+.card-content{
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between; /* chia đều khoảng */
+  align-items:center; /* căn giữa ngang */
+  text-align:center;
+  padding:12px;
+  flex:1;
 }
 
 .card-content h3 {
@@ -302,80 +330,90 @@ nav{
   cursor: pointer;
 }
 /* ===== BANNER ===== */
-.banner-container {
-  width: 90%;          /* chiều ngang nhỏ hơn 100% màn hình */
-  max-width: 1200px;   /* không quá to trên màn hình lớn */
-  margin: 0 auto;      /* căn giữa */
-  border-radius: 12px;
-  overflow: hidden; 
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-}
-.banner-slider {
-  position: relative;
-  width: 100%;
-  height: 500px; /* tùy chỉnh chiều cao banner */
-  overflow: hidden;
+.banner-container{
+  width:90%;
+  max-width:1200px;
+  margin:auto;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 4px 12px rgba(0,0,0,0.2);
 }
 
-.banner-slider .slides {
-  display: flex;
-  transition: transform 0.5s ease;
+/* slider */
+.banner-slider{
+  position:relative;
+  width:100%;
+  height:600px;
+  overflow:hidden;
 }
 
-.banner-slider .slides > div {
-  flex: 0 0 100%; /* Mỗi slide full-width */
-  height: 100%;
-  position: relative;
+/* slides */
+.banner-slider .slides{
+  display:flex;
+  height:100%;
+  transition:transform 0.5s ease;
 }
 
-.banner-slider .slides > div img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-}
-/* dots */
-#bannerDots {
-  text-align: center;
-  margin-top: 10px;
+/* mỗi slide */
+.banner-slider .slides > div{
+  flex:0 0 100%;      /* QUAN TRỌNG */
+  width:100%;
+  height:100%;
+  position:relative;
 }
 
-#bannerDots span {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: #ccc;
-  margin: 0 5px;
-  cursor: pointer;
+/* image */
+.banner-slider .slides img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+  display:block;
 }
 
-#bannerDots span.active {
-  background: #333;
-}
+/* nút prev next */
 .banner-slider button.prev,
-.banner-slider button.next {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: rgba(0,0,0,0.4);
-  color: #fff;
-  border: none;
-  padding: 10px 15px;
-  cursor: pointer;
-  border-radius: 4px;
-  font-size: 20px;
-  z-index: 10;
+.banner-slider button.next{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  background:rgba(0,0,0,0.4);
+  color:#fff;
+  border:none;
+  padding:10px 15px;
+  cursor:pointer;
+  border-radius:4px;
+  font-size:22px;
+  z-index:10;
 }
 
-.banner-slider button.prev { left: 10px; }
-.banner-slider button.next { right: 10px; }
+.banner-slider button.prev{ left:10px; }
+.banner-slider button.next{ right:10px; }
 
 .banner-slider button.prev:hover,
-.banner-slider button.next:hover { background: rgba(0,0,0,0.6); }
+.banner-slider button.next:hover{
+  background:rgba(0,0,0,0.6);
+}
 
+/* dots */
+#bannerDots{
+  text-align:center;
+  margin-top:10px;
+}
 
+#bannerDots span{
+  display:inline-block;
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:#ccc;
+  margin:0 5px;
+  cursor:pointer;
+}
 
+#bannerDots span.active{
+  background:#333;
+}
   /* ===== ADMIN ===== */
   .admin{
     background:white;
@@ -489,15 +527,62 @@ nav{
  /* ===== MOBILE ===== */
 
 /* ===== MOBILE STYLES (≤768px) ===== */
+/* ===== MOBILE STYLES (≤768px) ===== */
+/* ===== MOBILE BANNER (≤768px) ===== */
 @media (max-width:768px){
-  .banner-slider {
-    max-width: 100%;  /* full width điện thoại */
-    height: 200px;     /* hoặc auto tùy ý */
+
+  .banner-container{
+    width:100%;
+    overflow:hidden;
   }
-  .banner-container {
-    overflow-x: auto;
-    scroll-snap-type: x mandatory; /* giúp cuộn snap từng ảnh */
+
+  .banner-slider{
+    width:100%;
+    height:220px;
+    overflow:hidden;
+    position:relative;
   }
+
+  /* container slide */
+  .banner-slider .slides{
+    display:flex;
+    width:100%;
+    height:100%;
+
+    overflow-x:auto;
+    scroll-snap-type:x mandatory;
+    scroll-behavior:smooth;
+
+    -webkit-overflow-scrolling:touch;
+  }
+
+  /* mỗi banner */
+  .banner-slider .slides > div{
+    flex:0 0 100%;
+    width:100%;
+    height:100%;
+    scroll-snap-align:start;
+  }
+
+  /* ảnh banner */
+  .banner-slider .slides img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+  }
+
+  /* ẩn scrollbar */
+  .banner-slider .slides::-webkit-scrollbar{
+    display:none;
+  }
+
+ /* ẩn nút next + prev trên điện thoại */
+ .banner-slider .next,
+ .banner-slider .prev{
+   display: none;
+ }
+  
 
   .grid{
     grid-template-columns: repeat(2,1fr);
@@ -505,12 +590,11 @@ nav{
     
   }
 
+
   .card img{
-    height:160px;
-    border-radius: 8px;
-    padding: 10px;
-  
-    
+    height:200px;
+    border-radius:10px;
+   
   }
 
   .card-content{
@@ -525,12 +609,16 @@ nav{
   .card-content button{
     padding:6px;
     font-size:13px;
+    
   }
-
+  .card-price{
+    font-size:15px;
+    font-weight:700;
+    color:#070101;
+    margin-top:auto;
+  }
 }
-  
-  
-  
+
   
 
 
