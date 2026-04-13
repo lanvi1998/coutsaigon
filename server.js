@@ -354,22 +354,29 @@ app.get("/api/banners", async (req, res) => {
 });
 
 
-app.delete("/api/banner/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
+app.delete("/api/banner/:id", async (req,res)=>{
+  try{
 
-    const banner = await Banner.findById(id);
-    if (!banner)
-      return res.status(404).json({ error: "Not found" });
+    const banner = await Banner.findById(req.params.id)
+    if(!banner){
+      return res.status(404).json({error:"Not found"})
+    }
 
-    await Banner.findByIdAndDelete(id);
+    if(banner.image){
+      const file = banner.image.split("/").pop().split(".")[0]
+      const publicId = "fruitshop/banners/" + file
 
-    res.json({ success: true });
+      await cloudinary.uploader.destroy(publicId)
+    }
 
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    await Banner.findByIdAndDelete(req.params.id)
+
+    res.json({success:true})
+
+  }catch(err){
+    res.status(500).json({error:err.message})
   }
-});
+})
 
         // Lưu order
 
@@ -397,8 +404,8 @@ const order = new Order({
 
 await order.save()
 
-// ⚡ TRẢ KẾT QUẢ CHO WEB NGAY
-res.json({ success:true })
+// // ⚡ TRẢ KẾT QUẢ CHO WEB NGAY
+// res.json({ success:true })
 
 // ===== GỬI TELEGRAM =====
 let cartText = cart.map(p =>
