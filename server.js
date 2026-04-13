@@ -404,8 +404,8 @@ const order = new Order({
 
 await order.save()
 
-// // ⚡ TRẢ KẾT QUẢ CHO WEB NGAY
-// res.json({ success:true })
+// ⚡ TRẢ KẾT QUẢ CHO WEB NGAY
+res.json({ success:true })
 
 // ===== GỬI TELEGRAM =====
 let cartText = cart.map(p =>
