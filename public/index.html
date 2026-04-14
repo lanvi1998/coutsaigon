@@ -1187,6 +1187,7 @@ nav a:hover img {
 
 <script>
 // ====== LOGIN ======
+
 const API = "https://coutsaigon-production.up.railway.app";
 let userRole = null;
 let currentIndex = 0;
@@ -1445,8 +1446,28 @@ async function loadBanners(){
   enableSwipe();
 }
 // Slide function
+function enableSwipe(){
+  const slider = document.querySelector(".banner-slider");
+  if(!slider) return;
 
+  let startX = 0;
 
+  slider.addEventListener("touchstart", e=>{
+    startX = e.touches[0].clientX;
+  });
+
+  slider.addEventListener("touchend", e=>{
+    let endX = e.changedTouches[0].clientX;
+
+    if(endX - startX > 50){
+      prevSlide();
+    }else if(startX - endX > 50){
+      nextSlide();
+    }
+  });
+}
+
+// 
 function goToSlide(index){
   const slidesContainer = document.querySelector(".banner-slider .slides");
   const slides = slidesContainer.children;
@@ -1845,6 +1866,7 @@ async function editPrice(id, oldPrice) {
 
 <script>
 // Chạy khi DOM load xong
+
 const floatingBtn = document.getElementById("floatingBtn");
 const contactPopup = document.getElementById("contactPopup");
 
