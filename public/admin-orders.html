@@ -177,6 +177,7 @@ button.deliveredBtn { background: #2196f3; color: white; border: none; border-ra
 </div>
 
 <script>
+    const API = "https://coutsaigon-production.up.railway.app";
 let allOrders = [];
 
 // Chuyển trạng thái sang tiếng Việt
@@ -218,7 +219,7 @@ function renderTable(orders) {
 // Load đơn hàng từ server
 async function loadOrders() {
     try{
-        const res = await fetch("/api/orders");
+        const res = await fetch(API + "/api/orders");
         const orders = await res.json();
 
         console.log("Orders:",orders);
@@ -319,7 +320,7 @@ function closeModal(){ document.getElementById("modal").style.display="none"; }
 
 // Cập nhật trạng thái
 async function updateStatus(id,status){
-    await fetch("/api/orders/"+id+"/status",{
+    await fetch(API + "/api/orders/"+id+"/status",{
         method:"PUT",
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify({status})
