@@ -404,7 +404,7 @@ const order = new Order({
 
 await order.save()
 
-// ⚡ TRẢ KẾT QUẢ CHO WEB NGAY
+// ⚡ TRẢ KẾT QUẢ CHO WEB NGAYs
 res.json({ success:true })
 
 // ===== GỬI TELEGRAM =====
