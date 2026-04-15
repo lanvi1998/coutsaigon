@@ -827,7 +827,7 @@ z-index:9999;
         id: p._id,
         name: p.name,
         price: p.price,
-        image:API + p.image,
+        image: p.image,
         qty: Number(qtyInput.value)
     };
 
@@ -861,7 +861,7 @@ loginBtnPopup.onclick = async () => {
     }
 
     try {
-        const res = await fetch("/api/login", {
+        const res = await fetch(API + "/api/login", {
             method: "POST",
             headers: {"Content-Type":"application/json"},
             body: JSON.stringify({ username, password })
@@ -951,11 +951,11 @@ updateCartCount()
 async function loadProduct(){
   const mainImage = document.getElementById("mainImage")
 
-    const res = await fetch("/api/fruits/product/"+productId)
+    const res = await fetch(API + "/api//fruits/product/"+productId)
     const p = await res.json()
 
     productPrice = Number(p.price)
-    document.getElementById("mainImage").src = API + p.image; // ảnh chính
+    document.getElementById("mainImage").src = p.image; // ảnh chính
     document.getElementById("productName").innerText = p.name
     document.getElementById("productPrice").innerText = productPrice.toLocaleString()+" VND"
     document.getElementById("productUnit").innerText = "Đơn vị: "+p.unit
@@ -1071,7 +1071,7 @@ function enableSwipeThumbs(product){
 async function deleteThumb(src, element){
     if(!confirm("Xoá ảnh này?")) return;
 
-    const res = await fetch("/api/fruits/"+productId+"/thumb", {
+    const res = await fetch(API + "/api//fruits/"+productId+"/thumb", {
         method:"DELETE",
         headers: {"Content-Type":"application/json"},
         body: JSON.stringify({
@@ -1150,7 +1150,7 @@ const formData = new FormData()
 formData.append("thumb",file)
 formData.append("username",username)
 
-const res = await fetch("/api/fruits/"+productId+"/thumb",{
+const res = await fetch(API + "/api/i/fruits/"+productId+"/thumb",{
 method:"POST",
 body:formData
 })
@@ -1197,7 +1197,7 @@ alert(data.message)
 
 document.getElementById("addToCartBtn").onclick=async()=>{
 
-const res = await fetch("/api/fruits/product/"+productId)
+const res = await fetch(API + "/api/fruits/product/"+productId)
 
 const p = await res.json()
 
@@ -1218,7 +1218,7 @@ cart.push({
 id:p._id,
 name:p.name,
 price:p.price,
-image:API + p.image,
+image:p.image,
 qty:qty
 
 })
@@ -1246,7 +1246,7 @@ document.getElementById("saveBtn").onclick = async () => {
     // Lấy HTML từ editor rich text
     const desc = document.getElementById("editor").innerHTML;
 
-    const res = await fetch("/api/fruits/"+productId+"/description",{
+    const res = await fetch(API + "/api//fruits/"+productId+"/description",{
         method:"PUT",
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify({username, description: desc})
@@ -1296,7 +1296,7 @@ const div = document.createElement("div")
 
 div.innerHTML = `
   <div style="display:flex; align-items:center; gap:8px;">
-    <img src="${API + p.image}" alt="${API + p.image}" style="width:40px; height:40px; object-fit:cover; border-radius:6px;">
+    <img src="${p.image}" alt="${p.name}" style="width:40px; height:40px; object-fit:cover; border-radius:6px;">
     <div>
       <strong>${p.name}</strong><br>
       <small>${Number(p.price).toLocaleString()} VND</small>
@@ -1323,20 +1323,20 @@ document.addEventListener("click",(e)=>{
   }
 });
 
-// searchInput.addEventListener("input",()=>{
+searchInput.addEventListener("input",()=>{
 
-// const keyword = searchInput.value.toLowerCase()
+const keyword = searchInput.value.toLowerCase()
 
-// searchResults.innerHTML=""
+searchResults.innerHTML=""
 
-// if(keyword===""){
-// searchResults.style.display="none"
-// return
-// }
+if(keyword===""){
+searchResults.style.display="none"
+return
+}
 
-// const result = allProducts.filter(p=>
-// p.name.toLowerCase().includes(keyword)
-// )
+const result = allProducts.filter(p=>
+p.name.toLowerCase().includes(keyword)
+)
 
 // 🔥 nếu không tìm thấy
 if(result.length === 0){
@@ -1355,7 +1355,7 @@ const div = document.createElement("div")
 
 div.innerHTML = `
 <div style="display:flex; align-items:center; gap:8px;">
-<img src="${API + p.image}" alt="${API + p.image}" style="width:40px; height:40px; object-fit:cover; border-radius:6px;">
+<img src="${p.image}" alt="${p.name}" style="width:40px; height:40px; object-fit:cover; border-radius:6px;">
 <div>
 <strong>${p.name}</strong><br>
 <small>${Number(p.price).toLocaleString()} VND</small>
