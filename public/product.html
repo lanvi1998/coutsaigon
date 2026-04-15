@@ -991,57 +991,112 @@ function enableSwipeThumbs(product){
 
     thumbContainer.innerHTML = "";
 
+    const fixUrl = (src) => {
+        if(!src) return "";
+        return src.startsWith("http") ? src : API + "/" + src;
+    };
+
     let thumbs = [];
 
-    // gom ảnh chính + ảnh phụ
+    // ảnh chính + ảnh phụ
     if(product.image) thumbs.push(product.image);
-    if(product.thumbs?.length) thumbs = thumbs.concat(product.thumbs);
+    if(product.thumbs && product.thumbs.length) {
+        thumbs = thumbs.concat(product.thumbs);
+    }
 
-    if(!thumbs.length) return;
-
-    const getImgUrl = (src) =>
-        src.startsWith("http") ? src : API + "/" + src;
-
-    // set ảnh đầu tiên
-    mainImage.src = getImgUrl(thumbs[0]);
+    const imgList = [];
 
     thumbs.forEach((src, index) => {
+        const url = fixUrl(src);
 
-        const imgUrl = getImgUrl(src);
-
+        const wrap = document.createElement("div");
         const img = document.createElement("img");
-        img.src = imgUrl;
 
-        const div = document.createElement("div");
-        div.appendChild(img);
+        img.src = url;
+        wrap.appendChild(img);
 
-        // active mặc định ảnh đầu
-        if(index === 0){
-            img.classList.add("selected");
-        }
+        imgList.push(img);
 
         // click đổi ảnh chính
         img.onclick = () => {
-            mainImage.src = imgUrl;
+            mainImage.src = url;
 
-            thumbContainer.querySelectorAll("img")
-                .forEach(i => i.classList.remove("selected"));
-
+            imgList.forEach(i => i.classList.remove("selected"));
             img.classList.add("selected");
         };
+
+        // set ảnh đầu tiên mặc định
+        if(index === 0){
+            img.classList.add("selected");
+            mainImage.src = url;
+        }
 
         // admin xoá ảnh
         if(userRole === "admin"){
             const del = document.createElement("span");
             del.innerText = "❌";
-
-            del.onclick = () => deleteThumb(src, div);
-
-            div.appendChild(del);
+            del.onclick = () => deleteThumb(src, wrap);
+            wrap.appendChild(del);
         }
 
-        thumbContainer.appendChild(div);
+        thumbContainer.appendChild(wrap);
     });
+
+    // ================= SWIPE =================
+    let startX = 0;
+
+    thumbContainer.addEventListener("touchstart", e => {
+        startX = e.touches[0].clientX;
+    });
+
+    thumbContainer.addEventListener("touchend", e => {
+        const endX = e.changedTouches[0].clientX;
+        const diff = endX - startX;
+
+        const imgs = Array.from(thumbContainer.querySelectorAll("img"));
+        if(imgs.length === 0) return;
+
+        let current = imgs.findIndex(i => i.classList.contains("selected"));
+        if(current === -1) current = 0;
+
+        if(diff > 30){
+            current = current > 0 ? current - 1 : imgs.length - 1;
+        } else if(diff < -30){
+            current = current < imgs.length - 1 ? current + 1 : 0;
+        }
+
+        imgs.forEach(i => i.classList.remove("selected"));
+        imgs[current].classList.add("selected");
+        mainImage.src = imgs[current].src;
+    });
+}
+//thumb
+async function deleteThumb(src, element){
+    if(!confirm("Xoá ảnh này?")) return;
+
+    const res = await fetch(API + `/api/fruits/${productId}/thumb`, {
+        method:"DELETE",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({
+            username: localStorage.getItem("username"),
+            image: src
+        })
+    });
+
+    const data = await res.json();
+
+    if(data.success){
+        element.remove();
+        // xoá khỏi adminThumbs nếu có
+        const adminImgs = document.querySelectorAll("#adminThumbs img");
+        adminImgs.forEach(img=>{
+            if(img.src === src) img.remove();
+        });
+
+        alert("Đã xoá ảnh");
+    }else{
+        alert(data.message);
+    }
 }
 
 /* QTY */
