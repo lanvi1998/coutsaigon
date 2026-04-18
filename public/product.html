@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
 <title>Chi tiết sản phẩm</title>
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -420,6 +420,7 @@ z-index:9999;
 }
 
 .floating-cart-bar .cart-qty input{
+  font-size:16px !important;
   width: 50px;
   text-align: center;
   border: 1px solid #ddd;
@@ -442,6 +443,9 @@ z-index:9999;
     flex-direction: column; /* 2 hàng */
     gap: 6px;
   }
+  input, button{
+  touch-action: manipulation;
+}
 
   /* Hàng 1: số lượng + tổng tiền nằm ngang */
   .floating-cart-bar .cart-top {
