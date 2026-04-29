@@ -1979,6 +1979,89 @@ navbar.addEventListener("touchstart", stopAutoScrollForever);
 
 // chạy lần đầu
 startAutoScroll();
+// 
+const highlight = document.getElementById("highlight");
+
+let scrollAmountHL = 0;
+let directionHL = 1;
+let autoScrollHL;
+let stopHL = false;
+
+function autoScrollHighlight() {
+  if (!highlight || stopHL) return;
+
+  scrollAmountHL += directionHL * 1;
+  highlight.scrollLeft = scrollAmountHL;
+
+  // tới cuối → quay đầu
+  if (scrollAmountHL + highlight.clientWidth >= highlight.scrollWidth) {
+    directionHL = -1;
+  }
+
+  // về đầu → đổi chiều
+  if (scrollAmountHL <= 0) {
+    directionHL = 1;
+  }
+}
+
+// start
+function startAutoScrollHighlight() {
+  autoScrollHL = setInterval(autoScrollHighlight, 30);
+}
+
+// stop khi user chạm
+function stopAutoScrollHighlight() {
+  stopHL = true;
+  clearInterval(autoScrollHL);
+}
+
+highlight.addEventListener("pointerdown", stopAutoScrollHighlight);
+highlight.addEventListener("touchstart", stopAutoScrollHighlight);
+
+// chạy sau khi load sản phẩm
+setTimeout(startAutoScrollHighlight, 1000);
+// sp giảm giá 
+const sale = document.getElementById("saleProducts");
+
+let scrollAmountSale = 0;
+let directionSale = 1;
+let autoScrollSale;
+let stopSale = false;
+
+function autoScrollSaleProducts() {
+  if (!sale || stopSale) return;
+
+  scrollAmountSale += directionSale * 1;
+  sale.scrollLeft = scrollAmountSale;
+
+  // tới cuối → quay đầu
+  if (scrollAmountSale + sale.clientWidth >= sale.scrollWidth) {
+    directionSale = -1;
+  }
+
+  // về đầu → đổi chiều
+  if (scrollAmountSale <= 0) {
+    directionSale = 1;
+  }
+}
+
+// start
+function startAutoScrollSale() {
+  autoScrollSale = setInterval(autoScrollSaleProducts, 30);
+}
+
+// stop khi user chạm
+function stopAutoScrollSale() {
+  stopSale = true;
+  clearInterval(autoScrollSale);
+}
+
+sale.addEventListener("pointerdown", stopAutoScrollSale);
+sale.addEventListener("touchstart", stopAutoScrollSale);
+
+// chạy sau khi load
+setTimeout(startAutoScrollSale, 1000);
+
 </script>
 
 
