@@ -491,10 +491,11 @@ body.is-admin .search-box{
     /* ================= DANH MỤC SẢN PHẨM NAVBAR ================= */
 .category-navbar {
   display: flex;
-  flex-wrap: wrap; /* xuống dòng nếu màn hình nhỏ */
-  gap: 12px;
-  justify-content: center; /* căn giữa */
-  margin: 20px 0;
+  flex-wrap: nowrap;      /* ✅ không xuống dòng */
+  overflow-x: auto;       /* ✅ cho cuộn ngang */
+  gap: 10px;
+  padding: 10px;
+  -webkit-overflow-scrolling: touch;
 }
 
 .category-item {
@@ -1041,6 +1042,10 @@ nav a:hover img {
     <a href="box.html" class="category-item">
       <img src="box.jpg" alt="Hộp quà tặng">
       <span>Hộp quà tặng</span>
+    </a>
+    <a href="flower.html" class="category-item">
+      <img src="flower.jpg" alt="Bó hoa">
+      <span>Bó hoa</span>
     </a>
   </div>
   </nav>
@@ -1932,6 +1937,48 @@ contactPopup.addEventListener("click",(e)=>{
 });
 
 
+</script>
+<script>
+const navbar = document.querySelector(".category-navbar");
+
+let scrollAmount = 0;
+let direction = 1;
+let autoScroll;
+let isStopped = false;
+
+// chạy auto
+function autoScrollNavbar() {
+  if (!navbar || isStopped) return;
+
+  scrollAmount += direction * 1;
+  navbar.scrollLeft = scrollAmount;
+
+  if (scrollAmount + navbar.clientWidth >= navbar.scrollWidth) {
+    direction = -1;
+  }
+
+  if (scrollAmount <= 0) {
+    direction = 1;
+  }
+}
+
+// start
+function startAutoScroll() {
+  autoScroll = setInterval(autoScrollNavbar, 20);
+}
+
+// stop vĩnh viễn
+function stopAutoScrollForever() {
+  isStopped = true;
+  clearInterval(autoScroll);
+}
+
+// 👇 CHẠM LÀ DỪNG LUÔN
+navbar.addEventListener("pointerdown", stopAutoScrollForever);
+navbar.addEventListener("touchstart", stopAutoScrollForever);
+
+// chạy lần đầu
+startAutoScroll();
 </script>
 
 

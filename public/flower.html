@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Trái cây nội địa</title>
+<title>Bó hoa</title>
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -57,15 +57,16 @@
   <a href="gift.html">Giỏ quà tặng</a>
   <a href="box.html">Hộp quà tặng</a>
   <a href="flower.html">Bó hoa</a>
+
 </nav>
 
-<!-- SẢN PHẨM LOCAL -->
-<h2 style="text-align:center; margin-top:20px;">Trái cây nội địa</h2>
+<!-- SẢN PHẨM BOX -->
+<h2 style="text-align:center; margin-top:20px;">Bó hoa</h2>
 <div id="highlight" class="grid"></div>
 
 <!-- ADMIN UPLOAD -->
 <div class="admin" style="display:none;">
-  <h2>Admin Upload sản phẩm trái cây nội địa</h2>
+  <h2>Admin Upload sản phẩm bó hoa</h2>
   <input id="name" placeholder="Tên sản phẩm">
   <input id="price" placeholder="Giá">
   <input id="unit" placeholder="Đơn vị (kg, hộp, phần...)">
@@ -74,7 +75,7 @@
 </div>
 
 <!-- FOOTER -->
- <!-- FOOTER -->
+<!-- FOOTER -->
 <footer class="footer">
   <div class="footer-container">
 
@@ -94,7 +95,6 @@
       <p>Bảo mật thông tin</p>
       <p>Hướng dẫn mua hàng</p>
     </div>
-
 
     <div class="footer-col">
       <h3>Kênh liên hệ</h3>
@@ -125,12 +125,13 @@
     <p> 📍 Địa chỉ : 103 Lạc Long Quân, Phường Minh Phụng, TPHCM</p> 
   </div>
 </footer>
+
 <!-- Nút login/logout -->
 
 
 <script>
 // ===== GLOBAL =====
-const API = "https://coutsaigon-production.up.railway.app";
+const API = "http://localhost:3000";// đổi lại
 let userRole = null;
 updateCartCount();
 
@@ -192,7 +193,6 @@ window.addEventListener("load",()=>{
 });
 
 // ===== PRODUCTS =====
-// ===== PRODUCTS =====
 async function loadProducts(){
   try{
     const res = await fetch(API + "/api/fruits");
@@ -200,8 +200,8 @@ async function loadProducts(){
     const grid = document.getElementById("highlight");
     grid.innerHTML="";
 
-    // Lọc category local
-    products.filter(p=>p.category?.toLowerCase()==="local").forEach(p=>{
+    // Lọc category box
+    products.filter(p=>p.category?.toLowerCase()==="flower").forEach(p=>{
       const card = document.createElement("div");
       card.className="card";
 
@@ -213,7 +213,7 @@ async function loadProducts(){
 
         <div class="card-content">
           <h3>${p.name}</h3>
-          <div class="card-price">
+         <div class="card-price">
   ${Number(p.price).toLocaleString()} VND / ${p.unit || ''}
 </div>
 
@@ -248,7 +248,7 @@ document.getElementById("uploadProductBtn").addEventListener("click", async ()=>
   formData.append("name", name);
   formData.append("price", price);
   formData.append("unit", unit);
-  formData.append("category", "local"); // ✅ category local
+  formData.append("category", "flower");  // ✅ category box
   formData.append("username", localStorage.getItem("username"));
   formData.append("image", image);
 
@@ -264,7 +264,6 @@ document.getElementById("uploadProductBtn").addEventListener("click", async ()=>
     loadProducts();
   } catch(err){ console.error(err); alert("Upload thất bại!"); }
 });
-
 function deleteProduct(id){
   fetch(API + "/api/fruits/"+id,{
     method:"DELETE",
@@ -272,7 +271,7 @@ function deleteProduct(id){
     body:JSON.stringify({username: localStorage.getItem("username")})
   }).then(()=>loadProducts());
 }
-// sữa giá
+// SỮA GIÁ
 async function editPrice(id, oldPrice){
   const newPrice = prompt("Nhập giá mới:", oldPrice);
   if(!newPrice || isNaN(newPrice)) return;
@@ -321,68 +320,7 @@ function updateCartCount(){
   document.getElementById("cartCount").innerText = total;
 }
 
-// ===== SEARCH =====
-const searchInput = document.getElementById("searchInput");
-const searchResults = document.getElementById("searchResults");
-let timer, selectedIndex=-1, currentResults=[];
-searchInput.addEventListener("input", ()=>{
-  clearTimeout(timer);
-  timer = setTimeout(()=> fetchSearchResults(searchInput.value.trim()),300);
-});
-async function fetchSearchResults(query){
-  if(!query){ searchResults.style.display="none"; return; }
-  try{
-    const res = await fetch(API + `/api/search?q=${encodeURIComponent(query)}`);
-    const products = await res.json();
-    currentResults = products;
-    renderResults(products);
-  } catch(err){ console.error(err); }
-}
-function renderResults(products){
-  // Xóa nội dung cũ
-  searchResults.innerHTML = "";
-  selectedIndex = -1;
 
-  if(products.length === 0){
-    searchResults.style.display = "none";
-    return;
-  }
-
-  // Tạo từng item
-  products.forEach((p,i)=>{
-    const div = document.createElement("div");
-    div.innerHTML = `
-      <div style="display:flex; align-items:center; gap:8px; padding:4px 8px;">
-        <img src="${p.image}" alt="${p.name}" style="width:40px; height:40px; object-fit:cover; border-radius:6px;">
-        <div>
-          <strong>${p.name}</strong><br>
-          <small>${Number(p.price).toLocaleString()} VND</small>
-        </div>
-      </div>
-    `;
-    div.dataset.index = i;
-    div.addEventListener("click", ()=> window.location.href = `/product.html?id=${p._id}`);
-    searchResults.appendChild(div);
-  });
-
-  // Đẩy searchResults ra ngoài body để không bị che
-  if(searchResults.parentElement !== document.body){
-    document.body.appendChild(searchResults);
-  }
-
-  // Đặt vị trí popup theo input
-  const rect = searchInput.getBoundingClientRect();
-  searchResults.style.top = rect.bottom + window.scrollY + "px";
-  searchResults.style.left = rect.left + window.scrollX + "px";
-  searchResults.style.width = rect.width + "px";
-  searchResults.style.display = "block";
-}
-// Ẩn popup khi click ra ngoài
-document.addEventListener("click", (e) => {
-  if (!searchResults.contains(e.target) && e.target !== searchInput) {
-    searchResults.style.display = "none";
-  }
-});
 </script>
 </script>
 
@@ -475,5 +413,70 @@ contactPopup.addEventListener("click",(e)=>{
 
 
 </script>
+<script>
+  // ===== SEARCH =====
+  const searchInput = document.getElementById("searchInput");
+const searchResults = document.getElementById("searchResults");
+let timer, selectedIndex=-1, currentResults=[];
+searchInput.addEventListener("input", ()=>{
+  clearTimeout(timer);
+  timer = setTimeout(()=> fetchSearchResults(searchInput.value.trim()),300);
+
+});
+async function fetchSearchResults(query){
+  if(!query){ searchResults.style.display="none"; return; }
+  try{
+    const res = await fetch(API + `/api/search?q=${encodeURIComponent(query)}`);
+    const products = await res.json();
+    currentResults = products;
+    renderResults(products);
+  } catch(err){ console.error(err); }
+}
+function renderResults(products){
+  // Xóa nội dung cũ
+  searchResults.innerHTML = "";
+  selectedIndex = -1;
+
+  if(products.length === 0){
+    searchResults.style.display = "none";
+    return;
+  }
+
+  // Tạo từng item
+  products.forEach((p,i)=>{
+    const div = document.createElement("div");
+    div.innerHTML = `
+      <div style="display:flex; align-items:center; gap:8px; padding:4px 8px;">
+        <img src="${p.image}" alt="${p.name}" style="width:40px; height:40px; object-fit:cover; border-radius:6px;">
+        <div>
+          <strong>${p.name}</strong><br>
+          <small>${Number(p.price).toLocaleString()} VND</small>
+        </div>
+      </div>
+    `;
+    div.dataset.index = i;
+    div.addEventListener("click", ()=> window.location.href = `/product.html?id=${p._id}`);
+    searchResults.appendChild(div);
+  });
+
+  // Đẩy searchResults ra ngoài body để không bị che
+  if(searchResults.parentElement !== document.body){
+    document.body.appendChild(searchResults);
+  }
+
+  // Đặt vị trí popup theo input
+  const rect = searchInput.getBoundingClientRect();
+  searchResults.style.top = rect.bottom + window.scrollY + "px";
+  searchResults.style.left = rect.left + window.scrollX + "px";
+  searchResults.style.width = rect.width + "px";
+  searchResults.style.display = "block";
+}
+// Ẩn popup khi click ra ngoài
+document.addEventListener("click", (e) => {
+  if (!searchResults.contains(e.target) && e.target !== searchInput) {
+    searchResults.style.display = "none";
+  }
+});
+  </script>
 </body>
 </html>
