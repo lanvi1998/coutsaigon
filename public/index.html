@@ -14,6 +14,162 @@
 <body>
 
   <style>
+    
+ #menuBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 40px;
+  height: 40px;
+
+  border: none;
+  border-radius: 8px;
+  background: #4CAF50;
+  cursor: pointer;
+}
+
+#menuBtn i {
+  color: #fff;
+  font-size: 18px;
+}
+
+/* hover */
+#menuBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+}
+
+/* click */
+#menuBtn:active {
+  transform: scale(0.96);
+}
+
+/* mobile */
+@media (max-width: 480px) {
+  #menuBtn {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+}
+
+/* fix nút không bị lệch */
+#menuBtn {
+  flex-shrink: 0;
+}
+
+/* tiêu đề không bị xuống dòng */
+.category-text {
+  margin: 0;
+  white-space: nowrap;
+}
+.category-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 10px;
+  gap: 6px;
+}
+
+#menuBtn {
+  
+  left: 20px;
+}
+    .menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  text-decoration: none;
+  color: #333;
+  border-radius: 8px;
+  transition: 0.2s;
+}
+
+.menu-item img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.menu-item span {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.menu-item:hover {
+  background: #e8f5e9;
+}
+    /* Nút menu */
+#menuBtn {
+  
+  border: none;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+}
+
+#menuBtn i {
+  font-size: 22px;
+  color: #4CAF50;
+}
+
+/* Overlay */
+#menuPopup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  display: none;
+  z-index: 9999;
+}
+
+/* Nội dung popup */
+.menu-content {
+  position: absolute;
+  top: 0;
+  left: -280px;
+  width: 260px;
+  height: 100%;
+  background: #fff;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  transition: 0.3s;
+}
+
+/* Khi mở */
+#menuPopup.active .menu-content {
+  left: 0;
+}
+
+/* Item */
+.menu-content a {
+  text-decoration: none;
+  color: #333;
+  font-size: 15px;
+  padding: 10px;
+  border-radius: 6px;
+  transition: 0.2s;
+}
+
+.menu-content a:hover {
+  background: #e8f5e9;
+}
+
+/* Nút đóng */
+.close-btn {
+  font-size: 20px;
+  cursor: pointer;
+  align-self: flex-end;
+}
+
+/*  */
     @media (max-width: 768px) {
 
 .banner-slider {
@@ -1003,12 +1159,63 @@ nav a:hover img {
   </div>
   <div id="bannerDots"></div>
 </div>
+<!--  -->
+<!-- <button id="menuBtn">
+  <i class="fa-solid fa-bars"></i>
+</button> -->
+<!--  -->
+<div id="menuPopup">
+  <div class="menu-content">
 
+    <span class="close-btn" onclick="closeMenu()">✖</span>
 
+    <h3>Danh mục sản phẩm</h3>
+
+    <a href="import.html" class="menu-item">
+      <img src="import.jpg">
+      <span>Trái cây nhập khẩu</span>
+    </a>
+    
+    <a href="local.html" class="menu-item">
+      <img src="local.jpg">
+      <span>Trái cây nội địa</span>
+    </a>
+    
+    <a href="cut.html" class="menu-item">
+      <img src="cut.jpg">
+      <span>Trái cây cắt gọt</span>
+    </a>
+    
+    <a href="food.html" class="menu-item">
+      <img src="food.jpg">
+      <span>Thực phẩm công nghệ</span>
+    </a>
+    
+    <a href="gift.html" class="menu-item">
+      <img src="gift.jpg">
+      <span>Giỏ quà tặng</span>
+    </a>
+    
+    <a href="box.html" class="menu-item">
+      <img src="box.jpg">
+      <span>Hộp quà tặng</span>
+    </a>
+    
+    <a href="flower.html" class="menu-item">
+      <img src="flower.jpg">
+      <span>Bó hoa</span>
+    </a>
+
+  </div>
+</div>
 <!-- danh mục sp -->
-<h2 class="category-title">
-  <span class="category-text">Danh Mục Sản Phẩm</span>
-</h2>
+<div class="category-header">
+  <button id="menuBtn">
+    <i class="fa-solid fa-bars"></i>
+  </button>
+
+  <h2 class="category-text">Danh Mục Sản Phẩm</h2>
+</div>
 
 <!-- NAVBAR -->
 <nav>
@@ -2063,6 +2270,33 @@ sale.addEventListener("touchstart", stopAutoScrollSale);
 setTimeout(startAutoScrollSale, 1000);
 
 </script>
+<script>
+  const menuBtn = document.getElementById("menuBtn");
+  const menuPopup = document.getElementById("menuPopup");
+  
+  // mở menu
+  menuBtn.addEventListener("click", () => {
+    menuPopup.style.display = "block";
+    setTimeout(() => {
+      menuPopup.classList.add("active");
+    }, 10);
+  });
+  
+  // đóng menu
+  function closeMenu() {
+    menuPopup.classList.remove("active");
+    setTimeout(() => {
+      menuPopup.style.display = "none";
+    }, 300);
+  }
+  
+  // click ra ngoài để đóng
+  menuPopup.addEventListener("click", (e) => {
+    if (e.target === menuPopup) {
+      closeMenu();
+    }
+  });
+  </script>
 
 
 </script>
