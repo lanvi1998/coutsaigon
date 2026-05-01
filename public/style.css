@@ -719,7 +719,7 @@ nav{
 
 #searchInput {
   flex: 1;
-  max-width: 245px;  /* giới hạn chiều rộng */
+  max-width: 225px;  /* giới hạn chiều rộng */
   min-width: 120px;  /* tránh quá nhỏ */
   padding: 10px 10px;
   font-size: 14px;
