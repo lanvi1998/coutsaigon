@@ -94,15 +94,32 @@ function uploadToCloudinary(fileBuffer, folder = "fruitshop") {
 // ===== Express app =====
 const app = express()
 app.use(express.json())
+const cors = require("cors");
+
+const allowedOrigins = [
+  "https://traicaycoutsaigon.com",
+  "https://www.traicaycoutsaigon.com",
+  "https://coutsaigon-git-main-lanvi1998s-projects.vercel.app"
+];
+
+// CORS chuẩn production
 app.use(cors({
-  origin: [
-    "https://traicaycoutsaigon.com",
-    "https://www.traicaycoutsaigon.com",
-    "https://coutsaigon-git-main-lanvi1998s-projects.vercel.app"
-  ],
-  methods: ["GET","POST","PUT","DELETE"],
+  origin: function (origin, callback) {
+    // cho Postman / server-to-server
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error("CORS blocked: " + origin));
+    }
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true
 }));
+
+// xử lý preflight (QUAN TRỌNG)
+app.options("*", cors());
 
         app.use(express.static("public"))
 
