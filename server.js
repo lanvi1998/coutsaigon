@@ -95,7 +95,11 @@ function uploadToCloudinary(fileBuffer, folder = "fruitshop") {
 const app = express()
 app.use(express.json())
 app.use(cors({
-  origin: "https://ten-project.vercel.app",
+  origin: [
+    "https://coutsaigon-9yc2o8x1c-lanvi1998s-projects.vercel.app",
+    "https://traicaycoutsaigon.com",
+    "http://localhost:3000"
+  ],
   credentials: true
 }));
         app.use(express.static("public"))
