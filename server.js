@@ -95,20 +95,15 @@ function uploadToCloudinary(fileBuffer, folder = "fruitshop") {
 const app = express()
 app.use(express.json())
 app.use(cors({
-  origin: function (origin, callback) {
-    if (
-      !origin ||
-      origin.includes("vercel.app") ||
-      origin.includes("traicaycoutsaigon.com")
-    ) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  methods: ["GET","POST","PUT","DELETE","OPTIONS"],
+  origin: [
+    "https://traicaycoutsaigon.com",
+    "https://www.traicaycoutsaigon.com",
+    "https://coutsaigon-git-main-lanvi1998s-projects.vercel.app"
+  ],
+  methods: ["GET","POST","PUT","DELETE"],
   credentials: true
 }));
+
         app.use(express.static("public"))
 
 // ===== MongoDB =====
