@@ -94,7 +94,10 @@ function uploadToCloudinary(fileBuffer, folder = "fruitshop") {
 // ===== Express app =====
 const app = express()
 app.use(express.json())
-        app.use(cors())
+app.use(cors({
+  origin: "https://ten-project.vercel.app",
+  credentials: true
+}));
         app.use(express.static("public"))
 
 // ===== MongoDB =====
