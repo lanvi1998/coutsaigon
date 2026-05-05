@@ -96,12 +96,10 @@ const app = express()
 app.use(express.json())
 app.use(cors({
   origin: [
-    "https://coutsaigon-9yc2o8x1c-lanvi1998s-projects.vercel.app",
     "https://traicaycoutsaigon.com",
-    "https://coutsaigon.vercel.app",
-    "http://localhost:3000"
-    
+    "https://coutsaigon.vercel.app"
   ],
+  methods: ["GET","POST","PUT","DELETE"],
   credentials: true
 }));
         app.use(express.static("public"))
