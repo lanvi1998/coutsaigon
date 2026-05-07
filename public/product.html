@@ -9,6 +9,62 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
+  /*  */
+  /* FIX HEADER ĐÈ NAVBAR */
+.header{
+  position: relative;
+  z-index: 20;
+  overflow: visible !important;
+}
+
+.header-left{
+  position: relative;
+  z-index: 20;
+  overflow: visible !important;
+}
+
+nav{
+  position: relative;
+  z-index: 1;
+}
+
+/* LOGO KHÔNG ĐÈ */
+.header-left .logo{
+  display: block;
+  max-height: 90px;
+  width: auto;
+  object-fit: contain;
+}
+
+/* MOBILE */
+@media (max-width:768px){
+
+  .header{
+    height: 70px;
+    padding: 6px 10px;
+  }
+
+  .header-left .logo{
+    max-height: 55px; /* giảm logo mobile */
+    width: auto;
+  }
+
+  .header-left{
+    gap: 6px;
+    transform: none !important;
+  }
+
+  #searchInput{
+    transform: none !important;
+  }
+
+  nav{
+    margin-top: 6px;
+    position: relative;
+    z-index: 1;
+  }
+}
+  /*  */
  nav {
   position: relative;
   z-index: 10;
