@@ -607,45 +607,6 @@ z-index:9999;
   max-height: 300px;
 }
 }
-@media (max-width:768px){
-
-.header{
-  position: relative;
-  z-index: 999;
-}
-
-.search-box{
-  position: relative;
-}
-
-#searchResults{
-  position: absolute;
-  top: calc(100% + 5px);
-  left: 0;
-  width: 100%;
-
-  background: #5e9d7d;
-  border-radius: 8px;
-
-  z-index: 9999;
-
-  max-height: 300px;
-  overflow-y: auto;
-}
-
-}
-@media (max-width:768px){
-
-#searchResults{
-  z-index: 99999;
-}
-
-nav{
-  position: relative;
-  z-index: 1;
-}
-
-}
 </style>
 </head>
 
@@ -860,7 +821,7 @@ nav{
 <div id="cartAlert">Đã thêm vào giỏ</div>
 
 <script>
-  const API = "https://coutsaigon.onrender.com";
+const API = "https://coutsaigon.onrender.com";
   //thêm
   document.getElementById("buyNowBtn").onclick = async () => {
     const res = await fetch(`${API}/api/fruits/product/${productId}`);
@@ -1449,18 +1410,5 @@ searchResults.style.display="block"
   
   
   </script>
-  <script>
-    const nav = document.querySelector("nav");
-    
-    searchInput.addEventListener("focus", ()=>{
-      nav.style.pointerEvents = "none";
-    });
-    
-    searchInput.addEventListener("blur", ()=>{
-      setTimeout(()=>{
-        nav.style.pointerEvents = "auto";
-      },200);
-    });
-    </script>
 </body>
 </html> 
