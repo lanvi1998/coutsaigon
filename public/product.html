@@ -634,6 +634,18 @@ z-index:9999;
 }
 
 }
+@media (max-width:768px){
+
+#searchResults{
+  z-index: 99999;
+}
+
+nav{
+  position: relative;
+  z-index: 1;
+}
+
+}
 </style>
 </head>
 
@@ -1438,27 +1450,16 @@ searchResults.style.display="block"
   
   </script>
   <script>
-    const header = document.querySelector(".header");
+    const nav = document.querySelector("nav");
     
-    searchInput.addEventListener("input", () => {
-    
-      if(searchInput.value.trim() !== ""){
-        header.style.marginBottom = "220px";
-      }else{
-        header.style.marginBottom = "0";
-      }
-    
+    searchInput.addEventListener("focus", ()=>{
+      nav.style.pointerEvents = "none";
     });
     
-    document.addEventListener("click",(e)=>{
-    
-      const searchBox = document.querySelector(".search-box");
-    
-      if(!searchBox.contains(e.target)){
-        searchResults.style.display = "none";
-        header.style.marginBottom = "0";
-      }
-    
+    searchInput.addEventListener("blur", ()=>{
+      setTimeout(()=>{
+        nav.style.pointerEvents = "auto";
+      },200);
     });
     </script>
 </body>
