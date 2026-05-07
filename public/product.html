@@ -15,7 +15,7 @@
 }
 .header{
   position: relative;
-  z-index: 99999;
+  z-index: 100;
   overflow: visible;
 }
 
@@ -25,7 +25,22 @@
 }
 
 #searchResults{
-  z-index: 999999;
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  width: 100%;
+
+  background: #5e9d7d;
+  border-radius: 8px;
+
+  z-index: 999;
+
+  display: none;
+
+  overflow-y: auto;
+  max-height: 300px;
+
+  pointer-events: none;
 }
   .cart-qty{
   display: flex;
@@ -1342,6 +1357,7 @@ searchResults.appendChild(div)
 })
 
 searchResults.style.display="block"
+searchResults.style.pointerEvents = "auto";
 
 })
 
@@ -1360,6 +1376,7 @@ searchResults.innerHTML=""
 
 if(keyword===""){
 searchResults.style.display="none"
+searchResults.style.pointerEvents = "none";
 return
 }
 
