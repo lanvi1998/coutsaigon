@@ -34,13 +34,14 @@
 
 /* LOGO */
 .header-left .logo{
-  width:120px;
+  width:200px;
   height:auto;
   object-fit:contain;
-  flex-shrink:0;
 
   position:relative;
   z-index:1;
+
+  flex-shrink:0;
 }
 
 /* SEARCH */
@@ -110,8 +111,29 @@ nav{
   }
 
   .search-box{
-    margin-left:8px;
-  }
+  position:relative;
+  flex:1;
+  min-width:0;
+  max-width:420px;
+}
+
+#searchResults{
+  position:absolute;
+  top:calc(100% + 6px);
+  left:0;
+  right:0;
+  width:100%;
+
+  z-index:9999;
+
+  background:#5e9d7d;
+  border-radius:8px;
+
+  overflow-y:auto;
+  max-height:300px;
+
+  display:none;
+}
 
   #searchInput{
     height:38px;
