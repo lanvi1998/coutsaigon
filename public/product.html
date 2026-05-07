@@ -10,43 +10,97 @@
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   /*  */
-  @media (max-width:768px){
+/* FIX HEADER PC + MOBILE */
 
 .header{
-  position: relative;
-  z-index: 20;
-  overflow: visible;
-  height: 70px;
+  position:relative;
+  z-index:20;
+
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+
+  overflow:visible;
 }
 
 .header-left{
-  position: relative;
-  z-index: 20;
-  overflow: visible;
+  display:flex;
+  align-items:center;
+
+  flex:1;
+  min-width:0;
+
+  position:relative;
+  overflow:visible;
 }
 
-/* GIỮ LOGO TO */
+/* LOGO */
 .header-left .logo{
-  width: 120px;
-  height: auto;
-  object-fit: contain;
+  width:120px;
+  height:auto;
+  object-fit:contain;
 
-  position: relative;
-  z-index: 1;
+  flex-shrink:0;
 
-  pointer-events: none; /* QUAN TRỌNG */
+  position:relative;
+  z-index:1;
+
+  pointer-events:none;
 }
 
-nav{
-  position: relative;
-  z-index: 5;
+/* SEARCH */
+.search-box{
+  flex:1;
+  min-width:0;
+
+  position:relative;
+
+  margin-left:-18px;
+  z-index:2;
 }
 
-/* bỏ lệch gây đè */
-.header-left,
 #searchInput{
-  transform: none !important;
+  width:100%;
+  box-sizing:border-box;
+
+  position:relative;
+  z-index:2;
 }
+
+/* RIGHT */
+.header-right{
+  display:flex;
+  align-items:center;
+  gap:8px;
+
+  flex-shrink:0;
+
+  position:relative;
+  z-index:5;
+}
+
+/* SEARCH POPUP */
+#searchResults{
+  z-index:99999;
+}
+
+/* MOBILE */
+@media (max-width:768px){
+
+  .header{
+    height:70px;
+    padding:0 10px;
+  }
+
+  .header-left .logo{
+    width:120px;
+  }
+
+  #searchInput{
+    height:38px;
+    padding:0 10px 0 38px;
+  }
+
 }
   /*  */
  nav {
