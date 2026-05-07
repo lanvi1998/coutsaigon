@@ -14,8 +14,8 @@
 
 .header{
   position:relative;
-  z-index:20;
-
+  
+  z-index:1;
   display:flex;
   align-items:center;
   justify-content:space-between;
@@ -47,6 +47,10 @@
 
   pointer-events:none;
 }
+nav{
+    position:relative;
+    z-index:10;
+  }
 
 /* SEARCH */
 .search-box{
@@ -94,12 +98,15 @@
 
   .header-left .logo{
     width:120px;
-    gap: 6px;
+    
   }
 
   #searchInput{
     height:38px;
     padding:0 10px 0 38px;
+  }
+  .header-left {
+    gap: 6px;
   }
 
 }
