@@ -12,61 +12,52 @@
   /*  */
 /* FIX HEADER PC + MOBILE */
 
+/* HEADER */
 .header{
-  position:relative;
-  
-  z-index:1;
+  position: relative;
+  z-index: 20;
+
   display:flex;
   align-items:center;
   justify-content:space-between;
 
-  overflow:visible;
+  overflow: visible;
 }
 
 .header-left{
   display:flex;
   align-items:center;
-
   flex:1;
   min-width:0;
-
   position:relative;
-  overflow:visible;
 }
 
 /* LOGO */
 .header-left .logo{
-  width:200px;
+  width:120px;
   height:auto;
   object-fit:contain;
-
   flex-shrink:0;
 
   position:relative;
   z-index:1;
-
-  pointer-events:none;
 }
-nav{
-    position:relative;
-    z-index:10;
-  }
 
 /* SEARCH */
 .search-box{
   flex:1;
   min-width:0;
+  max-width:420px;
 
   position:relative;
 
-  margin-left:-18px;
+  margin-left:12px;
   z-index:2;
 }
 
 #searchInput{
   width:100%;
   box-sizing:border-box;
-
   position:relative;
   z-index:2;
 }
@@ -83,9 +74,27 @@ nav{
   z-index:5;
 }
 
-/* SEARCH POPUP */
+/* NAV nằm trên logo */
+nav{
+  position:relative;
+  z-index:10;
+}
+
+/* SEARCH RESULT */
 #searchResults{
-  z-index:99999;
+  position:absolute;
+  top:calc(100% + 6px);
+  left:0;
+  width:100%;
+
+  background:#5e9d7d;
+  border-radius:8px;
+
+  z-index:9999;
+
+  display:none;
+  overflow-y:auto;
+  max-height:300px;
 }
 
 /* MOBILE */
@@ -98,15 +107,15 @@ nav{
 
   .header-left .logo{
     width:120px;
-    
+  }
+
+  .search-box{
+    margin-left:8px;
   }
 
   #searchInput{
     height:38px;
     padding:0 10px 0 38px;
-  }
-  .header-left {
-    gap: 6px;
   }
 
 }
