@@ -607,6 +607,38 @@ z-index:9999;
   max-height: 300px;
 }
 }
+@media (max-width:768px){
+
+.header{
+  position: relative;
+  z-index: 100;
+}
+
+nav{
+  position: relative;
+  z-index: 200; /* navbar cao hơn search */
+}
+
+.search-box{
+  position: relative;
+}
+
+#searchResults{
+  position: absolute;
+  top: calc(100% + 5px);
+  left: 0;
+  width: 100%;
+
+  z-index: 150; /* thấp hơn nav */
+
+  background: #5e9d7d;
+  border-radius: 8px;
+
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+}
 </style>
 </head>
 
