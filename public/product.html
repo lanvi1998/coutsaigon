@@ -611,12 +611,7 @@ z-index:9999;
 
 .header{
   position: relative;
-  z-index: 100;
-}
-
-nav{
-  position: relative;
-  z-index: 200; /* navbar cao hơn search */
+  z-index: 999;
 }
 
 .search-box{
@@ -629,10 +624,10 @@ nav{
   left: 0;
   width: 100%;
 
-  z-index: 150; /* thấp hơn nav */
-
   background: #5e9d7d;
   border-radius: 8px;
+
+  z-index: 9999;
 
   max-height: 300px;
   overflow-y: auto;
@@ -1442,5 +1437,29 @@ searchResults.style.display="block"
   
   
   </script>
+  <script>
+    const header = document.querySelector(".header");
+    
+    searchInput.addEventListener("input", () => {
+    
+      if(searchInput.value.trim() !== ""){
+        header.style.marginBottom = "220px";
+      }else{
+        header.style.marginBottom = "0";
+      }
+    
+    });
+    
+    document.addEventListener("click",(e)=>{
+    
+      const searchBox = document.querySelector(".search-box");
+    
+      if(!searchBox.contains(e.target)){
+        searchResults.style.display = "none";
+        header.style.marginBottom = "0";
+      }
+    
+    });
+    </script>
 </body>
 </html> 
