@@ -3,178 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Chi tiết sản phẩm</title>
 <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  /*  */
-/* FIX HEADER PC + MOBILE */
-
-/* HEADER */
-.header{
-  position: relative;
-  z-index: 20;
-
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-
-  overflow: visible;
-}
-
-.header-left{
-  display:flex;
-  align-items:center;
-  flex:1;
-  min-width:0;
-  position:relative;
-}
-
-/* LOGO */
-.header-left .logo{
-  width:200px;
-  height:auto;
-  object-fit:contain;
-
-  position:relative;
-  z-index:1;
-
-  flex-shrink:0;
-}
-
-/* SEARCH */
-.search-box{
-  flex:1;
-  min-width:0;
-  max-width:420px;
-
-  position:relative;
-
-  margin-left:12px;
-  z-index:2;
-}
-
-#searchInput{
-  width:100%;
-  box-sizing:border-box;
-  position:relative;
-  z-index:2;
-}
-
-/* RIGHT */
-.header-right{
-  display:flex;
-  align-items:center;
-  gap:8px;
-
-  flex-shrink:0;
-
-  position:relative;
-  z-index:5;
-}
-
-/* NAV nằm trên logo */
-nav{
-  position:relative;
-  z-index:10;
-}
-
-/* SEARCH RESULT */
-#searchResults{
-  position:absolute;
-  top:calc(100% + 6px);
-  left:0;
-  width:100%;
-
-  background:#5e9d7d;
-  border-radius:8px;
-
-  z-index:9999;
-
-  display:none;
-  overflow-y:auto;
-  max-height:300px;
-}
-
-/* MOBILE */
-@media (max-width:768px){
-
-  .header{
-    height:70px;
-    padding:0 10px;
-  }
-
-  .header-left .logo{
-    width:120px;
-  }
-
-  .search-box{
-  position:relative;
-  flex:1;
-  min-width:0;
-  max-width:420px;
-}
-
-#searchResults{
-  position:absolute;
-  top:calc(100% + 6px);
-  left:0;
-  right:0;
-  width:100%;
-
-  z-index:9999;
-
-  background:#5e9d7d;
-  border-radius:8px;
-
-  overflow-y:auto;
-  max-height:300px;
-
-  display:none;
-}
-
-  #searchInput{
-    height:38px;
-    padding:0 10px 0 38px;
-  }
-
-}
-  /*  */
- nav {
-  position: relative;
-  z-index: 10;
-}
-.header{
-  position: relative;
-  z-index: 100;
-  overflow: visible;
-}
-nav{
-  position: relative;
-  z-index: 1;
-}
-
-
-#searchResults{
-  position: absolute;
-  top: calc(100% + 6px);
-  left: 0;
-  width: 100%;
-
-  background: #5e9d7d;
-  border-radius: 8px;
-
-  z-index: 9999;
-
-  display: none;
-
-  overflow-y: auto;
-  max-height: 300px;
-
-  pointer-events: none;
-}
   .cart-qty{
   display: flex;
   align-items: center;
@@ -273,28 +107,25 @@ nav{
   max-width: 400px;
   width: 100%;
 }
-.header{
-  position: relative;
-  z-index: 100;
-}
-
-.header-left{
-  position: relative;
-  z-index: 100;
-
-  display: flex;
-  align-items: center;
-
+.header, .header-left {
   overflow: visible;
 }
 
-nav{
-  position: relative;
-  z-index: 1;
-  margin-top: 0;
+#searchResults {
+  position: absolute;
+  top: 100%;
+  left: 0;
+ 
+  min-width: 200px;        /* tối thiểu */
+  max-width: 400px;        /* giới hạn popup */
+  background: #5e9d7d;     /* màu nền xanh tối */
+  color: rgb(6, 1, 1);            /* chữ trắng */
+  border-radius: 6px;
+  box-shadow: 0 4px 10px rgba(248, 250, 248, 0.15);
+  z-index: 9999;
+  display: none;
+  overflow-y: auto;
 }
-
-
 
 #searchResults div {
   padding: 8px 10px;
@@ -526,13 +357,13 @@ z-index:9999;
 }
 
 /* MOBILE: đưa mô tả xuống cuối */
+/* MOBILE: đưa mô tả xuống cuối */
 @media (max-width:768px){
-
-#searchResults {
+  #searchResults {
   position: absolute;
   top: 100%;
   left: 0;
-  z-index: 99999;
+  z-index: 99999; /* luôn nổi trên button */
 }
 
 .product-layout{
@@ -552,26 +383,21 @@ z-index:9999;
   order:3;
 }
 
-.floating-cart-bar{
-  position: static;
-  bottom:0;
-  left:0;
-  width:100%;
-  display:flex;
-  gap:10px;
-  padding:10px 15px;
-  background:#fff;
-  box-shadow:0 -3px 15px rgba(0,0,0,0.15);
-  z-index:9999;
-  align-items:center;
-  justify-content:space-between;
-  margin-right:20px;
-}
-
-body{
-  padding-bottom:140px;
-}
-
+/* Thanh mua hàng nổi */
+.floating-cart-bar {
+  position: fixed;      /* luôn cố định trên màn hình */
+  bottom: 0;            /* dưới cùng */
+  left: 0;
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  padding: 10px 15px;
+  background: #fff;
+  box-shadow: 0 -3px 15px rgba(0,0,0,0.15);
+  z-index: 9999;
+  align-items: center;
+  justify-content: space-between;
+  margin-right: 20px;
 }
 
 /* Thanh số lượng */
@@ -594,7 +420,6 @@ body{
 }
 
 .floating-cart-bar .cart-qty input{
-  font-size:16px !important;
   width: 50px;
   text-align: center;
   border: 1px solid #ddd;
@@ -602,7 +427,7 @@ body{
 }
 
 /* Ẩn trên desktop nếu muốn */
-/* }từ đây */
+}
 @media (max-width:768px){
   .floating-cart-bar {
     position: fixed;
@@ -617,9 +442,6 @@ body{
     flex-direction: column; /* 2 hàng */
     gap: 6px;
   }
-  input, button{
-  touch-action: manipulation;
-}
 
   /* Hàng 1: số lượng + tổng tiền nằm ngang */
   .floating-cart-bar .cart-top {
@@ -740,7 +562,10 @@ body{
   gap: 10px;
   z-index: 9999;
 }
-
+.header {
+  position: relative;
+  z-index: 1;
+}
 }
 @media (max-width:768px) {
   .search-box {
@@ -750,18 +575,32 @@ body{
   }
 
   #searchInput {
-    max-width: 225px;
+    max-width: 245px;
     
     
   }
-  @media (max-width:768px){
+  #searchResults{
+  padding: 12px;
+  cursor: pointer;
+  position: absolute;
+  top: 100%;
 
-#searchResults{
-  left: 0;
-  width: 100%;
-  z-index: 999;
-}
+  left: -27px;      /* kéo qua trái */
+  width: 110%;      /* to hơn ô search */
 
+  background: #5e9d7d;
+  color: #000;
+
+  border-radius: 6px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+
+  z-index: 99999;
+  display: none;
+
+  max-height: 300px;
+  overflow-y: auto;
+  min-height: 120px;   /* 🔥 luôn giữ kích thước */
+  max-height: 300px;
 }
 }
 </style>
@@ -831,7 +670,6 @@ body{
   <a href="food.html">Thực phẩm công nghệ</a>
   <a href="gift.html">Giỏ quà tặng</a>
   <a href="box.html">Hộp quà tặng</a>
-  <a href="flower.html">Bó hoa</a>
 </nav>
 
 
@@ -895,15 +733,15 @@ body{
 
 </div>
 <!-- FOOTER -->
- <!-- FOOTER -->
 <footer class="footer">
   <div class="footer-container">
 
     <div class="footer-col">
-      <h3>Thông tin cửa hàng</h3>
-      <p>Fruit Shop - Trái cây nhập khẩu và nội địa</p>
-      <p>Giấy phép kinh doanh số: 052194002384</p>
-      <p>Địa chỉ: 103 Lạc Long Quân, Phường Minh Phụng, TPHCM</p>
+      <h3>Thông tin công ty</h3>
+      <p>CÔNG TY TRÁI CÂY</p>
+      <p>Địa chỉ: 103 Lạc Long Quân, Phường Minh Phụng, TPHCM
+
+      </p>
       <p>Hotline: 0905276510</p>
       <p>Email: fruitshop@gmail.com</p>
     </div>
@@ -915,7 +753,6 @@ body{
       <p>Bảo mật thông tin</p>
       <p>Hướng dẫn mua hàng</p>
     </div>
-
 
     <div class="footer-col">
       <h3>Kênh liên hệ</h3>
@@ -979,10 +816,9 @@ body{
 <div id="cartAlert">Đã thêm vào giỏ</div>
 
 <script>
- const API = "https://coutsaigon.onrender.com";
   //thêm
   document.getElementById("buyNowBtn").onclick = async () => {
-    const res = await fetch(`${API}/api/fruits/product/${productId}`);
+    const res = await fetch("/api/fruits/product/" + productId);
     const p = await res.json();
 
     // Lưu riêng cho Mua ngay
@@ -1024,7 +860,7 @@ loginBtnPopup.onclick = async () => {
     }
 
     try {
-        const res = await fetch(`${API}/api/login`, {
+        const res = await fetch("/api/login", {
             method: "POST",
             headers: {"Content-Type":"application/json"},
             body: JSON.stringify({ username, password })
@@ -1114,7 +950,7 @@ updateCartCount()
 async function loadProduct(){
   const mainImage = document.getElementById("mainImage")
 
-    const res = await fetch(`${API}/api/fruits/product/${productId}`)
+    const res = await fetch("/api/fruits/product/"+productId)
     const p = await res.json()
 
     productPrice = Number(p.price)
@@ -1234,7 +1070,7 @@ function enableSwipeThumbs(product){
 async function deleteThumb(src, element){
     if(!confirm("Xoá ảnh này?")) return;
 
-    const res = await fetch(`${API}/api/fruits/${productId}/thumb`, {
+    const res = await fetch("/api/fruits/"+productId+"/thumb", {
         method:"DELETE",
         headers: {"Content-Type":"application/json"},
         body: JSON.stringify({
@@ -1313,7 +1149,7 @@ const formData = new FormData()
 formData.append("thumb",file)
 formData.append("username",username)
 
-const res = await fetch(`${API}/api/fruits/${productId}/thumb`, {
+const res = await fetch("/api/fruits/"+productId+"/thumb",{
 method:"POST",
 body:formData
 })
@@ -1360,7 +1196,7 @@ alert(data.message)
 
 document.getElementById("addToCartBtn").onclick=async()=>{
 
-  const res = await fetch(`${API}/api/fruits/product/${productId}`);
+const res = await fetch("/api/fruits/product/"+productId)
 
 const p = await res.json()
 
@@ -1409,7 +1245,7 @@ document.getElementById("saveBtn").onclick = async () => {
     // Lấy HTML từ editor rich text
     const desc = document.getElementById("editor").innerHTML;
 
-    const res = await fetch(`${API}/api/fruits/${productId}/description`, {
+    const res = await fetch("/api/fruits/"+productId+"/description",{
         method:"PUT",
         headers:{"Content-Type":"application/json"},
         body:JSON.stringify({username, description: desc})
@@ -1432,7 +1268,7 @@ const searchResults = document.getElementById("searchResults")
 
 let allProducts = []
 
-fetch(`${API}/api/fruits`)
+fetch("/api/fruits")
 .then(res=>res.json())
 .then(data=>{
 allProducts = data
@@ -1476,7 +1312,6 @@ searchResults.appendChild(div)
 })
 
 searchResults.style.display="block"
-searchResults.style.pointerEvents = "auto";
 
 })
 
@@ -1495,7 +1330,6 @@ searchResults.innerHTML=""
 
 if(keyword===""){
 searchResults.style.display="none"
-searchResults.style.pointerEvents = "none";
 return
 }
 
