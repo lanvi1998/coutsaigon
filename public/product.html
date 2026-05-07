@@ -571,41 +571,58 @@ z-index:9999;
   z-index: 1;
 }
 }
-@media (max-width:768px) {
-  .search-box {
-    flex: 1;
-    width: 100%;
-    max-width:250;
-  }
+@media (max-width:768px){
 
-  #searchInput {
-    max-width: 245px;
-    
-    
-  }
-  #searchResults{
-  padding: 12px;
-  cursor: pointer;
+.header{
+  position: relative;
+  z-index: 9999;
+  overflow: visible;
+}
+
+nav{
+  position: relative;
+  z-index: 1;
+}
+
+.search-box{
+  position: relative;
+  width: 100%;
+  max-width: 245px;
+  overflow: visible;
+}
+
+#searchInput{
+  width: 100%;
+  max-width: 245px;
+}
+
+#searchResults{
   position: absolute;
-  top: 100%;
+  top: calc(100% + 5px);
+  left: 0;
 
-  left: -27px;      /* kéo qua trái */
-  width: 110%;      /* to hơn ô search */
+  width: 100%; /* bằng ô search */
 
   background: #5e9d7d;
   color: #000;
 
-  border-radius: 6px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 
-  z-index: 99999;
+  z-index: 999999;
+
   display: none;
 
   max-height: 300px;
   overflow-y: auto;
-  min-height: 120px;   /* 🔥 luôn giữ kích thước */
-  max-height: 300px;
 }
+}
+@media (max-width:768px){
+
+#searchInput{
+  font-size:16px;
+}
+
 }
 </style>
 </head>
