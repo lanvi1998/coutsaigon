@@ -1189,9 +1189,7 @@ nav{
 
 /* MOBILE <480px */
 @media (max-width: 480px) {
-  .header-left {
-    flex: 1 1 65%;   /* chiếm 65% */
-  }
+ 
   .header-right {
     flex: 1 1 30%;   /* chiếm 30% */
     justify-content: flex-end;
