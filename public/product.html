@@ -389,7 +389,7 @@ z-index:9999;
 
 /* Thanh mua hàng nổi */
 .floating-cart-bar {
-  position: fixed;      /* luôn cố định trên màn hình */
+  position: static;      /* luôn cố định trên màn hình */
   bottom: 0;            /* dưới cùng */
   left: 0;
   width: 100%;
@@ -402,6 +402,11 @@ z-index:9999;
   align-items: center;
   justify-content: space-between;
   margin-right: 20px;
+}
+@media (max-width:768px){
+  body{
+    padding-bottom:140px;
+  }
 }
 
 /* Thanh số lượng */

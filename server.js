@@ -5,7 +5,7 @@ require('dotenv').config();
 const cloudinary = require('cloudinary').v2;  // 🔹 phải đứng trên cùng
 const nodemailer = require("nodemailer");
 const express = require("express");
-const cors = require("cors");
+// const cors = require("cors");
 const mongoose = require("mongoose");
 const multer = require("multer");
 const axios = require("axios");
@@ -118,7 +118,7 @@ app.use(cors({
 
 
 // xử lý preflight (QUAN TRỌNG)
-app.options("*", cors());
+app.options(/.*/, cors());
 
         app.use(express.static("public"))
 

@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Fruit Banner</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Inter', sans-serif;
+}
+
+body{
+  background:#f6f7f9;
+}
+
+/* ===== HERO ===== */
+.hero{
+  width:92%;
+  max-width:1200px;
+  margin:50px auto;
+  height:450px;
+  position:relative;
+  border-radius:28px;
+  overflow:hidden;
+  display:flex;
+  align-items:center;
+  padding:60px;
+  box-shadow:0 25px 70px rgba(0,0,0,0.25);
+}
+
+/* BACKGROUND */
+.hero::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:url("https://images.unsplash.com/photo-1610832958506-aa56368176cf") center/cover no-repeat;
+  opacity:0.75;
+  transform:scale(1.05);
+  z-index:0;
+}
+
+/* overlay */
+.hero::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(
+    90deg,
+    rgba(0,0,0,0.55) 15%,
+    rgba(0,0,0,0.15) 60%,
+    rgba(0,0,0,0.05)
+  );
+  z-index:1;
+}
+
+/* CONTENT */
+.content{
+  position:relative;
+  z-index:2;
+  max-width:520px;
+  color:#fff;
+  text-shadow:0 6px 20px rgba(0,0,0,0.35);
+}
+
+h1{
+  font-size:42px;
+  font-weight:800;
+  line-height:1.15;
+  margin-top:10px;
+}
+
+h1 span{
+  color:#00ff9d;
+}
+
+p{
+  margin-top:12px;
+  font-size:15px;
+  color:#f1f1f1;
+  line-height:1.6;
+}
+
+/* BUTTON */
+.btn{
+  margin-top:22px;
+  display:flex;
+  gap:12px;
+}
+
+.btn button{
+  padding:12px 22px;
+  border-radius:50px;
+  border:none;
+  font-weight:600;
+  cursor:pointer;
+  font-size:13px;
+}
+
+.primary{
+  background:linear-gradient(135deg,#00ff9d,#00c37a);
+  color:#000;
+}
+
+/* ===== POPUP ===== */
+#menuPopup{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.6);
+  justify-content:center;
+  align-items:center;
+  z-index:9999;
+}
+
+.menu-content{
+  width:90%;
+  max-width:500px;
+  background:#fff;
+  border-radius:16px;
+  padding:20px;
+  max-height:80vh;
+  overflow-y:auto;
+  position:relative;
+}
+
+.menu-content h3{
+  margin-bottom:15px;
+}
+
+.close-btn{
+  position:absolute;
+  right:12px;
+  top:10px;
+  cursor:pointer;
+  font-size:18px;
+  color:#666;
+}
+
+.menu-item{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:10px;
+  margin-bottom:10px;
+  border-radius:12px;
+  text-decoration:none;
+  color:#111;
+  border:1px solid #eee;
+  transition:0.2s;
+}
+
+.menu-item:hover{
+  background:#f5f5f5;
+  transform:scale(1.02);
+}
+
+.menu-item img{
+  width:45px;
+  height:45px;
+  border-radius:10px;
+  object-fit:cover;
+}
+</style>
+</head>
+
+<body>
+
+<div class="hero">
+
+  <div class="content">
+    <h1>Trái Cây <span>Tươi Sạch</span><br>Cam Kết Chất Lượng</h1>
+
+    <p>
+      Trái cây nhập khẩu cao cấp, giữ nguyên độ tươi tự nhiên.
+      Giao nhanh trong 2 giờ tại nội thành.
+    </p>
+
+    <div class="btn">
+      <!-- 🔥 CLICK Ở ĐÂY -->
+      <button class="primary" onclick="openMenu()">Mua ngay</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- ===== POPUP DANH MỤC ===== -->
+<div id="menuPopup">
+  <div class="menu-content">
+
+    <span class="close-btn" onclick="closeMenu()">✖</span>
+
+    <h3>Danh mục sản phẩm</h3>
+
+    <a href="import.html" class="menu-item">
+      <img src="import.jpg">
+      <span>Trái cây nhập khẩu</span>
+    </a>
+
+    <a href="local.html" class="menu-item">
+      <img src="local.jpg">
+      <span>Trái cây nội địa</span>
+    </a>
+
+    <a href="cut.html" class="menu-item">
+      <img src="cut.jpg">
+      <span>Trái cây cắt gọt</span>
+    </a>
+
+    <a href="food.html" class="menu-item">
+      <img src="food.jpg">
+      <span>Thực phẩm công nghệ</span>
+    </a>
+
+    <a href="gift.html" class="menu-item">
+      <img src="gift.jpg">
+      <span>Giỏ quà tặng</span>
+    </a>
+
+    <a href="box.html" class="menu-item">
+      <img src="box.jpg">
+      <span>Hộp quà tặng</span>
+    </a>
+
+    <a href="flower.html" class="menu-item">
+      <img src="flower.jpg">
+      <span>Bó hoa</span>
+    </a>
+
+  </div>
+</div>
+
+<!-- ===== SCRIPT ===== -->
+<script>
+function openMenu(){
+  document.getElementById("menuPopup").style.display = "flex";
+}
+
+function closeMenu(){
+  document.getElementById("menuPopup").style.display = "none";
+}
+
+// click ngoài để đóng
+window.onclick = function(e){
+  const popup = document.getElementById("menuPopup");
+  if(e.target === popup){
+    popup.style.display = "none";
+  }
+}
+</script>
+
+</body>
+</html>
