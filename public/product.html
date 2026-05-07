@@ -361,13 +361,13 @@ z-index:9999;
 }
 
 /* MOBILE: đưa mô tả xuống cuối */
-/* MOBILE: đưa mô tả xuống cuối */
 @media (max-width:768px){
-  #searchResults {
+
+#searchResults {
   position: absolute;
   top: 100%;
   left: 0;
-  z-index: 99999; /* luôn nổi trên button */
+  z-index: 99999;
 }
 
 .product-layout{
@@ -387,26 +387,26 @@ z-index:9999;
   order:3;
 }
 
-/* Thanh mua hàng nổi */
-.floating-cart-bar {
-  position: static;      /* luôn cố định trên màn hình */
-  bottom: 0;            /* dưới cùng */
-  left: 0;
-  width: 100%;
-  display: flex;
-  gap: 10px;
-  padding: 10px 15px;
-  background: #fff;
-  box-shadow: 0 -3px 15px rgba(0,0,0,0.15);
-  z-index: 9999;
-  align-items: center;
-  justify-content: space-between;
-  margin-right: 20px;
+.floating-cart-bar{
+  position: static;
+  bottom:0;
+  left:0;
+  width:100%;
+  display:flex;
+  gap:10px;
+  padding:10px 15px;
+  background:#fff;
+  box-shadow:0 -3px 15px rgba(0,0,0,0.15);
+  z-index:9999;
+  align-items:center;
+  justify-content:space-between;
+  margin-right:20px;
 }
-@media (max-width:768px){
-  body{
-    padding-bottom:140px;
-  }
+
+body{
+  padding-bottom:140px;
+}
+
 }
 
 /* Thanh số lượng */
@@ -437,7 +437,7 @@ z-index:9999;
 }
 
 /* Ẩn trên desktop nếu muốn */
-}
+/* }từ đây */
 @media (max-width:768px){
   .floating-cart-bar {
     position: fixed;
