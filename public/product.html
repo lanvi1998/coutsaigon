@@ -10,59 +10,43 @@
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   /*  */
-  /* FIX HEADER ĐÈ NAVBAR */
+  @media (max-width:768px){
+
 .header{
   position: relative;
   z-index: 20;
-  overflow: visible !important;
+  overflow: visible;
+  height: 70px;
 }
 
 .header-left{
   position: relative;
   z-index: 20;
-  overflow: visible !important;
+  overflow: visible;
+}
+
+/* GIỮ LOGO TO */
+.header-left .logo{
+  width: 120px;
+  height: auto;
+  object-fit: contain;
+
+  position: relative;
+  z-index: 1;
+
+  pointer-events: none; /* QUAN TRỌNG */
 }
 
 nav{
   position: relative;
-  z-index: 1;
+  z-index: 5;
 }
 
-/* LOGO KHÔNG ĐÈ */
-.header-left .logo{
-  display: block;
-  max-height: 90px;
-  width: auto;
-  object-fit: contain;
+/* bỏ lệch gây đè */
+.header-left,
+#searchInput{
+  transform: none !important;
 }
-
-/* MOBILE */
-@media (max-width:768px){
-
-  .header{
-    height: 70px;
-    padding: 6px 10px;
-  }
-
-  .header-left .logo{
-    max-height: 55px; /* giảm logo mobile */
-    width: auto;
-  }
-
-  .header-left{
-    gap: 6px;
-    transform: none !important;
-  }
-
-  #searchInput{
-    transform: none !important;
-  }
-
-  nav{
-    margin-top: 6px;
-    position: relative;
-    z-index: 1;
-  }
 }
   /*  */
  nav {
