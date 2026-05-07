@@ -19,10 +19,7 @@
   overflow: visible;
 }
 
-.search-box{
-  position: relative;
-  z-index: 999999;
-}
+
 
 #searchResults{
   position: absolute;
@@ -144,21 +141,7 @@
   overflow: visible;
 }
 
-#searchResults {
-  position: absolute;
-  top: 100%;
-  left: 0;
- 
-  min-width: 200px;        /* tối thiểu */
-  max-width: 400px;        /* giới hạn popup */
-  background: #5e9d7d;     /* màu nền xanh tối */
-  color: rgb(6, 1, 1);            /* chữ trắng */
-  border-radius: 6px;
-  box-shadow: 0 4px 10px rgba(248, 250, 248, 0.15);
-  z-index: 9999;
-  display: none;
-  overflow-y: auto;
-}
+
 
 #searchResults div {
   padding: 8px 10px;
@@ -604,10 +587,7 @@ body{
   gap: 10px;
   z-index: 9999;
 }
-.header {
-  position: relative;
-  z-index: 99999;
-}
+
 }
 @media (max-width:768px) {
   .search-box {
@@ -621,28 +601,14 @@ body{
     
     
   }
-  #searchResults{
-  padding: 12px;
-  cursor: pointer;
-  position: absolute;
-  top: 100%;
+  @media (max-width:768px){
 
-  left: -27px;      /* kéo qua trái */
-  width: 110%;      /* to hơn ô search */
+#searchResults{
+  left: 0;
+  width: 100%;
+  z-index: 999;
+}
 
-  background: #5e9d7d;
-  color: #000;
-
-  border-radius: 6px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-
-  z-index: 99999;
-  display: none;
-
-  max-height: 300px;
-  overflow-y: auto;
-  min-height: 120px;   /* 🔥 luôn giữ kích thước */
-  max-height: 300px;
 }
 }
 </style>
@@ -1368,21 +1334,21 @@ document.addEventListener("click",(e)=>{
   }
 });
 
-searchInput.addEventListener("input",()=>{
+// searchInput.addEventListener("input",()=>{
 
-const keyword = searchInput.value.toLowerCase()
+// const keyword = searchInput.value.toLowerCase()
 
-searchResults.innerHTML=""
+// searchResults.innerHTML=""
 
-if(keyword===""){
-searchResults.style.display="none"
-searchResults.style.pointerEvents = "none";
-return
-}
+// if(keyword===""){
+// searchResults.style.display="none"
+// searchResults.style.pointerEvents = "none";
+// return
+// }
 
-const result = allProducts.filter(p=>
-p.name.toLowerCase().includes(keyword)
-)
+// const result = allProducts.filter(p=>
+// p.name.toLowerCase().includes(keyword)
+// )
 
 // 🔥 nếu không tìm thấy
 if(result.length === 0){
