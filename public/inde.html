@@ -14,7 +14,201 @@
 <body>
 
   <style>
-   
+    
+ #menuBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 40px;
+  height: 40px;
+
+  border: none;
+  border-radius: 8px;
+  background: #4CAF50;
+  cursor: pointer;
+}
+
+#menuBtn i {
+  color: #fff;
+  font-size: 18px;
+}
+
+/* hover */
+#menuBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.2);
+}
+
+/* click */
+#menuBtn:active {
+  transform: scale(0.96);
+}
+
+/* mobile */
+@media (max-width: 480px) {
+  #menuBtn {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+}
+
+/* fix nút không bị lệch */
+#menuBtn {
+  flex-shrink: 0;
+}
+
+/* tiêu đề không bị xuống dòng */
+.category-text {
+  margin: 0;
+  white-space: nowrap;
+}
+.category-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 10px;
+  gap: 6px;
+}
+
+#menuBtn {
+  
+  left: 20px;
+}
+    .menu-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  text-decoration: none;
+  color: #333;
+  border-radius: 8px;
+  transition: 0.2s;
+}
+
+.menu-item img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.menu-item span {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.menu-item:hover {
+  background: #e8f5e9;
+}
+    /* Nút menu */
+#menuBtn {
+  
+  border: none;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
+}
+
+#menuBtn i {
+  font-size: 22px;
+  color: #4CAF50;
+}
+
+/* Overlay */
+#menuPopup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  display: none;
+  z-index: 9999;
+}
+
+/* Nội dung popup */
+.menu-content {
+  position: absolute;
+  top: 0;
+  left: -280px;
+  width: 260px;
+  height: 100%;
+  background: #fff;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  transition: 0.3s;
+}
+
+/* Khi mở */
+#menuPopup.active .menu-content {
+  left: 0;
+}
+
+/* Item */
+.menu-content a {
+  text-decoration: none;
+  color: #333;
+  font-size: 15px;
+  padding: 10px;
+  border-radius: 6px;
+  transition: 0.2s;
+}
+
+.menu-content a:hover {
+  background: #e8f5e9;
+}
+
+/* Nút đóng */
+.close-btn {
+  font-size: 20px;
+  cursor: pointer;
+  align-self: flex-end;
+}
+
+/*  */
+    @media (max-width: 768px) {
+
+.banner-slider {
+  overflow: hidden;
+  background: #f5f5f5; /* tránh trắng khi swipe */
+}
+
+.banner-slider .slides {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
+.banner-slider .slides > div {
+  flex: 0 0 100%;   /* mỗi slide full màn hình */
+  width: 100%;
+  height: 100%;
+}
+
+.banner-slider img {
+  width: 100%;
+  height: 140px;     /* giữ đúng mobile */
+  object-fit: cover;
+  display: block;
+  background: #f5f5f5;
+}
+}
+/*  */
+   @media (max-width: 480px){
+
+body.is-admin #searchInput{
+  max-width: 180px !important;
+}
+
+body.is-admin .search-box{
+  max-width: 230px;
+}
+
+}
     /*  */
     .sub-title{
   display:flex;
@@ -314,8 +508,8 @@
     z-index: 999;
   }
   #searchInput {
-    width: 100%;
-    box-sizing: border-box;
+    max-width: 225px;
+        min-width: 120px;
   }
   #searchResults {
     width: 100%;
@@ -327,6 +521,7 @@
     z-index: 1000;
   }
 }
+
  /* Chỉnh Login / Logout + Giỏ hàng cùng size */
 /* Login / Logout / Cart cùng size */
 /* ===== LOGIN / LOGOUT / CART ===== */
@@ -452,10 +647,11 @@
     /* ================= DANH MỤC SẢN PHẨM NAVBAR ================= */
 .category-navbar {
   display: flex;
-  flex-wrap: wrap; /* xuống dòng nếu màn hình nhỏ */
-  gap: 12px;
-  justify-content: center; /* căn giữa */
-  margin: 20px 0;
+  flex-wrap: nowrap;      /* ✅ không xuống dòng */
+  overflow-x: auto;       /* ✅ cho cuộn ngang */
+  gap: 10px;
+  padding: 10px;
+  -webkit-overflow-scrolling: touch;
 }
 
 .category-item {
@@ -963,12 +1159,67 @@ nav a:hover img {
   </div>
   <div id="bannerDots"></div>
 </div>
+<!--  -->
+<!-- <button id="menuBtn">
+  <i class="fa-solid fa-bars"></i>
+</button> -->
+<!--  -->
+<div id="menuPopup">
+  <div class="menu-content">
 
+    <span class="close-btn" onclick="closeMenu()">✖</span>
 
+    <h3>Danh mục sản phẩm</h3>
+
+    <a href="import.html" class="menu-item">
+      <img src="import.jpg">
+      <span>Trái cây nhập khẩu</span>
+    </a>
+    
+    <a href="local.html" class="menu-item">
+      <img src="local.jpg">
+      <span>Trái cây nội địa</span>
+    </a>
+    
+    <a href="cut.html" class="menu-item">
+      <img src="cut.jpg">
+      <span>Trái cây cắt gọt</span>
+    </a>
+    
+    <a href="food.html" class="menu-item">
+      <img src="food.jpg">
+      <span>Thực phẩm công nghệ</span>
+    </a>
+    
+    <a href="gift.html" class="menu-item">
+      <img src="gift.jpg">
+      <span>Giỏ quà tặng</span>
+    </a>
+    
+    <a href="box.html" class="menu-item">
+      <img src="box.jpg">
+      <span>Hộp quà tặng</span>
+    </a>
+    
+    <a href="flower.html" class="menu-item">
+      <img src="flower.jpg">
+      <span>Bó hoa</span>
+    </a>
+    <a href="juice.html" class="menu-item">
+      <img src="juice.jpg">
+      <span>Nước ép</span>
+    </a>
+
+  </div>
+</div>
 <!-- danh mục sp -->
-<h2 class="category-title">
-  <span class="category-text">Danh Mục Sản Phẩm</span>
-</h2>
+<div class="category-header">
+  <button id="menuBtn">
+    <i class="fa-solid fa-bars"></i>
+  </button>
+
+  <h2 class="category-text">Danh Mục Sản Phẩm</h2>
+</div>
 
 <!-- NAVBAR -->
 <nav>
@@ -1002,6 +1253,10 @@ nav a:hover img {
     <a href="box.html" class="category-item">
       <img src="box.jpg" alt="Hộp quà tặng">
       <span>Hộp quà tặng</span>
+    </a>
+    <a href="flower.html" class="category-item">
+      <img src="flower.jpg" alt="Bó hoa">
+      <span>Bó hoa</span>
     </a>
   </div>
   </nav>
@@ -1133,8 +1388,9 @@ nav a:hover img {
   <div class="footer-container">
 
     <div class="footer-col">
-      <h3>Thông tin công ty</h3>
-      <p>CÔNG TY TRÁI CÂY</p>
+      <h3>Thông tin cửa hàng</h3>
+      <p>Fruit Shop - Trái cây nhập khẩu và nội địa</p>
+      <p>Giấy phép kinh doanh số: 052194002384</p>
       <p>Địa chỉ: 103 Lạc Long Quân, Phường Minh Phụng, TPHCM</p>
       <p>Hotline: 0905276510</p>
       <p>Email: fruitshop@gmail.com</p>
@@ -1172,10 +1428,20 @@ nav a:hover img {
 </footer>
 <!-- <footer>© 2026 Fruit Shop</footer> -->
 
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-SMBPBRVLCP"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
+  gtag('config', 'G-SMBPBRVLCP');
+</script>
 
 <script>
 // ====== LOGIN ======
+
+const API = "https://coutsaigon.onrender.com";
 let userRole = null;
 let currentIndex = 0;
 let interval;
@@ -1203,12 +1469,12 @@ document.getElementById("loginBtnPopup").addEventListener("click", async () => {
   }
 
   try {
-    const res = await fetch("/api/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username, password })
-    });
-    const data = await res.json();
+    const res = await fetch(API + "/api/login", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ username, password })
+});
+const data = await res.json();
 
     if(data.success){
       userRole = data.role;
@@ -1216,6 +1482,8 @@ document.getElementById("loginBtnPopup").addEventListener("click", async () => {
       localStorage.setItem("userRole", userRole);
 
       closePopup();
+
+  window.location.reload(); // ⭐ THÊM DÒNG NÀY
 
       // Ẩn login, hiện logout
       document.getElementById("loginBtn").style.display = "none";
@@ -1273,9 +1541,11 @@ window.addEventListener("load", () => {
   const storedRole = localStorage.getItem("userRole");
   if(storedRole){
     userRole = storedRole;
+   
     document.getElementById("loginBtn").style.display = "none";
     document.getElementById("logoutBtn").style.display = "inline-block";
     if(userRole === "admin"){
+      document.body.classList.add("is-admin"); 
       document.querySelector(".admin").style.display = "block";
       document.querySelector(".admin-banner").style.display = "block";
       document.getElementById("adminOrdersLink").style.display = "inline-block";
@@ -1310,7 +1580,7 @@ document.getElementById("uploadProductBtn").addEventListener("click", async () =
   formData.append("image", image); // bắt buộc "image"
   formData.append("salePercent", salePercent);
   try {
-    const res = await fetch("/api/upload", {  // 🔹 sửa endpoint đúng
+    const res = await fetch(API + "/api/upload", {  // 🔹 sửa endpoint đúng
       method: "POST",
       body: formData
     });
@@ -1359,7 +1629,7 @@ function updateCartCount(){
 }
 
 function deleteProduct(id){
-  fetch("/api/fruits/"+id,{method:"DELETE", headers:{"Content-Type":"application/json"}, body: JSON.stringify({username: localStorage.getItem("username")})})
+  fetch(API + "/api/fruits/"+id,{method:"DELETE", headers:{"Content-Type":"application/json"}, body: JSON.stringify({username: localStorage.getItem("username")})})
   .then(()=>loadProducts());
 }
 
@@ -1368,7 +1638,7 @@ function deleteProduct(id){
 async function loadBanners(){
   try{
 
-    const res = await fetch("/api/banners");
+    const res = await fetch(API + "/api/banners");
     const banners = await res.json();
 
     const slidesContainer = document.querySelector(".banner-slider .slides");
@@ -1429,19 +1699,42 @@ async function loadBanners(){
   enableSwipe();
 }
 // Slide function
+function enableSwipe(){
+  const slider = document.querySelector(".banner-slider");
+  if(!slider) return;
 
+  let startX = 0;
 
+  slider.addEventListener("touchstart", e=>{
+    startX = e.touches[0].clientX;
+  });
+
+  slider.addEventListener("touchend", e=>{
+    let endX = e.changedTouches[0].clientX;
+
+    if(endX - startX > 50){
+      prevSlide();
+    }else if(startX - endX > 50){
+      nextSlide();
+    }
+  });
+}
+
+// 
 function goToSlide(index){
   const slidesContainer = document.querySelector(".banner-slider .slides");
   const slides = slidesContainer.children;
   const dots = document.querySelectorAll("#bannerDots span");
 
-  currentIndex = (index + slides.length) % slides.length;
+  if(!slides.length) return;
 
-  slidesContainer.style.transition = "transform 0.5s ease";
+  currentIndex = index;
+  if(currentIndex >= slides.length) currentIndex = 0;
+  if(currentIndex < 0) currentIndex = slides.length - 1;
+
   slidesContainer.style.transform = `translateX(-${currentIndex * 100}%)`;
 
-  dots.forEach(d=>d.classList.remove("active"));
+  dots.forEach(d => d.classList.remove("active"));
   if(dots[currentIndex]) dots[currentIndex].classList.add("active");
 }
 
@@ -1515,7 +1808,7 @@ searchInput.addEventListener("input", ()=>{
 async function fetchSearchResults(query){
   if(!query){ searchResults.style.display="none"; return; }
   try{
-    const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
+    const res = await fetch(API + `/api/search?q=${encodeURIComponent(query)}`);
     const products = await res.json();
     currentResults = products;
     renderResults(products);
@@ -1566,10 +1859,12 @@ document.addEventListener("click", (e) => {
     searchResults.style.display = "none";
   }
 });
+// 
+
 // ====== PRODUCTS ======
 async function loadProducts() {
   try {
-    const res = await fetch("/api/fruits");
+    const res = await fetch(API + "/api/fruits");
     const products = await res.json();
 
     const highlightGrid = document.getElementById("highlight");
@@ -1650,7 +1945,7 @@ document.getElementById("uploadBannerBtn").addEventListener("click", async ()=>{
   formData.append("image",file);
   formData.append("username",localStorage.getItem("username"));
   try{
-    const res=await fetch("/api/banner/upload",{method:"POST", body:formData});
+    const res=await fetch(API + "/api/banner/upload",{method:"POST", body:formData});
     const data=await res.json();
     if(data.error){ alert("Upload lỗi: "+data.error); return; }
     alert("Upload banner thành công!");
@@ -1701,7 +1996,7 @@ async function editPrice(id, oldPrice) {
 
     const username = localStorage.getItem("username");
 
-    const res = await fetch(`/api/fruits/${id}/price`, {
+    const res = await fetch(API + `/api/fruits/${id}/price`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json"
@@ -1827,6 +2122,7 @@ async function editPrice(id, oldPrice) {
 
 <script>
 // Chạy khi DOM load xong
+
 const floatingBtn = document.getElementById("floatingBtn");
 const contactPopup = document.getElementById("contactPopup");
 
@@ -1853,6 +2149,158 @@ contactPopup.addEventListener("click",(e)=>{
 
 
 </script>
+<script>
+const navbar = document.querySelector(".category-navbar");
+
+let scrollAmount = 0;
+let direction = 1;
+let autoScroll;
+let isStopped = false;
+
+// chạy auto
+function autoScrollNavbar() {
+  if (!navbar || isStopped) return;
+
+  scrollAmount += direction * 1;
+  navbar.scrollLeft = scrollAmount;
+
+  if (scrollAmount + navbar.clientWidth >= navbar.scrollWidth) {
+    direction = -1;
+  }
+
+  if (scrollAmount <= 0) {
+    direction = 1;
+  }
+}
+
+// start
+function startAutoScroll() {
+  autoScroll = setInterval(autoScrollNavbar, 20);
+}
+
+// stop vĩnh viễn
+function stopAutoScrollForever() {
+  isStopped = true;
+  clearInterval(autoScroll);
+}
+
+// 👇 CHẠM LÀ DỪNG LUÔN
+navbar.addEventListener("pointerdown", stopAutoScrollForever);
+navbar.addEventListener("touchstart", stopAutoScrollForever);
+
+// chạy lần đầu
+startAutoScroll();
+// 
+const highlight = document.getElementById("highlight");
+
+let scrollAmountHL = 0;
+let directionHL = 1;
+let autoScrollHL;
+let stopHL = false;
+
+function autoScrollHighlight() {
+  if (!highlight || stopHL) return;
+
+  scrollAmountHL += directionHL * 1;
+  highlight.scrollLeft = scrollAmountHL;
+
+  // tới cuối → quay đầu
+  if (scrollAmountHL + highlight.clientWidth >= highlight.scrollWidth) {
+    directionHL = -1;
+  }
+
+  // về đầu → đổi chiều
+  if (scrollAmountHL <= 0) {
+    directionHL = 1;
+  }
+}
+
+// start
+function startAutoScrollHighlight() {
+  autoScrollHL = setInterval(autoScrollHighlight, 30);
+}
+
+// stop khi user chạm
+function stopAutoScrollHighlight() {
+  stopHL = true;
+  clearInterval(autoScrollHL);
+}
+
+highlight.addEventListener("pointerdown", stopAutoScrollHighlight);
+highlight.addEventListener("touchstart", stopAutoScrollHighlight);
+
+// chạy sau khi load sản phẩm
+setTimeout(startAutoScrollHighlight, 1000);
+// sp giảm giá 
+const sale = document.getElementById("saleProducts");
+
+let scrollAmountSale = 0;
+let directionSale = 1;
+let autoScrollSale;
+let stopSale = false;
+
+function autoScrollSaleProducts() {
+  if (!sale || stopSale) return;
+
+  scrollAmountSale += directionSale * 1;
+  sale.scrollLeft = scrollAmountSale;
+
+  // tới cuối → quay đầu
+  if (scrollAmountSale + sale.clientWidth >= sale.scrollWidth) {
+    directionSale = -1;
+  }
+
+  // về đầu → đổi chiều
+  if (scrollAmountSale <= 0) {
+    directionSale = 1;
+  }
+}
+
+// start
+function startAutoScrollSale() {
+  autoScrollSale = setInterval(autoScrollSaleProducts, 30);
+}
+
+// stop khi user chạm
+function stopAutoScrollSale() {
+  stopSale = true;
+  clearInterval(autoScrollSale);
+}
+
+sale.addEventListener("pointerdown", stopAutoScrollSale);
+sale.addEventListener("touchstart", stopAutoScrollSale);
+
+// chạy sau khi load
+setTimeout(startAutoScrollSale, 1000);
+
+</script>
+<script>
+  const menuBtn = document.getElementById("menuBtn");
+  const menuPopup = document.getElementById("menuPopup");
+  
+  // mở menu
+  menuBtn.addEventListener("click", () => {
+    menuPopup.style.display = "block";
+    setTimeout(() => {
+      menuPopup.classList.add("active");
+    }, 10);
+  });
+  
+  // đóng menu
+  function closeMenu() {
+    menuPopup.classList.remove("active");
+    setTimeout(() => {
+      menuPopup.style.display = "none";
+    }, 300);
+  }
+  
+  // click ra ngoài để đóng
+  menuPopup.addEventListener("click", (e) => {
+    if (e.target === menuPopup) {
+      closeMenu();
+    }
+  });
+  </script>
 
 
 </script>
