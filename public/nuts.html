@@ -204,7 +204,7 @@ async function loadProducts(){
     grid.innerHTML="";
 
     // Lọc category box
-    products.filter(p=>p.category?.toLowerCase()==="box").forEach(p=>{
+    products.filter(p=>p.category?.toLowerCase()==="nuts").forEach(p=>{
       const card = document.createElement("div");
       card.className="card";
 
