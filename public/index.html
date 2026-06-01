@@ -14,6 +14,18 @@
 <body>
 
   <style>
+    body.menu-open{
+  overflow:hidden;
+  height:100vh;
+
+}
+.menu-content{
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+}
+.menu-content{
+  touch-action: pan-y;
+}
     
     /*  */
     
@@ -1168,6 +1180,9 @@ nav a:hover img {
 <!-- danh mục sp -->
 <div id="menuPopup">
   <div class="menu-content">
+    <div class="close-btn" onclick="closeMenu()">
+      <i class="fa-solid fa-xmark"></i>
+    </div>
   <h3>Trái cây</h3>
 
 <a href="import.html" class="menu-item">
