@@ -2009,21 +2009,35 @@ document.getElementById("uploadBannerBtn").addEventListener("click", async ()=>{
     loadBanners();
   } catch(err){ console.error(err); alert("Upload banner thất bại!"); }
 });
+async function deleteBanner(id) {
+  try {
 
-async function deleteBanner(id){
+    const res = await fetch(
+      API + `/api/banner/${id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          username: localStorage.getItem("username")
+        })
+      }
+    );
 
-const res = await fetch(`/api/banner/${id}`,{
-  method:"DELETE"
-})
+    const data = await res.json();
 
-const data = await res.json()
+    if (data.success) {
+      alert("✅ Xóa banner thành công");
+      loadBanners();
+    } else {
+      alert(data.error || "❌ Xóa banner thất bại");
+    }
 
-if(data.success){
-  loadBanners()
-}else{
-  alert("Xoá banner thất bại")
-}
-
+  } catch (err) {
+    console.error(err);
+    alert("❌ Lỗi kết nối server");
+  }
 }
 
 // INITIAL
