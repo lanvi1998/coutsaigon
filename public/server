@@ -604,11 +604,11 @@ app.put("/api/fruits/:id/stock", async (req,res)=>{
       });
     }
 
-    const fruit = await Fruit.findByIdAndUpdate(
-      req.params.id,
-      { stock:Number(stock) },
-      { new:true }
-    );
+    const fruit = await Fruit.findById(req.params.id);
+
+fruit.stock += Number(stock);
+
+await fruit.save();
 
     res.json({
       success:true,
