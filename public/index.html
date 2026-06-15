@@ -2005,7 +2005,7 @@ async function loadProducts() {
                 <button onclick="deleteProduct('${p._id}')">❌ Xoá</button>
               `
               : outOfStock
-                ? `<button disabled>Hết hàng</button>`
+                // ? `<button disabled>Hết hàng</button>`
                 : `<button onclick="addToCart('${p._id}','${p.name}',${salePrice},'${p.image}','${p.unit}')">
                     🛒 Thêm vào giỏ
                   </button>`
