@@ -22,21 +22,26 @@
 }
 
 /* HẾT HÀNG */
-.product.out-of-stock {
-  opacity: 0.35;
+.card.out-of-stock {
+  opacity: 0.3;
   filter: grayscale(100%);
-  pointer-events: none; /* không click được */
+  pointer-events: none;
+  position: relative;
 }
 
-/* lớp phủ đen full card */
-.product.out-of-stock::after {
-  content: "";
+.card.out-of-stock::after {
+  content: "HẾT HÀNG";
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.25);
-  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0.35);
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 8px;
 }
-
 /* chỉ hiện khi hết hàng */
 .product.out-of-stock .sold-out {
   display: block;
@@ -1986,6 +1991,7 @@ async function loadProducts() {
       }
 
       const outOfStock = (p.stock || 0) <= 0;
+      if (outOfStock) card.classList.add("out-of-stock");
 
 const cardHTML = `
 ${salePercent > 0 ? `<div class="sale-badge">SALE-${salePercent}%</div>` : ""}
@@ -2026,7 +2032,7 @@ ${outOfStock ? `<div class="out-stock-badge">HẾT HÀNG</div>` : ""}
       // ⭐ Highlight
       if (p.category === "highlight") {
         const card = document.createElement("div");
-        card.className = "card";
+        card.className = "card product";
         card.innerHTML = cardHTML;
         highlightGrid.appendChild(card);
       }
