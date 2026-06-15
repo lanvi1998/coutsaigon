@@ -23,12 +23,15 @@
 
 /* HẾT HÀNG */
 .card.out-of-stock {
-  opacity: 0.3;
-  filter: grayscale(100%);
-  pointer-events: none;
+  opacity: 0.45;       
+  
+  filter: grayscale(60%); 
+  transition: 0.3s ease;
   position: relative;
 }
-
+.card.out-of-stock img {
+  filter: brightness(0.7);
+}
 .card.out-of-stock::after {
   content: "HẾT HÀNG";
   position: absolute;
