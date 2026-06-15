@@ -22,28 +22,22 @@
 }
 
 /* HẾT HÀNG */
-.card.out-of-stock {
-  opacity: 0.45;       
-  
-  filter: grayscale(60%); 
-  transition: 0.3s ease;
+..card.out-of-stock {
+  opacity: 0.55;
+  filter: grayscale(40%);
   position: relative;
 }
-.card.out-of-stock img {
-  filter: brightness(0.7);
-}
+
 .card.out-of-stock::after {
   content: "HẾT HÀNG";
   position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(0,0,0,0.35);
-  color: #fff;
-  font-size: 16px;
-  font-weight: bold;
-  border-radius: 8px;
+  top: 10px;
+  right: 10px;
+  background: rgba(255,0,0,0.85);
+  color: white;
+  padding: 4px 8px;
+  font-size: 12px;
+  border-radius: 6px;
 }
 /* chỉ hiện khi hết hàng */
 .product.out-of-stock .sold-out {
@@ -1978,59 +1972,66 @@ async function loadProducts() {
     saleGrid.innerHTML = "";
 
     products.forEach(p => {
-      const price = Number(p.price) || 0;
-      const salePercent = Number(p.salePercent) || 0;
-      const salePrice = salePercent > 0 ? price - (price * salePercent / 100) : price;
 
-      // HTML card
-      let priceHTML = "";
-      if (salePercent > 0) {
-        priceHTML = `
-          <p class="old-price">${price.toLocaleString()} VND</p>
-          <p class="sale-price">${salePrice.toLocaleString()} VND / ${p.unit || ""}</p>
-        `;
-      } else {
-        priceHTML = `<p class="price">${price.toLocaleString()} VND / ${p.unit || ""}</p>`;
-      }
+const price = Number(p.price) || 0;
+const salePercent = Number(p.salePercent) || 0;
+const salePrice = salePercent > 0 ? price - (price * salePercent / 100) : price;
 
-      const outOfStock = (p.stock || 0) <= 0;
-      if (outOfStock) card.classList.add("out-of-stock");
+const outOfStock = (p.stock || 0) <= 0;
 
-const cardHTML = `
-${salePercent > 0 ? `<div class="sale-badge">SALE-${salePercent}%</div>` : ""}
+// ✅ PHẢI TẠO CARD TRƯỚC
+const card = document.createElement("div");
+card.className = "card";
 
-${outOfStock ? `<div class="out-stock-badge">HẾT HÀNG</div>` : ""}
+if (outOfStock) {
+  card.classList.add("out-of-stock"); // ✅ đúng chỗ
+}
 
-<img src="${p.image}"
-     style="cursor:pointer"
-     onclick="window.location.href='product.html?id=${p._id}'">
+let priceHTML = "";
+if (salePercent > 0) {
+  priceHTML = `
+    <p class="old-price">${price.toLocaleString()} VND</p>
+    <p class="sale-price">${salePrice.toLocaleString()} VND / ${p.unit || ""}</p>
+  `;
+} else {
+  priceHTML = `<p class="price">${price.toLocaleString()} VND / ${p.unit || ""}</p>`;
+}
 
-<div class="card-content">
-  <h3>${p.name}</h3>
+card.innerHTML = `
+  ${salePercent > 0 ? `<div class="sale-badge">SALE-${salePercent}%</div>` : ""}
 
-  ${priceHTML}
+  ${outOfStock ? `<div class="out-stock-badge">HẾT HÀNG</div>` : ""}
 
-  <p class="stock">
-    📦 Còn: ${p.stock || 0}
-  </p>
+  <img src="${p.image}"
+    style="cursor:pointer"
+    onclick="window.location.href='product.html?id=${p._id}'">
 
-  ${
-    userRole === "admin"
-      ? `
-      <div class="buttons">
-        <button onclick="editPrice('${p._id}',${price})">✏️ Sửa giá</button>
-        <button onclick="editStock('${p._id}',${p.stock||0})">📦 Kho</button>
-        <button onclick="deleteProduct('${p._id}')">❌ Xoá</button>
-      </div>
-      `
-      : outOfStock
-      ? `<button disabled style="background:#999">❌ Hết hàng</button>`
-      : `<button onclick="addToCart('${p._id}','${p.name}',${salePrice},'${p.image}','${p.unit}')">
-          🛒 Thêm vào giỏ
-        </button>`
-  }
-</div>
+  <div class="card-content">
+    <h3>${p.name}</h3>
+
+    ${priceHTML}
+
+    <p class="stock">📦 Còn: ${p.stock || 0}</p>
+
+    ${
+      userRole === "admin"
+        ? `
+          <div class="buttons">
+            <button onclick="editPrice('${p._id}',${price})">✏️ Sửa giá</button>
+            <button onclick="editStock('${p._id}',${p.stock||0})">📦 Kho</button>
+            <button onclick="deleteProduct('${p._id}')">❌ Xoá</button>
+          </div>
+        `
+        : outOfStock
+          ? `<button disabled style="background:#999">❌ Hết hàng</button>`
+          : `<button onclick="addToCart('${p._id}','${p.name}',${salePrice},'${p.image}','${p.unit}')">
+              🛒 Thêm vào giỏ
+            </button>`
+    }
+  </div>
 `;
+
+
 
       // ⭐ Highlight
       if (p.category === "highlight") {
