@@ -14,6 +14,38 @@
 <body>
 
   <style>
+    .product {
+  position: relative;
+  padding: 10px;
+  border-radius: 10px;
+  background: #fff;
+}
+
+/* làm tối sản phẩm */
+.product.out-of-stock {
+  opacity: 0.5;
+  filter: grayscale(100%);
+  pointer-events: none; /* không cho click */
+}
+
+/* chữ HẾT HÀNG ở giữa */
+.product .sold-out {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: bold;
+}
+
+/* chỉ hiện khi hết hàng */
+.product.out-of-stock .sold-out {
+  display: block;
+}
     .card.out-of-stock {
   opacity: 0.7;
 }
