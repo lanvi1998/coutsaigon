@@ -2013,23 +2013,18 @@ card.innerHTML = `
   </div>
 `;
 
+// ⭐ highlight
+if (p.category === "highlight") {
+  const c = card.cloneNode(true);
+  highlightGrid.appendChild(c);
+}
 
-      // ⭐ Highlight
-      if (p.category === "highlight") {
-        const card = document.createElement("div");
-        card.className = "card product";
-        highlightGrid.appendChild(card);
-        highlightGrid.appendChild(card);
-      }
-
-      // 🔥 Sale: hiển thị tất cả sản phẩm category === "sale"
-      if (p.category === "sale") {
-        const card = document.createElement("div");
-        card.className = "card";
-        card.innerHTML = cardHTML;
-        saleGrid.appendChild(card.cloneNode(true));
-      }
-    });
+// 🔥 sale
+if (p.category === "sale") {
+  const c = card.cloneNode(true);
+  saleGrid.appendChild(c);
+}
+});
 
   } catch(err) {
     console.error("Lỗi load sản phẩm:", err);
