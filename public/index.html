@@ -1624,7 +1624,7 @@ document.getElementById("uploadProductBtn").addEventListener("click", async () =
   const stock =
 parseInt(document.getElementById("stock").value) || 0;
 
-formData.append("stock", stock);
+
   const username = localStorage.getItem("username"); // admin username
 
   if (!name || !price || !image) {
@@ -1634,14 +1634,16 @@ formData.append("stock", stock);
   
   
   const formData = new FormData();
-  formData.append("name", name);
-  formData.append("price", price);
-  formData.append("unit", unit || "Chưa có");
-  formData.append("category", category);
-  formData.append("description", description);
-  formData.append("username", username);
-  formData.append("image", image); // bắt buộc "image"
-  formData.append("salePercent", salePercent);
+
+formData.append("name", name);
+formData.append("price", price);
+formData.append("unit", unit || "Chưa có");
+formData.append("category", category);
+formData.append("description", description);
+formData.append("username", username);
+formData.append("image", image);
+formData.append("salePercent", salePercent);
+formData.append("stock", stock);
   try {
     const res = await fetch(API + "/api/upload", {  // 🔹 sửa endpoint đúng
       method: "POST",
@@ -1955,12 +1957,20 @@ async function loadProducts() {
 
       const cardHTML = `
   ${salePercent > 0 ? `<div class="sale-badge">SALE-${salePercent}%</div>` : ""}
+
+  ${isOutOfStock ? `<div class="out-stock">HẾT HÀNG</div>` : ""}
+
   <img src="${p.image}" style="cursor:pointer"
        onclick="window.location.href='product.html?id=${p._id}'">
 
   <div class="card-content">
     <h3>${p.name}</h3>
+
     ${priceHTML}
+
+    <p style="color:${isOutOfStock ? 'red' : 'green'};font-weight:bold;">
+      ${isOutOfStock ? 'Hết hàng' : `Còn ${p.stock} sản phẩm`}
+    </p>
 
     ${
       userRole === "admin"
@@ -1970,18 +1980,23 @@ async function loadProducts() {
         <button onclick="deleteProduct('${p._id}')">❌ Xoá</button>
       </div>
       `
-      : `<button onclick="addToCart('${p._id}','${p.name}',${salePrice},'${p.image}','${p.unit}')">🛒 Thêm vào giỏ</button>`
-      
+      : `
+      <button
+        ${isOutOfStock ? "disabled" : ""}
+        onclick="addToCart('${p._id}','${p.name}',${salePrice},'${p.image}','${p.unit}')">
+        ${isOutOfStock ? "Hết hàng" : "🛒 Thêm vào giỏ"}
+      </button>
+      `
     }
-      
-
   </div>
 `;
 
       // ⭐ Highlight
       if (p.category === "highlight") {
         const card = document.createElement("div");
-        card.className = "card";
+        card.className = isOutOfStock
+  ? "card out-stock-card"
+  : "card";
         card.innerHTML = cardHTML;
         highlightGrid.appendChild(card);
       }
