@@ -334,6 +334,44 @@ async function editPrice(id, oldPrice){
     alert("❌ Lỗi kết nối server");
   }
 }
+// sua ton
+async function editStock(id, oldStock){
+  const newStock = prompt("Nhập tồn kho mới:", oldStock);
+
+  if(newStock === null) return;
+  if(isNaN(newStock) || newStock === "") {
+    alert("Tồn kho không hợp lệ!");
+    return;
+  }
+
+  const username = localStorage.getItem("username");
+
+  try{
+    const res = await fetch(API + `/api/fruits/${id}/stock`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        username,
+        stock: Number(newStock)
+      })
+    });
+
+    const data = await res.json();
+
+    if(data.success){
+      alert("📦 Cập nhật tồn kho thành công");
+      loadProducts();
+    }else{
+      alert("❌ " + (data.message || "Lỗi cập nhật"));
+    }
+
+  }catch(err){
+    console.error(err);
+    alert("❌ Lỗi server");
+  }
+}
 // ===== CART =====
 function addToCart(id,name,price,image,unit){
   let cart = JSON.parse(localStorage.getItem("cart"))||[];
