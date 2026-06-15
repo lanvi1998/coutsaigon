@@ -5,7 +5,7 @@ require('dotenv').config();
 const cloudinary = require('cloudinary').v2;  // 🔹 phải đứng trên cùng
 const nodemailer = require("nodemailer");
 const express = require("express");
-const cors = require("cors");
+// const cors = require("cors");
 const mongoose = require("mongoose");
 const multer = require("multer");
 const axios = require("axios");
@@ -94,12 +94,33 @@ function uploadToCloudinary(fileBuffer, folder = "fruitshop") {
 // ===== Express app =====
 const app = express()
 app.use(express.json())
-        app.use(cors())
+const cors = require("cors");
+
+const allowedOrigins = [
+  "https://traicaycoutsaigon.com",
+  "https://coutsaigon-git-main-lanvi1998s-projects.vercel.app"
+];
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error("CORS blocked: " + origin));
+  },
+  methods: ["GET","POST","PUT","DELETE","OPTIONS"],
+  credentials: true
+}));
+
+
+
+// xử lý preflight (QUAN TRỌNG)
+app.options(/.*/, cors());
+
         app.use(express.static("public"))
-        // chống sleep (UptimeRobot sẽ gọi)
-app.get("/ping", (req, res) => {
-  res.send("ok");
-});
 
 // ===== MongoDB =====
 mongoose.connect(process.env.MONGO_URI)
@@ -107,21 +128,24 @@ mongoose.connect(process.env.MONGO_URI)
 .catch(err=>console.log(err))
 // ===== Schemas =====
      // ===== Schemas =====
-const fruitSchema = new mongoose.Schema({
-    name: String,
-    price: Number,
-    unit: String,
-    image: String,
-    description: String,
-    category: String,
-    thumbs: { type: [String], default: [] },
-  
-    salePercent: {
-      type: Number,
-      default: 0
-    }
-  });
-  
+     const fruitSchema = new mongoose.Schema({
+      name: String,
+      price: Number,
+      stock: {
+        type: Number,
+        default: 0
+      },
+      unit: String,
+      image: String,
+      description: String,
+      category: String,
+      thumbs: { type: [String], default: [] },
+    
+      salePercent: {
+        type: Number,
+        default: 0
+      }
+    });
   const Fruit = mongoose.model("Fruit", fruitSchema);
   
   
@@ -249,7 +273,16 @@ await Fruit.findByIdAndDelete(req.params.id)
 // ===== Upload sản phẩm (admin only) =====
 app.post("/api/upload", upload.single("image"), async (req,res)=>{
     try{
-      const { name, price, category, description, username, unit, salePercent } = req.body;
+      const {
+        name,
+        price,
+        stock,
+        category,
+        description,
+        username,
+        unit,
+        salePercent
+      } = req.body;
     //       // 🔹 Check giá trị salePercent nhận từ client
     // console.log("salePercent received:", salePercent, "type:", typeof salePercent);
 
@@ -269,7 +302,8 @@ app.post("/api/upload", upload.single("image"), async (req,res)=>{
   
       const fruit = new Fruit({
         name,
-        price: Number(price),              // chuyển price thành số
+        price: Number(price),
+        stock: Number(stock) || 0,
         unit: unit || "Chưa có",
         category: category ? category.toLowerCase() : "",
         description,
@@ -358,22 +392,29 @@ app.get("/api/banners", async (req, res) => {
 });
 
 
-app.delete("/api/banner/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
+app.delete("/api/banner/:id", async (req,res)=>{
+  try{
 
-    const banner = await Banner.findById(id);
-    if (!banner)
-      return res.status(404).json({ error: "Not found" });
+    const banner = await Banner.findById(req.params.id)
+    if(!banner){
+      return res.status(404).json({error:"Not found"})
+    }
 
-    await Banner.findByIdAndDelete(id);
+    if(banner.image){
+      const file = banner.image.split("/").pop().split(".")[0]
+      const publicId = "fruitshop/banners/" + file
 
-    res.json({ success: true });
+      await cloudinary.uploader.destroy(publicId)
+    }
 
-  } catch (err) {
-    res.status(500).json({ error: err.message });
+    await Banner.findByIdAndDelete(req.params.id)
+
+    res.json({success:true})
+
+  }catch(err){
+    res.status(500).json({error:err.message})
   }
-});
+})
 
         // Lưu order
 
@@ -400,8 +441,25 @@ const order = new Order({
 })
 
 await order.save()
+for (const item of cart) {
 
-// ⚡ TRẢ KẾT QUẢ CHO WEB NGAY
+  const product = await Fruit.findById(item._id);
+
+  if (!product) continue;
+
+  if (product.stock < item.qty) {
+    return res.status(400).json({
+      success:false,
+      message:`${product.name} không đủ tồn kho`
+    });
+  }
+
+  product.stock -= item.qty;
+
+  await product.save();
+}
+
+// ⚡ TRẢ KẾT QUẢ CHO WEB NGAYs
 res.json({ success:true })
 
 // ===== GỬI TELEGRAM =====
@@ -510,6 +568,41 @@ ${cart.map(p => `
         }
         });
 // API tìm kiếm sản phẩm
+//
+app.put("/api/fruits/:id/stock", async (req,res)=>{
+
+  try{
+
+    const { username, stock } = req.body;
+
+    const user = await User.findOne({ username });
+
+    if(!user || user.role !== "admin"){
+      return res.status(403).json({
+        success:false,
+        message:"Chỉ admin"
+      });
+    }
+
+    const fruit = await Fruit.findByIdAndUpdate(
+      req.params.id,
+      { stock:Number(stock) },
+      { new:true }
+    );
+
+    res.json({
+      success:true,
+      fruit
+    });
+
+  }catch(err){
+    res.status(500).json({
+      success:false,
+      message:err.message
+    });
+  }
+
+});
 // Hàm bỏ dấu tiếng Việt
         const removeVietnameseTones = (str) => {
         if (!str) return "";
@@ -521,22 +614,27 @@ str = str.trim().replace(/\s+/g, " ");
 };
 
 // Tìm sản phẩm theo tên (không phân biệt hoa/thường và dấu)
-        app.get("/api/search", async (req, res) => {
-        try {
-        const q = req.query.q?.trim() || "";
-        if (!q) return res.json([]);
+app.get("/api/search", async (req, res) => {
+  try {
+    const q = req.query.q?.trim() || "";
+    if (!q) return res.json([]);
 
-    const products = await Fruit.find({
-    name: { $regex: q, $options: "i" }   // tìm không phân biệt hoa thường
-});
+    const products = await Fruit.find();
 
-        res.json(products || []);
+    const keyword = removeVietnameseTones(q);
+
+    const result = products.filter(p => {
+      const name = removeVietnameseTones(p.name);
+      return name.includes(keyword);
+    });
+
+    res.json(result);
 
   } catch (err) {
-        console.error("Search error:", err);
+    console.error("Search error:", err);
     res.status(500).json({ error: err.message });
-        }
-        });
+  }
+});
 // ===== GET 1 sản phẩm theo ID =====
         app.get("/api/fruits/product/:id", async (req, res) => {
         try {
@@ -733,5 +831,3 @@ ${cartHtml}
         app.listen(PORT, () => {
         console.log("Server running on port " + PORT);
 });
-// chống sleep
-

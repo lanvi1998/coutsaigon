@@ -14,30 +14,12 @@
 <body>
 
   <style>
-    .out-stock-card{
-  opacity:.5;
+    .stock{
+  color:#4CAF50;
+  font-size:13px;
+  font-weight:600;
+  margin:5px 0;
 }
-
-.out-stock-card img{
-  filter:grayscale(100%);
-}
-
-.out-stock{
-  position:absolute;
-  top:10px;
-  left:10px;
-  background:red;
-  color:#fff;
-  padding:5px 10px;
-  border-radius:5px;
-  font-weight:bold;
-}
-
-button:disabled{
-  background:#999;
-  cursor:not-allowed;
-}
-    /*  */
     body.menu-open{
   overflow:hidden;
   height:100vh;
@@ -1420,8 +1402,8 @@ nav a:hover img {
   <input id="name" placeholder="Tên sản phẩm">
   <input id="price" placeholder="Giá">
   <input id="unit" placeholder="Đơn vị">
-<!-- up tồn -->
-<input id="stock" type="number" placeholder="Tồn kho">
+  <input id="stock" type="number" placeholder="Tồn kho">
+
   <!-- THÊM CÁI NÀY -->
   <select id="category">
     <option value="highlight">⭐ Sản phẩm nổi bật</option>
@@ -1621,10 +1603,7 @@ document.getElementById("uploadProductBtn").addEventListener("click", async () =
   const description = document.getElementById("description")?.value.trim() || "";
   const image = document.getElementById("image").files[0];
   const salePercent = parseInt(document.getElementById("salePercent").value.trim()) || 0;
-  const stock =
-parseInt(document.getElementById("stock").value) || 0;
-
-
+  const stock = parseInt(document.getElementById("stock").value) || 0;
   const username = localStorage.getItem("username"); // admin username
 
   if (!name || !price || !image) {
@@ -1634,16 +1613,15 @@ parseInt(document.getElementById("stock").value) || 0;
   
   
   const formData = new FormData();
-
-formData.append("name", name);
-formData.append("price", price);
-formData.append("unit", unit || "Chưa có");
-formData.append("category", category);
-formData.append("description", description);
-formData.append("username", username);
-formData.append("image", image);
-formData.append("salePercent", salePercent);
-formData.append("stock", stock);
+  formData.append("name", name);
+  formData.append("price", price);
+  formData.append("unit", unit || "Chưa có");
+  formData.append("category", category);
+  formData.append("description", description);
+  formData.append("username", username);
+  formData.append("image", image); // bắt buộc "image"
+  formData.append("salePercent", salePercent);
+  formData.append("stock", stock);
   try {
     const res = await fetch(API + "/api/upload", {  // 🔹 sửa endpoint đúng
       method: "POST",
@@ -1942,7 +1920,6 @@ async function loadProducts() {
       const price = Number(p.price) || 0;
       const salePercent = Number(p.salePercent) || 0;
       const salePrice = salePercent > 0 ? price - (price * salePercent / 100) : price;
-      const isOutOfStock = Number(p.stock) <= 0;
 
       // HTML card
       let priceHTML = "";
@@ -1957,46 +1934,44 @@ async function loadProducts() {
 
       const cardHTML = `
   ${salePercent > 0 ? `<div class="sale-badge">SALE-${salePercent}%</div>` : ""}
-
-  ${isOutOfStock ? `<div class="out-stock">HẾT HÀNG</div>` : ""}
-
   <img src="${p.image}" style="cursor:pointer"
        onclick="window.location.href='product.html?id=${p._id}'">
 
   <div class="card-content">
     <h3>${p.name}</h3>
-
-    ${priceHTML}
-
-    <p style="color:${isOutOfStock ? 'red' : 'green'};font-weight:bold;">
-      ${isOutOfStock ? 'Hết hàng' : `Còn ${p.stock} sản phẩm`}
-    </p>
+${priceHTML}
+<p class="stock">
+📦 Còn: ${p.stock || 0}
+</p>
 
     ${
       userRole === "admin"
       ? `
       <div class="buttons">
         <button onclick="editPrice('${p._id}',${price})">✏️ Sửa giá</button>
+<button onclick="editStock('${p._id}',${p.stock||0})">📦 Kho</button>
         <button onclick="deleteProduct('${p._id}')">❌ Xoá</button>
       </div>
       `
-      : `
-      <button
-        ${isOutOfStock ? "disabled" : ""}
-        onclick="addToCart('${p._id}','${p.name}',${salePrice},'${p.image}','${p.unit}')">
-        ${isOutOfStock ? "Hết hàng" : "🛒 Thêm vào giỏ"}
-      </button>
-      `
+      :
+(p.stock || 0) > 0
+?
+`<button onclick="addToCart('${p._id}','${p.name}',${salePrice},'${p.image}','${p.unit}')">
+🛒 Thêm vào giỏ
+</button>`
+:
+`<button disabled style="background:#999">
+❌ Hết hàng
+</button>`
     }
+
   </div>
 `;
 
       // ⭐ Highlight
       if (p.category === "highlight") {
         const card = document.createElement("div");
-        card.className = isOutOfStock
-  ? "card out-stock-card"
-  : "card";
+        card.className = "card";
         card.innerHTML = cardHTML;
         highlightGrid.appendChild(card);
       }
@@ -2068,6 +2043,39 @@ document.querySelector('.banner-slider .next').onclick = ()=> {
   goToSlide(currentIndex);
   resetInterval();
 };
+// toonf
+async function editStock(id, oldStock){
+
+const stock = prompt(
+  "Nhập tồn kho mới:",
+  oldStock
+);
+
+if(stock === null) return;
+
+const res = await fetch(
+  API + `/api/fruits/${id}/stock`,
+  {
+    method:"PUT",
+    headers:{
+      "Content-Type":"application/json"
+    },
+    body:JSON.stringify({
+      stock:Number(stock)
+    })
+  }
+);
+
+const data = await res.json();
+
+if(data.success){
+  alert("Cập nhật tồn kho thành công");
+  loadProducts();
+}else{
+  alert("Lỗi cập nhật kho");
+}
+}
+
 // sữa giá
 async function editPrice(id, oldPrice) {
   try {
