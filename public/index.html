@@ -1976,54 +1976,36 @@ async function loadProducts() {
 const price = Number(p.price) || 0;
 const salePercent = Number(p.salePercent) || 0;
 const salePrice = salePercent > 0 ? price - (price * salePercent / 100) : price;
-
 const outOfStock = (p.stock || 0) <= 0;
 
-// ✅ PHẢI TẠO CARD TRƯỚC
 const card = document.createElement("div");
 card.className = "card";
 
-if (outOfStock) {
-  card.classList.add("out-of-stock"); // ✅ đúng chỗ
-}
-
-let priceHTML = "";
-if (salePercent > 0) {
-  priceHTML = `
-    <p class="old-price">${price.toLocaleString()} VND</p>
-    <p class="sale-price">${salePrice.toLocaleString()} VND / ${p.unit || ""}</p>
-  `;
-} else {
-  priceHTML = `<p class="price">${price.toLocaleString()} VND / ${p.unit || ""}</p>`;
-}
+if (outOfStock) card.classList.add("out-of-stock");
 
 card.innerHTML = `
   ${salePercent > 0 ? `<div class="sale-badge">SALE-${salePercent}%</div>` : ""}
-
   ${outOfStock ? `<div class="out-stock-badge">HẾT HÀNG</div>` : ""}
 
-  <img src="${p.image}"
-    style="cursor:pointer"
-    onclick="window.location.href='product.html?id=${p._id}'">
+  <img src="${p.image}" onclick="window.location.href='product.html?id=${p._id}'">
 
   <div class="card-content">
     <h3>${p.name}</h3>
 
-    ${priceHTML}
+    ${
+      salePercent > 0
+        ? `<p class="old-price">${price.toLocaleString()} VND</p>
+           <p class="sale-price">${salePrice.toLocaleString()} VND</p>`
+        : `<p class="price">${price.toLocaleString()} VND</p>`
+    }
 
-    <p class="stock">📦 Còn: ${p.stock || 0}</p>
+    <p>📦 Còn: ${p.stock || 0}</p>
 
     ${
       userRole === "admin"
-        ? `
-          <div class="buttons">
-            <button onclick="editPrice('${p._id}',${price})">✏️ Sửa giá</button>
-            <button onclick="editStock('${p._id}',${p.stock||0})">📦 Kho</button>
-            <button onclick="deleteProduct('${p._id}')">❌ Xoá</button>
-          </div>
-        `
+        ? `<button onclick="deleteProduct('${p._id}')">❌ Xoá</button>`
         : outOfStock
-          ? `<button disabled style="background:#999">❌ Hết hàng</button>`
+          ? `<button disabled>Hết hàng</button>`
           : `<button onclick="addToCart('${p._id}','${p.name}',${salePrice},'${p.image}','${p.unit}')">
               🛒 Thêm vào giỏ
             </button>`
@@ -2032,12 +2014,11 @@ card.innerHTML = `
 `;
 
 
-
       // ⭐ Highlight
       if (p.category === "highlight") {
         const card = document.createElement("div");
         card.className = "card product";
-        card.innerHTML = cardHTML;
+        highlightGrid.appendChild(card);
         highlightGrid.appendChild(card);
       }
 
@@ -2046,7 +2027,7 @@ card.innerHTML = `
         const card = document.createElement("div");
         card.className = "card";
         card.innerHTML = cardHTML;
-        saleGrid.appendChild(card);
+        saleGrid.appendChild(card.cloneNode(true));
       }
     });
 
