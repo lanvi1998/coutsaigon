@@ -128,19 +128,24 @@ mongoose.connect(process.env.MONGO_URI)
 .catch(err=>console.log(err))
 // ===== Schemas =====
      // ===== Schemas =====
-const fruitSchema = new mongoose.Schema({
-    name: String,
-    price: Number,
-    unit: String,
-    image: String,
-    description: String,
-    category: String,
-    thumbs: { type: [String], default: [] },
+     const fruitSchema = new mongoose.Schema({
+      name: String,
+      price: Number,
+      unit: String,
+      image: String,
+      description: String,
+      category: String,
+      thumbs: { type: [String], default: [] },
   
-    salePercent: {
-      type: Number,
-      default: 0
-    }
+      stock: {
+        type: Number,
+        default: 0
+      },
+  
+      salePercent: {
+        type: Number,
+        default: 0
+      }
   });
   
   const Fruit = mongoose.model("Fruit", fruitSchema);
@@ -270,7 +275,16 @@ await Fruit.findByIdAndDelete(req.params.id)
 // ===== Upload sản phẩm (admin only) =====
 app.post("/api/upload", upload.single("image"), async (req,res)=>{
     try{
-      const { name, price, category, description, username, unit, salePercent } = req.body;
+      const {
+        name,
+        price,
+        category,
+        description,
+        username,
+        unit,
+        salePercent,
+        stock
+      } = req.body;
     //       // 🔹 Check giá trị salePercent nhận từ client
     // console.log("salePercent received:", salePercent, "type:", typeof salePercent);
 
@@ -290,17 +304,14 @@ app.post("/api/upload", upload.single("image"), async (req,res)=>{
   
       const fruit = new Fruit({
         name,
-        price: Number(price),              // chuyển price thành số
+        price: Number(price),
         unit: unit || "Chưa có",
         category: category ? category.toLowerCase() : "",
         description,
         image: result.secure_url,
-        salePercent: parseInt(salePercent) || 0  // ✅ chuyển salePercent thành số
+        stock: parseInt(stock) || 0,
+        salePercent: parseInt(salePercent) || 0
       });
-  
-      await fruit.save();
-      res.json(fruit);
-  
     } catch(err){
       console.log(err);
       res.status(500).json({error:err.message});
@@ -428,6 +439,18 @@ const order = new Order({
 })
 
 await order.save()
+for (const item of cart) {
+
+  await Fruit.findByIdAndUpdate(
+    item.id,
+    {
+      $inc: {
+        stock: -item.qty
+      }
+    }
+  );
+
+}
 
 // ⚡ TRẢ KẾT QUẢ CHO WEB NGAYs
 res.json({ success:true })
@@ -637,6 +660,43 @@ app.put("/api/fruits/:id/price", async (req,res)=>{
         message:"Không tìm thấy sản phẩm"
       });
     }
+
+    res.json({
+      success:true,
+      fruit
+    });
+
+  }catch(err){
+    res.status(500).json({
+      success:false,
+      message:err.message
+    });
+  }
+});
+// tồn
+app.put("/api/fruits/:id/stock", async (req,res)=>{
+  try{
+
+    const { username, stock } = req.body;
+
+    const user = await User.findOne({ username });
+
+    if(!user || user.role !== "admin"){
+      return res.status(403).json({
+        success:false,
+        message:"Chỉ admin"
+      });
+    }
+
+    const fruit = await Fruit.findByIdAndUpdate(
+      req.params.id,
+      {
+        stock:Number(stock)
+      },
+      {
+        new:true
+      }
+    );
 
     res.json({
       success:true,

@@ -14,6 +14,30 @@
 <body>
 
   <style>
+    .out-stock-card{
+  opacity:.5;
+}
+
+.out-stock-card img{
+  filter:grayscale(100%);
+}
+
+.out-stock{
+  position:absolute;
+  top:10px;
+  left:10px;
+  background:red;
+  color:#fff;
+  padding:5px 10px;
+  border-radius:5px;
+  font-weight:bold;
+}
+
+button:disabled{
+  background:#999;
+  cursor:not-allowed;
+}
+    /*  */
     body.menu-open{
   overflow:hidden;
   height:100vh;
@@ -1396,7 +1420,8 @@ nav a:hover img {
   <input id="name" placeholder="Tên sản phẩm">
   <input id="price" placeholder="Giá">
   <input id="unit" placeholder="Đơn vị">
-
+<!-- up tồn -->
+<input id="stock" type="number" placeholder="Tồn kho">
   <!-- THÊM CÁI NÀY -->
   <select id="category">
     <option value="highlight">⭐ Sản phẩm nổi bật</option>
@@ -1596,6 +1621,10 @@ document.getElementById("uploadProductBtn").addEventListener("click", async () =
   const description = document.getElementById("description")?.value.trim() || "";
   const image = document.getElementById("image").files[0];
   const salePercent = parseInt(document.getElementById("salePercent").value.trim()) || 0;
+  const stock =
+parseInt(document.getElementById("stock").value) || 0;
+
+formData.append("stock", stock);
   const username = localStorage.getItem("username"); // admin username
 
   if (!name || !price || !image) {
@@ -1911,6 +1940,7 @@ async function loadProducts() {
       const price = Number(p.price) || 0;
       const salePercent = Number(p.salePercent) || 0;
       const salePrice = salePercent > 0 ? price - (price * salePercent / 100) : price;
+      const isOutOfStock = Number(p.stock) <= 0;
 
       // HTML card
       let priceHTML = "";
@@ -1941,7 +1971,9 @@ async function loadProducts() {
       </div>
       `
       : `<button onclick="addToCart('${p._id}','${p.name}',${salePrice},'${p.image}','${p.unit}')">🛒 Thêm vào giỏ</button>`
+      
     }
+      
 
   </div>
 `;
