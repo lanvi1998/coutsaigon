@@ -312,11 +312,13 @@ app.post("/api/upload", upload.single("image"), async (req,res)=>{
         stock: parseInt(stock) || 0,
         salePercent: parseInt(salePercent) || 0
       });
-    } catch(err){
-      console.log(err);
-      res.status(500).json({error:err.message});
-    }
-  });
+      
+      await fruit.save();
+      
+      res.json({
+        success: true,
+        product: fruit
+      });
 // ===== REGISTER =====
         app.post("/api/register", async (req,res)=>{
         try{
