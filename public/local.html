@@ -204,7 +204,7 @@ async function loadProducts(){
     grid.innerHTML="";
 
     products
-      .filter(p => p.category?.toLowerCase() === "import")
+      .filter(p => p.category?.toLowerCase() === "local")
       .forEach(p => {
 
         const price = Number(p.price) || 0;
