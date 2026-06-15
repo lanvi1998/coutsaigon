@@ -1964,18 +1964,9 @@ async function loadProducts() {
 
     products.forEach(p => {
 
-      const price = Number(String(p.price).replace(/[^\d]/g, "")) || 0;
-
-const salePercent = Math.min(100, Math.max(0, Number(p.salePercent) || 0));
-
-const salePrice = Math.max(
-  0,
-  price - (price * salePercent / 100)
-);
-
-// 🔥 chặn âm tuyệt đối
-salePrice = Math.max(0, salePrice);
-      
+      const price = Number(p.price) || 0;
+      const salePercent = Number(p.salePercent) || 0;
+       const salePrice = salePercent > 0 ? price - (price * salePercent / 100) : price; 
       const outOfStock = (p.stock || 0) <= 0;
       // 
       let actionHTML = "";
