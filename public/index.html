@@ -14,6 +14,32 @@
 <body>
 
   <style>
+    .card.out-of-stock {
+  opacity: 0.7;
+}
+
+.card.out-of-stock img {
+  filter: grayscale(100%) brightness(50%);
+}
+
+.out-stock-badge {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0,0,0,0.75);
+  color: #fff;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 14px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.card {
+  position: relative;
+}
     .stock{
   color:#4CAF50;
   font-size:13px;
@@ -1932,40 +1958,42 @@ async function loadProducts() {
         priceHTML = `<p class="price">${price.toLocaleString()} VND / ${p.unit || ""}</p>`;
       }
 
-      const cardHTML = `
-  ${salePercent > 0 ? `<div class="sale-badge">SALE-${salePercent}%</div>` : ""}
-  <img src="${p.image}" style="cursor:pointer"
-       onclick="window.location.href='product.html?id=${p._id}'">
+      const outOfStock = (p.stock || 0) <= 0;
 
-  <div class="card-content">
-    <h3>${p.name}</h3>
-${priceHTML}
-<p class="stock">
-📦 Còn: ${p.stock || 0}
-</p>
+const cardHTML = `
+${salePercent > 0 ? `<div class="sale-badge">SALE-${salePercent}%</div>` : ""}
 
-    ${
-      userRole === "admin"
+${outOfStock ? `<div class="out-stock-badge">HẾT HÀNG</div>` : ""}
+
+<img src="${p.image}"
+     style="cursor:pointer"
+     onclick="window.location.href='product.html?id=${p._id}'">
+
+<div class="card-content">
+  <h3>${p.name}</h3>
+
+  ${priceHTML}
+
+  <p class="stock">
+    📦 Còn: ${p.stock || 0}
+  </p>
+
+  ${
+    userRole === "admin"
       ? `
       <div class="buttons">
         <button onclick="editPrice('${p._id}',${price})">✏️ Sửa giá</button>
-<button onclick="editStock('${p._id}',${p.stock||0})">📦 Kho</button>
+        <button onclick="editStock('${p._id}',${p.stock||0})">📦 Kho</button>
         <button onclick="deleteProduct('${p._id}')">❌ Xoá</button>
       </div>
       `
-      :
-(p.stock || 0) > 0
-?
-`<button onclick="addToCart('${p._id}','${p.name}',${salePrice},'${p.image}','${p.unit}')">
-🛒 Thêm vào giỏ
-</button>`
-:
-`<button disabled style="background:#999">
-❌ Hết hàng
-</button>`
-    }
-
-  </div>
+      : outOfStock
+      ? `<button disabled style="background:#999">❌ Hết hàng</button>`
+      : `<button onclick="addToCart('${p._id}','${p.name}',${salePrice},'${p.image}','${p.unit}')">
+          🛒 Thêm vào giỏ
+        </button>`
+  }
+</div>
 `;
 
       // ⭐ Highlight
