@@ -1967,19 +1967,13 @@ async function loadProducts() {
 
     products.forEach(p => {
 
-      const price = Math.max(0, Number(p.price) || 0);
+      const priceRaw = Number(p.price);
+const saleRaw = Number(p.salePercent);
 
-const salePercent = Math.min(
-  100,
-  Math.max(0, Number(p.salePercent) || 0)
-);
+const price = isNaN(priceRaw) ? 0 : priceRaw;
+const salePercent = isNaN(saleRaw) ? 0 : Math.min(100, Math.max(0, saleRaw));
 
-const salePrice = Math.max(
-  0,
-  price - (price * salePercent / 100)
-);
-
-const outOfStock = (p.stock || 0) <= 0;
+const salePrice = price - (price * salePercent / 100);
       // 
       let actionHTML = "";
 
