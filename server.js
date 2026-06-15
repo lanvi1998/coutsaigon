@@ -273,52 +273,71 @@ await Fruit.findByIdAndDelete(req.params.id)
         })
 
 // ===== Upload sản phẩm (admin only) =====
-app.post("/api/upload", upload.single("image"), async (req,res)=>{
-    try{
-      const {
-        name,
-        price,
-        category,
-        description,
-        username,
-        unit,
-        salePercent,
-        stock
-      } = req.body;
-    //       // 🔹 Check giá trị salePercent nhận từ client
-    // console.log("salePercent received:", salePercent, "type:", typeof salePercent);
+app.post("/api/upload", upload.single("image"), async (req, res) => {
+  try {
+    const {
+      name,
+      price,
+      category,
+      description,
+      username,
+      unit,
+      salePercent,
+      stock
+    } = req.body;
 
+    const user = await User.findOne({ username });
 
-
-  
-      const user = await User.findOne({ username });
-      if(!user || user.role!=="admin") 
-        return res.status(403).json({error:"Chỉ admin mới được phép"});
-  
-      if(!name || !price)
-        return res.status(400).json({error:"Thiếu tên hoặc giá"});
-      if(!req.file)
-        return res.status(400).json({error:"Chưa chọn ảnh"});
-  
-      const result = await uploadToCloudinary(req.file.buffer, "fruitshop/products");
-  
-      const fruit = new Fruit({
-        name,
-        price: Number(price),
-        unit: unit || "Chưa có",
-        category: category ? category.toLowerCase() : "",
-        description,
-        image: result.secure_url,
-        stock: parseInt(stock) || 0,
-        salePercent: parseInt(salePercent) || 0
+    if (!user || user.role !== "admin") {
+      return res.status(403).json({
+        error: "Chỉ admin mới được phép"
       });
-      
-      await fruit.save();
-      
-      res.json({
-        success: true,
-        product: fruit
+    }
+
+    if (!name || !price) {
+      return res.status(400).json({
+        error: "Thiếu tên hoặc giá"
       });
+    }
+
+    if (!req.file) {
+      return res.status(400).json({
+        error: "Chưa chọn ảnh"
+      });
+    }
+
+    const result = await uploadToCloudinary(
+      req.file.buffer,
+      "fruitshop/products"
+    );
+
+    const fruit = new Fruit({
+      name,
+      price: Number(price),
+      unit: unit || "Chưa có",
+      category: category ? category.toLowerCase() : "",
+      description,
+      image: result.secure_url,
+      stock: Number(stock) || 0,
+      salePercent: Number(salePercent) || 0
+    });
+
+    await fruit.save();
+
+    res.json({
+      success: true,
+      product: fruit
+    });
+
+  } catch (err) {
+    console.error(err);
+
+    res.status(500).json({
+      success: false,
+      error: err.message
+    });
+  }
+});
 // ===== REGISTER =====
         app.post("/api/register", async (req,res)=>{
         try{
