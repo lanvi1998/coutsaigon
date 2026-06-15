@@ -2053,29 +2053,37 @@ const stock = prompt(
 
 if(stock === null) return;
 
-const res = await fetch(
-  API + `/api/fruits/${id}/stock`,
-  {
-    method:"PUT",
-    headers:{
-      "Content-Type":"application/json"
-    },
-    body:JSON.stringify({
-      stock:Number(stock)
-    })
+try{
+
+  const res = await fetch(
+    API + `/api/fruits/${id}/stock`,
+    {
+      method:"PUT",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({
+        stock:Number(stock)
+      })
+    }
+  );
+
+  const data = await res.json();
+
+  console.log(data);
+
+  if(data.success){
+    alert("Cập nhật thành công");
+    loadProducts();
+  }else{
+    alert(data.error || "Lỗi cập nhật");
   }
-);
 
-const data = await res.json();
-
-if(data.success){
-  alert("Cập nhật tồn kho thành công");
-  loadProducts();
-}else{
-  alert("Lỗi cập nhật kho");
+}catch(err){
+  console.error(err);
+  alert(err.message);
 }
 }
-
 // sữa giá
 async function editPrice(id, oldPrice) {
   try {
