@@ -210,41 +210,108 @@ async function loadProducts(){
     const grid = document.getElementById("highlight");
     grid.innerHTML="";
 
-    // Lọc category local
-    products.filter(p=>p.category?.toLowerCase()==="food").forEach(p=>{
-      const card = document.createElement("div");
-      card.className="card";
+    products
+      .filter(p => p.category?.toLowerCase() === "food")
+      .forEach(p => {
 
-      card.innerHTML=`
-        <img src="${p.image}" 
-             alt="${p.name}" 
-             style="cursor:pointer;" 
-             onclick="window.location.href='product.html?id=${p._id}'">
+        const price = Number(p.price) || 0;
+        const salePercent = Number(p.salePercent) || 0;
 
-        <div class="card-content">
-          <h3>${p.name}</h3>
-          <div class="card-price">
-  ${Number(p.price).toLocaleString()} VND / ${p.unit || ''}
-</div>
+        const salePrice = salePercent > 0
+          ? price - (price * salePercent / 100)
+          : price;
 
-          ${userRole==="admin"
-  ? `
-    <button onclick="editPrice('${p._id}', ${p.price})">💰 Sửa giá</button>
-    <button onclick="deleteProduct('${p._id}')">❌ Xoá</button>
-  `
-  : `<button onclick="addToCart('${p._id}','${p.name}',${p.price},'${p.image}','${p.unit}')">🛒 Thêm vào giỏ</button>`
-}
-        </div>
-      `;
+        const stock = Number(p.stock) || 0;
+        const outOfStock = stock <= 0;
 
-      grid.appendChild(card);
-    });
+        const card = document.createElement("div");
+        card.className = "card";
 
-  }catch(err){
+        if(outOfStock){
+          card.classList.add("out-of-stock");
+        }
+
+        card.innerHTML = `
+          ${salePercent > 0 ? `<div class="sale-badge">SALE-${salePercent}%</div>` : ""}
+          ${outOfStock ? `<div class="out-stock-badge">HẾT HÀNG</div>` : ""}
+
+          <img src="${p.image}"
+            style="cursor:pointer;"
+            onclick="window.location.href='product.html?id=${p._id}'">
+
+          <div class="card-content">
+            <h3>${p.name}</h3>
+
+            ${
+              salePercent > 0
+                ? `<p class="old-price">${price.toLocaleString()} VND</p>
+                   <p class="sale-price">${salePrice.toLocaleString()} VND</p>`
+                : `<div class="card-price">${price.toLocaleString()} VND / ${p.unit || ''}</div>`
+            }
+
+            <p>📦 Còn: ${stock}</p>
+
+            ${
+              userRole === "admin"
+                ? `
+                  <button onclick="editPrice('${p._id}',${price})">💰 Sửa giá</button>
+                  <button onclick="editStock('${p._id}',${stock})">📦 Tồn kho</button>
+                  <button onclick="deleteProduct('${p._id}')">❌ Xoá</button>
+                `
+                : outOfStock
+                  ? `<button disabled>Hết hàng</button>`
+                  : `<button onclick="addToCart('${p._id}','${p.name}',${salePrice},'${p.image}','${p.unit}')">
+                      🛒 Thêm vào giỏ
+                    </button>`
+            }
+          </div>
+        `;
+
+        grid.appendChild(card);
+      });
+
+  } catch(err){
     console.error(err);
   }
 }
+// 
+async function editStock(id, oldStock){
+  const newStock = prompt("Nhập tồn kho mới:", oldStock);
 
+  if(newStock === null) return;
+  if(isNaN(newStock) || newStock === "") {
+    alert("Tồn kho không hợp lệ!");
+    return;
+  }
+
+  const username = localStorage.getItem("username");
+
+  try{
+    const res = await fetch(API + `/api/fruits/${id}/stock`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        username,
+        stock: Number(newStock)
+      })
+    });
+
+    const data = await res.json();
+
+    if(data.success){
+      alert("📦 Cập nhật tồn kho thành công");
+      loadProducts();
+    }else{
+      alert("❌ " + (data.message || "Lỗi cập nhật"));
+    }
+
+  }catch(err){
+    console.error(err);
+    alert("❌ Lỗi server");
+  }
+}
 // ===== UPLOAD SẢN PHẨM ADMIN =====
 document.getElementById("uploadProductBtn").addEventListener("click", async ()=>{
   const name = document.getElementById("name").value;
