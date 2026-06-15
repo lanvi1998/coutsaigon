@@ -14,6 +14,10 @@
 <body>
 
   <style>
+    /*  tắt nút hết hàng*/
+    button:disabled {
+  display: none;
+}
    .product {
   position: relative;
   border-radius: 10px;
@@ -1970,6 +1974,26 @@ async function loadProducts() {
         : price;
 
       const outOfStock = (p.stock || 0) <= 0;
+      // 
+      let actionHTML = "";
+
+  if (userRole === "admin") {
+    actionHTML = `
+      <button onclick="editPrice('${p._id}',${price})">✏️ Sửa giá</button>
+      <button onclick="editStock('${p._id}',${p.stock || 0})">📦 Tồn kho</button>
+      <button onclick="deleteProduct('${p._id}')">❌ Xoá</button>
+    `;
+  } else {
+    if (!outOfStock) {
+      actionHTML = `
+        <button onclick="addToCart('${p._id}','${p.name}',${salePrice},'${p.image}','${p.unit}')">
+          🛒 Thêm vào giỏ
+        </button>
+      `;
+    }
+  }
+
+      // 
 
       const card = document.createElement("div");
       card.className = "card";
