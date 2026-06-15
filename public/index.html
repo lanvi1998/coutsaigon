@@ -28,17 +28,7 @@
   position: relative;
 }
 
-.card.out-of-stock::after {
-  content: "HẾT HÀNG";
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background: rgba(255,0,0,0.85);
-  color: white;
-  padding: 4px 8px;
-  font-size: 12px;
-  border-radius: 6px;
-}
+
 /* chỉ hiện khi hết hàng */
 .product.out-of-stock .sold-out {
   display: block;
@@ -1973,64 +1963,71 @@ async function loadProducts() {
 
     products.forEach(p => {
 
-const price = Number(p.price) || 0;
-const salePercent = Number(p.salePercent) || 0;
-const salePrice = salePercent > 0 ? price - (price * salePercent / 100) : price;
-const outOfStock = (p.stock || 0) <= 0;
+      const price = Number(p.price) || 0;
+      const salePercent = Number(p.salePercent) || 0;
+      const salePrice = salePercent > 0
+        ? price - (price * salePercent / 100)
+        : price;
 
-const card = document.createElement("div");
-card.className = "card";
+      const outOfStock = (p.stock || 0) <= 0;
 
-if (outOfStock) card.classList.add("out-of-stock");
+      const card = document.createElement("div");
+      card.className = "card";
 
-card.innerHTML = `
-  ${salePercent > 0 ? `<div class="sale-badge">SALE-${salePercent}%</div>` : ""}
-  ${outOfStock ? `<div class="out-stock-badge">HẾT HÀNG</div>` : ""}
+      if (outOfStock) {
+        card.classList.add("out-of-stock");
+      }
 
-  <img src="${p.image}" onclick="window.location.href='product.html?id=${p._id}'">
+      card.innerHTML = `
+        ${salePercent > 0 ? `<div class="sale-badge">SALE-${salePercent}%</div>` : ""}
+        ${outOfStock ? `<div class="out-stock-badge">HẾT HÀNG</div>` : ""}
 
-  <div class="card-content">
-    <h3>${p.name}</h3>
+        <img src="${p.image}"
+          onclick="window.location.href='product.html?id=${p._id}'">
 
-    ${
-      salePercent > 0
-        ? `<p class="old-price">${price.toLocaleString()} VND</p>
-           <p class="sale-price">${salePrice.toLocaleString()} VND</p>`
-        : `<p class="price">${price.toLocaleString()} VND</p>`
-    }
+        <div class="card-content">
+          <h3>${p.name}</h3>
 
-    <p>📦 Còn: ${p.stock || 0}</p>
+          ${
+            salePercent > 0
+              ? `<p class="old-price">${price.toLocaleString()} VND</p>
+                 <p class="sale-price">${salePrice.toLocaleString()} VND</p>`
+              : `<p class="price">${price.toLocaleString()} VND</p>`
+          }
 
-    ${
-      userRole === "admin"
-        ? `<button onclick="deleteProduct('${p._id}')">❌ Xoá</button>`
-        : outOfStock
-          ? `<button disabled>Hết hàng</button>`
-          : `<button onclick="addToCart('${p._id}','${p.name}',${salePrice},'${p.image}','${p.unit}')">
-              🛒 Thêm vào giỏ
-            </button>`
-    }
-  </div>
-`;
+          <p>📦 Còn: ${p.stock || 0}</p>
 
-// ⭐ highlight
-if (p.category === "highlight") {
-  const c = card.cloneNode(true);
-  highlightGrid.appendChild(c);
-}
+          ${
+            userRole === "admin"
+              ? `
+                <button onclick="editPrice('${p._id}',${price})">✏️ Sửa giá</button>
+                <button onclick="editStock('${p._id}',${p.stock || 0})">📦 Tồn kho</button>
+                <button onclick="deleteProduct('${p._id}')">❌ Xoá</button>
+              `
+              : outOfStock
+                ? `<button disabled>Hết hàng</button>`
+                : `<button onclick="addToCart('${p._id}','${p.name}',${salePrice},'${p.image}','${p.unit}')">
+                    🛒 Thêm vào giỏ
+                  </button>`
+          }
+        </div>
+      `;
 
-// 🔥 sale
-if (p.category === "sale") {
-  const c = card.cloneNode(true);
-  saleGrid.appendChild(c);
-}
-});
+      // ===== highlight =====
+      if (p.category === "highlight") {
+        highlightGrid.appendChild(card.cloneNode(true));
+      }
 
-  } catch(err) {
+      // ===== sale =====
+      if (p.category === "sale") {
+        saleGrid.appendChild(card.cloneNode(true));
+      }
+    });
+
+  } catch (err) {
     console.error("Lỗi load sản phẩm:", err);
   }
 }
-
 updateCartCount();
 loadProducts();
 
