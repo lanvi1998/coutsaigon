@@ -439,6 +439,26 @@ const order = new Order({
   total,
   cart
 })
+// kiểm tra tồn kho trước
+for (const item of cart) {
+
+  const product = await Fruit.findById(item._id);
+
+  if (!product) {
+    return res.status(404).json({
+      success:false,
+      message:`Không tìm thấy sản phẩm`
+    });
+  }
+
+  if (product.stock < item.qty) {
+    return res.status(400).json({
+      success:false,
+      message:`${product.name} không đủ tồn kho`
+    });
+  }
+
+}
 
 await order.save()
 for (const item of cart) {
