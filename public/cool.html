@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Trái cây cắt gọt</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<!-- Popup Login -->
+<div id="authPopup" class="popup" style="display:none;">
+  <h3>Admin Login</h3>
+  <input id="username" placeholder="Username"><br><br>
+  <input id="password" type="password" placeholder="Password"><br><br>
+  <button id="loginBtnPopup">Login</button>
+  <button onclick="closePopup()">Close</button>
+</div>
+
+<!-- HEADER -->
+<!-- HEADER -->
+<header class="header">
+  <div class="header-left">
+    <a href="index.html">
+      <img src="/logo.png" class="logo">
+    </a>
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Tìm sản phẩm..." />
+      <div id="searchResults"></div>
+    </div>
+   
+  </div>
+  <div class="header-right">
+    <button id="loginBtn">
+      <i class="fa-solid fa-user"></i>
+    </button>
+    <button id="logoutBtn" style="display:none;"> <i class="fa-solid fa-user"></i></button>
+    
+    <a href="cart.html" class="cart-icon">
+      <i class="fa-solid fa-cart-shopping"></i>
+      <span id="cartCount" class="cart-count">0</span>
+      </a>
+  </div>
+ 
+  
+</header>
+
+<!-- NAVBAR -->
+<nav>
+  
+  <a href="import.html">Trái cây nhập khẩu</a>
+  <a href="local.html">Trái cây nội địa</a>
+  <a href="cut.html">Trái cây cắt gọt</a>
+  <a href="food.html">Đồ ăn vặt</a>
+  <a href="gift.html">Giỏ quà tặng</a>
+  <a href="box.html">Hộp quà tặng</a>
+  <a href="flower.html">Bó hoa</a>
+  <a href="juice.html">Nước ép</a>
+  <a href="nuts.html">Nhân hạt mix</a>
+  <a href="cool.html">Thực phẩm đông lạnh</a>
+  <a href="special.html">Đặc sản miền trung</a>
+</nav>
+
+<!-- SẢN PHẨM CUT -->
+<h2 style="text-align:center; margin-top:20px;">Trái cây cắt gọt</h2>
+<div id="highlight" class="grid"></div>
+
+<!-- ADMIN UPLOAD -->
+<div class="admin" style="display:none;">
+  <h2>Admin Upload sản phẩm </h2>
+  <input id="name" placeholder="Tên sản phẩm">
+  <input id="price" placeholder="Giá">
+  <input id="unit" placeholder="Đơn vị (kg, hộp, phần...)">
+  <input type="file" id="image">
+  <button id="uploadProductBtn">Upload</button>
+</div>
+
+<!-- FOOTER -->
+ <!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-container">
+
+    <div class="footer-col">
+      <h3>Thông tin cửa hàng</h3>
+      <p>Fruit Shop - Trái cây nhập khẩu và nội địa</p>
+      <p>Giấy phép kinh doanh số: 052194002384</p>
+      <p>Địa chỉ: 103 Lạc Long Quân, Phường Minh Phụng, TPHCM</p>
+      <p>Hotline: 0905276510</p>
+      <p>Email: fruitshop@gmail.com</p>
+    </div>
+
+    <div class="footer-col">
+      <h3>Chính sách và dịch vụ</h3>
+      <p>Đổi trả 48h</p>
+      <p>Chính sách khách hàng</p>
+      <p>Bảo mật thông tin</p>
+      <p>Hướng dẫn mua hàng</p>
+    </div>
+
+
+    <div class="footer-col">
+      <h3>Kênh liên hệ</h3>
+    
+      <div class="social">
+    
+        <!-- Facebook -->
+        <a href="https://www.facebook.com/co.ut.trai.cay.2025/" target="_blank">
+          <img src="https://cdn-icons-png.flaticon.com/512/733/733547.png">
+        </a>
+    
+        <!-- Zalo -->
+        <a href="https://zalo.me/0905276510" target="_blank">
+          <img src="zalo.jpg">
+        </a>
+    
+        <!-- TikTok -->
+        <a href="https://www.tiktok.com/@uphan6510" target="_blank">
+          <img src="tiktok.jpg">
+        </a>
+    
+      </div>
+    </div>
+
+  </div>
+  <div class="footer-bottom">
+    <p> 📞 Hotline: 0905276510<p>
+    <p> 📍 Địa chỉ : 103 Lạc Long Quân, Phường Minh Phụng, TPHCM</p> 
+  </div>
+</footer>
+
+
+<script>
+// ===== GLOBAL =====
+const API = "https://coutsaigon.onrender.com";
+let userRole = null;
+updateCartCount();
+
+// ===== SHOW/HIDE POPUP =====
+document.getElementById("loginBtn").addEventListener("click",()=>{ document.getElementById("authPopup").style.display="block"; });
+function closePopup(){ document.getElementById("authPopup").style.display="none"; }
+
+// ===== LOGIN =====
+document.getElementById("loginBtnPopup").addEventListener("click", async ()=>{
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+  if(!username || !password){ alert("Điền đầy đủ username và password!"); return; }
+
+  try{
+    const res = await fetch(API + "/api/login",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({username,password})
+    });
+    const data = await res.json();
+    if(data.success){
+      userRole = data.role;
+      localStorage.setItem("username", username);
+      localStorage.setItem("userRole", userRole);
+      closePopup();
+
+      document.getElementById("loginBtn").style.display="none";
+      document.getElementById("logoutBtn").style.display="inline-block";
+
+      if(userRole==="admin"){ document.querySelector(".admin").style.display="block"; }
+
+      loadProducts();
+    } else { alert(data.message || "Login thất bại!"); }
+  } catch(err){ console.error(err); alert("Login lỗi, thử lại!"); }
+});
+
+// ===== LOGOUT =====
+document.getElementById("logoutBtn").addEventListener("click", ()=>{
+  userRole = null;
+  localStorage.removeItem("username");
+  localStorage.removeItem("userRole");
+  document.getElementById("loginBtn").style.display="inline-block";
+  document.getElementById("logoutBtn").style.display="none";
+  document.querySelector(".admin").style.display="none";
+  loadProducts();
+});
+
+// ===== CHECK LOGIN =====
+window.addEventListener("load",()=>{
+  const storedRole = localStorage.getItem("userRole");
+  if(storedRole){
+    userRole = storedRole;
+    document.getElementById("loginBtn").style.display="none";
+    document.getElementById("logoutBtn").style.display="inline-block";
+    if(userRole==="admin"){ document.querySelector(".admin").style.display="block"; }
+  }
+  updateCartCount();
+  loadProducts();
+});
+
+// ===== PRODUCTS =====
+async function loadProducts(){
+  try{
+    const res = await fetch(API + "/api/fruits");
+    const products = await res.json();
+    const grid = document.getElementById("highlight");
+    grid.innerHTML="";
+
+    products
+      .filter(p => p.category?.toLowerCase() === "cool")
+      .forEach(p => {
+
+        const price = Number(p.price) || 0;
+        const salePercent = Number(p.salePercent) || 0;
+
+        const salePrice = salePercent > 0
+          ? price - (price * salePercent / 100)
+          : price;
+
+        const stock = Number(p.stock) || 0;
+        const outOfStock = stock <= 0;
+
+        const card = document.createElement("div");
+        card.className = "card";
+
+        if(outOfStock){
+          card.classList.add("out-of-stock");
+        }
+
+        card.innerHTML = `
+          ${salePercent > 0 ? `<div class="sale-badge">SALE-${salePercent}%</div>` : ""}
+          ${outOfStock ? `<div class="out-stock-badge">HẾT HÀNG</div>` : ""}
+
+          <img src="${p.image}"
+            style="cursor:pointer;"
+            onclick="window.location.href='product.html?id=${p._id}'">
+
+          <div class="card-content">
+            <h3>${p.name}</h3>
+
+            ${
+              salePercent > 0
+                ? `<p class="old-price">${price.toLocaleString()} VND</p>
+                   <p class="sale-price">${salePrice.toLocaleString()} VND</p>`
+                : `<div class="card-price">${price.toLocaleString()} VND / ${p.unit || ''}</div>`
+            }
+
+            <p>📦 Còn: ${stock}</p>
+
+            ${
+              userRole === "admin"
+                ? `
+                  <button onclick="editPrice('${p._id}',${price})">💰 Sửa giá</button>
+                  <button onclick="editStock('${p._id}',${stock})">📦 Tồn kho</button>
+                  <button onclick="deleteProduct('${p._id}')">❌ Xoá</button>
+                `
+                : outOfStock
+                  ? `<button disabled>Hết hàng</button>`
+                  : `<button onclick="addToCart('${p._id}','${p.name}',${salePrice},'${p.image}','${p.unit}')">
+                      🛒 Thêm vào giỏ
+                    </button>`
+            }
+          </div>
+        `;
+
+        grid.appendChild(card);
+      });
+
+  } catch(err){
+    console.error(err);
+  }
+}
+// 
+async function editStock(id, oldStock){
+  const newStock = prompt("Nhập tồn kho mới:", oldStock);
+
+  if(newStock === null) return;
+  if(isNaN(newStock) || newStock === "") {
+    alert("Tồn kho không hợp lệ!");
+    return;
+  }
+
+  const username = localStorage.getItem("username");
+
+  try{
+    const res = await fetch(API + `/api/fruits/${id}/stock`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        username,
+        stock: Number(newStock)
+      })
+    });
+
+    const data = await res.json();
+
+    if(data.success){
+      alert("📦 Cập nhật tồn kho thành công");
+      loadProducts();
+    }else{
+      alert("❌ " + (data.message || "Lỗi cập nhật"));
+    }
+
+  }catch(err){
+    console.error(err);
+    alert("❌ Lỗi server");
+  }
+}
+// ===== UPLOAD SẢN PHẨM ADMIN =====
+document.getElementById("uploadProductBtn").addEventListener("click", async ()=>{
+  const name = document.getElementById("name").value;
+  const price = document.getElementById("price").value;
+  const unit = document.getElementById("unit").value;
+  const image = document.getElementById("image").files[0];
+
+  if(!name || !price || !unit || !image){ alert("Điền đủ thông tin và chọn ảnh!"); return; }
+
+  const formData = new FormData();
+  formData.append("name", name);
+  formData.append("price", price);
+  formData.append("unit", unit);
+  formData.append("category", "cool"); // ✅ category box
+  formData.append("username", localStorage.getItem("username"));
+  formData.append("image", image);
+
+  try{
+    const res = await fetch(API + "/api/upload",{method:"POST", body:formData});
+    const data = await res.json();
+    if(data.error){ alert("Upload lỗi: "+data.error); return; }
+    alert("Upload sản phẩm thành công!");
+    document.getElementById("name").value="";
+    document.getElementById("price").value="";
+    document.getElementById("unit").value="";
+    document.getElementById("image").value="";
+    loadProducts();
+  } catch(err){ console.error(err); alert("Upload thất bại!"); }
+});
+
+function deleteProduct(id){
+  fetch(API + "/api/fruits/"+id,{
+    method:"DELETE",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({username: localStorage.getItem("username")})
+  }).then(()=>loadProducts());
+}
+// sữa giá
+async function editPrice(id, oldPrice){
+  const newPrice = prompt("Nhập giá mới:", oldPrice);
+  if(!newPrice || isNaN(newPrice)) return;
+
+  const username = localStorage.getItem("username");
+
+  try{
+    const res = await fetch(API + `/api/fruits/${id}/price`, {
+      method:"PUT",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body:JSON.stringify({
+        username,
+        price:Number(newPrice)
+      })
+    });
+
+    const data = await res.json();
+
+    if(data.success){
+      alert("✅ Cập nhật giá thành công");
+      loadProducts();
+    }else{
+      alert("❌ "+data.message);
+    }
+
+  }catch(err){
+    console.error(err);
+    alert("❌ Lỗi kết nối server");
+  }
+}
+// ===== CART =====
+function addToCart(id,name,price,image){
+  let cart = JSON.parse(localStorage.getItem("cart"))||[];
+  const exist = cart.find(p=>p.id===id);
+  if(exist) exist.qty+=1; else cart.push({id,name,price,image,qty:1});
+  localStorage.setItem("cart", JSON.stringify(cart));
+  updateCartCount();
+  alert("Đã thêm vào giỏ hàng 🛒");
+}
+function updateCartCount(){
+  let cart = JSON.parse(localStorage.getItem("cart"))||[];
+  let total = cart.reduce((t,p)=>t+p.qty,0);
+  document.getElementById("cartCount").innerText = total;
+}
+
+// ===== SEARCH =====
+const searchInput = document.getElementById("searchInput");
+const searchResults = document.getElementById("searchResults");
+let timer, selectedIndex=-1, currentResults=[];
+searchInput.addEventListener("input", ()=>{
+  clearTimeout(timer);
+  timer = setTimeout(()=> fetchSearchResults(searchInput.value.trim()),300);
+});
+async function fetchSearchResults(query){
+  if(!query){ searchResults.style.display="none"; return; }
+  try{
+    const res = await fetch(API + `/api/search?q=${encodeURIComponent(query)}`);
+    const products = await res.json();
+    currentResults = products;
+    renderResults(products);
+  } catch(err){ console.error(err); }
+}
+function renderResults(products){
+  // Xóa nội dung cũ
+  searchResults.innerHTML = "";
+  selectedIndex = -1;
+
+  if(products.length === 0){
+    searchResults.style.display = "none";
+    return;
+  }
+
+  // Tạo từng item
+  products.forEach((p,i)=>{
+    const div = document.createElement("div");
+    div.innerHTML = `
+      <div style="display:flex; align-items:center; gap:8px; padding:4px 8px;">
+        <img src="${p.image}" alt="${p.name}" style="width:40px; height:40px; object-fit:cover; border-radius:6px;">
+        <div>
+          <strong>${p.name}</strong><br>
+          <small>${Number(p.price).toLocaleString()} VND</small>
+        </div>
+      </div>
+    `;
+    div.dataset.index = i;
+    div.addEventListener("click", ()=> window.location.href = `/product.html?id=${p._id}`);
+    searchResults.appendChild(div);
+  });
+
+  // Đẩy searchResults ra ngoài body để không bị che
+  if(searchResults.parentElement !== document.body){
+    document.body.appendChild(searchResults);
+  }
+
+  // Đặt vị trí popup theo input
+  const rect = searchInput.getBoundingClientRect();
+  searchResults.style.top = rect.bottom + window.scrollY + "px";
+  searchResults.style.left = rect.left + window.scrollX + "px";
+  searchResults.style.width = rect.width + "px";
+  searchResults.style.display = "block";
+}
+// Ẩn popup khi click ra ngoài
+document.addEventListener("click", (e) => {
+  if (!searchResults.contains(e.target) && e.target !== searchInput) {
+    searchResults.style.display = "none";
+  }
+});
+</script>
+</script>
+
+</body>
+<!-- Nút chính nổi -->
+<div id="floatingBtn" title="Liên hệ">
+  <img src="/contact.jpg" alt="Liên hệ">
+</div>
+
+<!-- Popup lựa chọn -->
+<div id="contactPopup">
+  <a href="http://Zalo.me/0905276510" target="_blank" title="Chat Zalo">
+    <img src="/zalo.jpg" alt="Zalo">
+  </a>
+  <a href="https://m.me/co.ut.trai.cay.2025" target="_blank" title="Chat Messenger">
+    <img src="/messenger.jpg" alt="Messenger">
+  </a>
+  <a href="https://www.tiktok.com/@uphan6510" target="_blank" title="TikTok Shop">
+    <img src="/tiktok.jpg" alt="TikTok">
+  </a>
+  <a href="tel:0905276510" title="Gọi điện">
+    <img src="/call.jpg" alt="Call">
+  </a>
+</div>
+
+<style>
+#floatingBtn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%; /* sửa ở đây */
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  z-index: 9999;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+#floatingBtn img { width:100%; height:100%; object-fit:cover; }
+#floatingBtn:hover { transform: scale(1.1); }
+
+#contactPopup {
+  position: fixed;
+  bottom: 90px;
+  right: 20px;
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  z-index: 9999;
+}
+#contactPopup a {
+  width: 50px; height:50px;
+  display:block;
+  border-radius:50%;
+  overflow:hidden;
+  box-shadow:0 4px 8px rgba(0,0,0,0.2);
+  transition: transform 0.3s ease;
+}
+#contactPopup a img { width:100%; height:100%; object-fit:cover; }
+#contactPopup a:hover { transform: scale(1.1); }
+</style>
+
+<script>
+// Chạy khi DOM load xong
+const floatingBtn = document.getElementById("floatingBtn");
+const contactPopup = document.getElementById("contactPopup");
+
+// mở / đóng popup
+floatingBtn.addEventListener("click",(e)=>{
+  e.stopPropagation();
+
+  if(contactPopup.style.display==="flex"){
+    contactPopup.style.display="none";
+  }else{
+    contactPopup.style.display="flex";
+  }
+});
+
+// click ra ngoài -> đóng
+document.addEventListener("click",()=>{
+  contactPopup.style.display="none";
+});
+
+// click trong popup không đóng
+contactPopup.addEventListener("click",(e)=>{
+  e.stopPropagation();
+});
+
+
+
+</script>
+</body>
+</html>
