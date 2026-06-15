@@ -2063,8 +2063,9 @@ try{
         "Content-Type":"application/json"
       },
       body:JSON.stringify({
-        stock:Number(stock)
-      })
+  username: localStorage.getItem("username"),
+  stock: Number(stock)
+})
     }
   );
 
