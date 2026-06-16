@@ -244,19 +244,19 @@ async function loadProducts(){
 
             <p>📦 Còn: ${stock}</p>
 
-            ${
-              userRole === "admin"
-                ? `
-                  <button onclick="editPrice('${p._id}',${price})">💰 Sửa giá</button>
-                  <button onclick="editStock('${p._id}',${stock})">📦 Tồn kho</button>
-                  <button onclick="deleteProduct('${p._id}')">❌ Xoá</button>
-                `
-                : outOfStock
-                  ? `<button disabled>Hết hàng</button>`
-                  : `<button onclick="addToCart('${p._id}','${p.name}',${salePrice},'${p.image}','${p.unit}')">
-                      🛒 Thêm vào giỏ
-                    </button>`
-            }
+           ${
+  userRole === "admin"
+    ? `
+      <button onclick="editPrice('${p._id}',${price})">💰 Sửa giá</button>
+      <button onclick="editStock('${p._id}',${stock})">📦 Tồn kho</button>
+      <button onclick="deleteProduct('${p._id}')">❌ Xoá</button>
+    `
+    : outOfStock
+      ? ``
+      : `<button onclick="addToCart('${p._id}','${p.name}',${salePrice},'${p.image}','${p.unit}')">
+          🛒 Thêm vào giỏ
+        </button>`
+}
           </div>
         `;
 
