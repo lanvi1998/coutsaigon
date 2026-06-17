@@ -2000,7 +2000,7 @@ async function loadProducts() {
   userRole === "admin"
     ? `
       <button onclick="editPrice('${p._id}',${price})">💰 Sửa giá</button>
-      <button onclick="editStock('${p._id}',${stock})">📦 Tồn kho</button>
+     <button onclick="editStock('${p._id}',${p.stock || 0})">📦 Tồn kho</button>
       <button onclick="deleteProduct('${p._id}')">❌ Xoá</button>
     `
     : outOfStock
