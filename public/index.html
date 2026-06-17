@@ -1316,11 +1316,11 @@ nav a:hover img {
       <span>Nhân hạt mix</span>
     </a>
     <a href="cool.html" class="category-item">
-      <img src="nuts.jpg" alt="Sản phẩm đông lạnh">
+      <img src="cool.jpg" alt="Sản phẩm đông lạnh">
       <span>Sản phẩm phẩm đông lạnh</span>
     </a>
     <a href="special.html" class="category-item">
-      <img src="nuts.jpg" alt="Đặc sản miền trung">
+      <img src="specal.jpg" alt="Đặc sản miền trung">
       <span>Đặc sản miền trung"</span>
     </a>
   </div>
@@ -1953,7 +1953,9 @@ async function loadProducts() {
   if (userRole === "admin") {
     actionHTML = `
       <button onclick="editPrice('${p._id}',${price})">✏️ Sửa giá</button>
-      <button onclick="editStock('${p._id}',${p.stock || 0})">📦 Tồn kho</button>
+      <button onclick="editStock('${p._id}',${p.stock || 0})">
+  📦 Tồn kho
+</button>
       <button onclick="deleteProduct('${p._id}')">❌ Xoá</button>
     `;
   } else {
