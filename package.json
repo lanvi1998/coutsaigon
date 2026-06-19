@@ -5,7 +5,9 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "deploy": "wrangler deploy",
+    "preview": "wrangler dev"
   },
   "keywords": [],
   "author": "",
@@ -23,5 +25,8 @@
     "multer": "^2.1.1",
     "nodemailer": "^8.0.4",
     "swiper": "^12.1.4"
+  },
+  "devDependencies": {
+    "wrangler": "^4.103.0"
   }
 }
