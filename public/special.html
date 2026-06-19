@@ -204,7 +204,7 @@ async function loadProducts(){
     grid.innerHTML="";
 
     products
-      .filter(p => p.category?.toLowerCase() === "specical")
+      .filter(p => p.category?.toLowerCase() === "special")
       .forEach(p => {
 
         const price = Number(p.price) || 0;
@@ -244,7 +244,7 @@ async function loadProducts(){
 
             <p>📦 Còn: ${stock}</p>
 
-            ${
+           ${
   userRole === "admin"
     ? `
       <button onclick="editPrice('${p._id}',${price})">💰 Sửa giá</button>
